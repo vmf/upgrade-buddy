@@ -1,0 +1,1266 @@
+[
+  {
+    "path_id": "django_42_mariadb_103_dropped",
+    "path_name": "Application fails with MariaDB 10.3 or earlier",
+    "risk_type": "runtime_requirement",
+    "risk_level": "critical",
+    "affected_surface": "runtime",
+    "description": "Django 4.2 drops support for MariaDB 10.3. Applications running on MariaDB 10.3 or earlier will fail at runtime or exhibit undefined behavior. Django 4.2 requires MariaDB 10.4 or higher.",
+    "conditions": [
+      {
+        "condition_id": "mariadb_103_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Upstream support for MariaDB 10.3 ends in May 2023. Django 4.2 supports MariaDB 10.4 and higher.",
+            "relevance": "Directly states Django 4.2 requires MariaDB 10.4+"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "mariadb_103_runtime",
+        "statement": "Application is running on MariaDB version 10.3 or earlier",
+        "category": "runtime",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "10.4",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Django 4.2 supports MariaDB 10.4 and higher.",
+            "relevance": "Specifies minimum MariaDB version for Django 4.2"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check the MariaDB version in your deployment (SELECT VERSION();)",
+      "Upgrade MariaDB to version 10.4 or higher before upgrading to Django 4.2",
+      "Test the application on MariaDB 10.4+ in a staging environment"
+    ]
+  },
+  {
+    "path_id": "django_42_mysql_57_dropped",
+    "path_name": "Application fails with MySQL 5.7 or earlier",
+    "risk_type": "runtime_requirement",
+    "risk_level": "critical",
+    "affected_surface": "runtime",
+    "description": "Django 4.2 drops support for MySQL 5.7. Applications running on MySQL 5.7 or earlier will fail at runtime or exhibit undefined behavior. Django 4.2 requires MySQL 8 or higher.",
+    "conditions": [
+      {
+        "condition_id": "mysql_57_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Upstream support for MySQL 5.7 ends in October 2023. Django 4.2 supports MySQL 8 and higher.",
+            "relevance": "Directly states Django 4.2 requires MySQL 8+"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "mysql_57_runtime",
+        "statement": "Application is running on MySQL version 5.7 or earlier",
+        "category": "runtime",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "8.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Django 4.2 supports MySQL 8 and higher.",
+            "relevance": "Specifies minimum MySQL version for Django 4.2"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check the MySQL version in your deployment (SELECT VERSION();)",
+      "Upgrade MySQL to version 8.0 or higher before upgrading to Django 4.2",
+      "Review MySQL 8 migration guide for potential schema or query compatibility issues",
+      "Test the application on MySQL 8+ in a staging environment"
+    ]
+  },
+  {
+    "path_id": "django_42_postgresql_11_dropped",
+    "path_name": "Application fails with PostgreSQL 11 or earlier",
+    "risk_type": "runtime_requirement",
+    "risk_level": "critical",
+    "affected_surface": "runtime",
+    "description": "Django 4.2 drops support for PostgreSQL 11. Applications running on PostgreSQL 11 or earlier will fail at runtime or exhibit undefined behavior. Django 4.2 requires PostgreSQL 12 or higher.",
+    "conditions": [
+      {
+        "condition_id": "postgresql_11_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Upstream support for PostgreSQL 11 ends in November 2023. Django 4.2 supports PostgreSQL 12 and higher.",
+            "relevance": "Directly states Django 4.2 requires PostgreSQL 12+"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "postgresql_11_runtime",
+        "statement": "Application is running on PostgreSQL version 11 or earlier",
+        "category": "runtime",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "12",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Django 4.2 supports PostgreSQL 12 and higher.",
+            "relevance": "Specifies minimum PostgreSQL version for Django 4.2"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check the PostgreSQL version in your deployment (SELECT version();)",
+      "Upgrade PostgreSQL to version 12 or higher before upgrading to Django 4.2",
+      "Test the application on PostgreSQL 12+ in a staging environment"
+    ]
+  },
+  {
+    "path_id": "django_42_rawsql_mysql_groupby",
+    "path_name": "RawSQL() aggregations fail on MySQL 8+",
+    "risk_type": "removed_api",
+    "risk_level": "high",
+    "affected_surface": "application_code",
+    "description": "Django 4.2 removes support for using RawSQL() aggregations on MySQL 8+ because MySQL 8+ supports functional dependencies in GROUP BY clauses, eliminating the need for the workaround. Applications using RawSQL() in aggregations will fail. Standard aggregation functions must be used instead.",
+    "conditions": [
+      {
+        "condition_id": "rawsql_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "MySQL 8+ allows functional dependencies on GROUP BY columns, so the pre-Django 4.2 workaround of grouping by primary keys of the main table is removed. As a consequence, using RawSQL() aggregations is no longer supported on MySQL",
+            "relevance": "States RawSQL() aggregations removed in Django 4.2"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "rawsql_usage",
+        "statement": "Application uses RawSQL() in aggregation queries on MySQL",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "RawSQL() in aggregations",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "using RawSQL() aggregations is no longer supported on MySQL as there is no way to determine if such aggregations are needed or valid in the GROUP BY clause. Use aggregation-functions instead.",
+            "relevance": "Explains the removal and directs to use standard aggregation functions"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "rawsql_mysql",
+        "statement": "Application is running on MySQL 8 or higher",
+        "category": "runtime",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "8.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "MySQL 8+ allows functional dependencies on GROUP BY columns",
+            "relevance": "Indicates this issue applies to MySQL 8+"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for RawSQL() usage: grep -r 'RawSQL' --include='*.py'",
+      "Identify RawSQL() usage in aggregation contexts (e.g., .annotate(), .aggregate())",
+      "Replace RawSQL() aggregations with standard Django aggregation functions",
+      "Test queries on MySQL 8+ to verify correct GROUP BY behavior"
+    ]
+  },
+  {
+    "path_id": "django_42_parse_header_removed",
+    "path_name": "Application fails using django.http.multipartparser.parse_header()",
+    "risk_type": "removed_api",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "The undocumented function django.http.multipartparser.parse_header() is removed in Django 4.2. Applications calling this function will fail with ImportError or AttributeError. Use django.utils.http.parse_header_parameters() instead.",
+    "conditions": [
+      {
+        "condition_id": "parse_header_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The undocumented django.http.multipartparser.parse_header() function is removed. Use django.utils.http.parse_header_parameters() instead.",
+            "relevance": "Directly states the function is removed in Django 4.2"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "parse_header_usage",
+        "statement": "Application calls django.http.multipartparser.parse_header()",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "django.http.multipartparser.parse_header",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The undocumented django.http.multipartparser.parse_header() function is removed.",
+            "relevance": "Identifies the removed function"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for parse_header imports: grep -r 'from django.http.multipartparser import parse_header' --include='*.py'",
+      "Search for parse_header calls: grep -r 'parse_header(' --include='*.py'",
+      "Replace all instances with django.utils.http.parse_header_parameters()",
+      "Test multipart parsing functionality after migration"
+    ]
+  },
+  {
+    "path_id": "django_42_expression_get_group_by_cols_alias",
+    "path_name": "Custom Expression subclasses fail due to removed alias argument",
+    "risk_type": "changed_behavior",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "The alias argument for Expression.get_group_by_cols() is removed in Django 4.2. Custom Expression subclasses that override this method and expect the alias argument will fail with TypeError.",
+    "conditions": [
+      {
+        "condition_id": "get_group_by_cols_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The alias argument for Expression.get_group_by_cols is removed.",
+            "relevance": "Directly states the alias argument is removed"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "get_group_by_cols_usage",
+        "statement": "Application defines custom Expression subclasses overriding get_group_by_cols()",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "Expression.get_group_by_cols override",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The alias argument for Expression.get_group_by_cols is removed.",
+            "relevance": "Identifies the API change"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search for custom Expression subclasses: grep -r 'class.*Expression' --include='*.py'",
+      "Look for get_group_by_cols method overrides: grep -r 'def get_group_by_cols' --include='*.py'",
+      "Remove the alias parameter from get_group_by_cols() method signatures",
+      "Update method implementations to not use the alias argument",
+      "Test custom expressions in queries with GROUP BY clauses"
+    ]
+  },
+  {
+    "path_id": "django_42_exists_negated_removed",
+    "path_name": "Exists expression fails with negated parameter",
+    "risk_type": "removed_api",
+    "risk_level": "low",
+    "affected_surface": "application_code",
+    "description": "The undocumented negated parameter of the django.db.models.Exists expression is removed in Django 4.2. Code using this parameter will fail with TypeError.",
+    "conditions": [
+      {
+        "condition_id": "exists_negated_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The undocumented negated parameter of the django.db.models.Exists expression is removed.",
+            "relevance": "Directly states the negated parameter is removed"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "exists_negated_usage",
+        "statement": "Application uses Exists() with negated parameter",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "Exists(negated=...)",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The undocumented negated parameter of the django.db.models.Exists expression is removed.",
+            "relevance": "Identifies the removed parameter"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search for Exists usage with negated: grep -r 'Exists.*negated' --include='*.py'",
+      "Replace Exists(negated=True) with ~Exists() (using the ~ operator for negation)",
+      "Test queryset filters that use Exists expressions"
+    ]
+  },
+  {
+    "path_id": "django_42_sqlparse_version",
+    "path_name": "Application fails with sqlparse < 0.3.1",
+    "risk_type": "dependency_requirement",
+    "risk_level": "medium",
+    "affected_surface": "dependencies",
+    "description": "Django 4.2 requires sqlparse version 0.3.1 or higher. Applications with sqlparse < 0.3.1 will fail at startup or runtime.",
+    "conditions": [
+      {
+        "condition_id": "sqlparse_django_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of sqlparse is increased from 0.2.2 to 0.3.1.",
+            "relevance": "States minimum sqlparse version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "sqlparse_dependency_version",
+        "statement": "Application has sqlparse version less than 0.3.1",
+        "category": "dependency",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "0.3.1",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of sqlparse is increased from 0.2.2 to 0.3.1.",
+            "relevance": "Specifies the minimum version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check installed sqlparse version: pip show sqlparse",
+      "Update sqlparse to 0.3.1 or higher: pip install 'sqlparse>=0.3.1'",
+      "Update requirements.txt or pyproject.toml with sqlparse>=0.3.1"
+    ]
+  },
+  {
+    "path_id": "django_42_sqlite_version",
+    "path_name": "Application fails with SQLite < 3.21.0",
+    "risk_type": "runtime_requirement",
+    "risk_level": "medium",
+    "affected_surface": "runtime",
+    "description": "Django 4.2 requires SQLite version 3.21.0 or higher. Applications running on SQLite < 3.21.0 will fail at runtime.",
+    "conditions": [
+      {
+        "condition_id": "sqlite_django_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of SQLite is increased from 3.9.0 to 3.21.0.",
+            "relevance": "States minimum SQLite version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "sqlite_runtime_version",
+        "statement": "Application is running on SQLite version less than 3.21.0",
+        "category": "runtime",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "3.21.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of SQLite is increased from 3.9.0 to 3.21.0.",
+            "relevance": "Specifies the minimum version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check SQLite version in Python: python -c 'import sqlite3; print(sqlite3.sqlite_version)'",
+      "Upgrade SQLite to version 3.21.0 or higher",
+      "If using system SQLite, upgrade your OS or compile Python with a newer SQLite version",
+      "Test database operations after SQLite upgrade"
+    ]
+  },
+  {
+    "path_id": "django_42_asgiref_version",
+    "path_name": "Application fails with asgiref < 3.6.0",
+    "risk_type": "dependency_requirement",
+    "risk_level": "medium",
+    "affected_surface": "dependencies",
+    "description": "Django 4.2 requires asgiref version 3.6.0 or higher. Applications with asgiref < 3.6.0 will fail at startup or runtime.",
+    "conditions": [
+      {
+        "condition_id": "asgiref_django_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of asgiref is increased from 3.5.2 to 3.6.0.",
+            "relevance": "States minimum asgiref version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "asgiref_dependency_version",
+        "statement": "Application has asgiref version less than 3.6.0",
+        "category": "dependency",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "3.6.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of asgiref is increased from 3.5.2 to 3.6.0.",
+            "relevance": "Specifies the minimum version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check installed asgiref version: pip show asgiref",
+      "Update asgiref to 3.6.0 or higher: pip install 'asgiref>=3.6.0'",
+      "Update requirements.txt or pyproject.toml with asgiref>=3.6.0"
+    ]
+  },
+  {
+    "path_id": "django_42_usercreationform_case_sensitive",
+    "path_name": "UserCreationForm rejects case-variant usernames",
+    "risk_type": "changed_behavior",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "Django 4.2's UserCreationForm now rejects usernames that differ only in case. This may break user registration flows that previously allowed case-variant usernames. Use BaseUserCreationForm if the previous behavior is needed.",
+    "conditions": [
+      {
+        "condition_id": "usercreationform_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "UserCreationForm now rejects usernames that differ only in case. If you need the previous behavior, use BaseUserCreationForm instead.",
+            "relevance": "States the behavior change in UserCreationForm"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "usercreationform_usage",
+        "statement": "Application uses UserCreationForm for user registration",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "UserCreationForm",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "UserCreationForm now rejects usernames that differ only in case.",
+            "relevance": "Identifies the form with changed behavior"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search for UserCreationForm usage: grep -r 'UserCreationForm' --include='*.py'",
+      "Test user registration with case-variant usernames (e.g., 'User' vs 'user')",
+      "If case-insensitive username uniqueness is required, verify database constraints",
+      "If previous behavior is needed, switch to BaseUserCreationForm",
+      "Review and update user registration tests"
+    ]
+  },
+  {
+    "path_id": "django_42_mysqlclient_version",
+    "path_name": "Application fails with mysqlclient < 1.4.3",
+    "risk_type": "dependency_requirement",
+    "risk_level": "medium",
+    "affected_surface": "dependencies",
+    "description": "Django 4.2 requires mysqlclient version 1.4.3 or higher for MySQL database connections. Applications with mysqlclient < 1.4.3 will fail at startup or runtime.",
+    "conditions": [
+      {
+        "condition_id": "mysqlclient_django_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of mysqlclient is increased from 1.4.0 to 1.4.3.",
+            "relevance": "States minimum mysqlclient version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "mysqlclient_dependency_version",
+        "statement": "Application has mysqlclient version less than 1.4.3",
+        "category": "dependency",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "1.4.3",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of mysqlclient is increased from 1.4.0 to 1.4.3.",
+            "relevance": "Specifies the minimum version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check installed mysqlclient version: pip show mysqlclient",
+      "Update mysqlclient to 1.4.3 or higher: pip install 'mysqlclient>=1.4.3'",
+      "Update requirements.txt or pyproject.toml with mysqlclient>=1.4.3"
+    ]
+  },
+  {
+    "path_id": "django_42_argon2_version",
+    "path_name": "Application fails with argon2-cffi < 19.2.0",
+    "risk_type": "dependency_requirement",
+    "risk_level": "low",
+    "affected_surface": "dependencies",
+    "description": "Django 4.2 requires argon2-cffi version 19.2.0 or higher for Argon2 password hashing. Applications with argon2-cffi < 19.2.0 will fail if Argon2 password hashing is used.",
+    "conditions": [
+      {
+        "condition_id": "argon2_django_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of argon2-cffi is increased from 19.1.0 to 19.2.0.",
+            "relevance": "States minimum argon2-cffi version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "argon2_dependency_version",
+        "statement": "Application has argon2-cffi version less than 19.2.0",
+        "category": "dependency",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "19.2.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of argon2-cffi is increased from 19.1.0 to 19.2.0.",
+            "relevance": "Specifies the minimum version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check installed argon2-cffi version: pip show argon2-cffi",
+      "Update argon2-cffi to 19.2.0 or higher: pip install 'argon2-cffi>=19.2.0'",
+      "Update requirements.txt or pyproject.toml with argon2-cffi>=19.2.0"
+    ]
+  },
+  {
+    "path_id": "django_42_pillow_version",
+    "path_name": "Application fails with Pillow < 6.2.1",
+    "risk_type": "dependency_requirement",
+    "risk_level": "low",
+    "affected_surface": "dependencies",
+    "description": "Django 4.2 requires Pillow version 6.2.1 or higher for image handling. Applications with Pillow < 6.2.1 will fail if ImageField or image processing is used.",
+    "conditions": [
+      {
+        "condition_id": "pillow_django_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of Pillow is increased from 6.2.0 to 6.2.1.",
+            "relevance": "States minimum Pillow version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "pillow_dependency_version",
+        "statement": "Application has Pillow version less than 6.2.1",
+        "category": "dependency",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "6.2.1",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of Pillow is increased from 6.2.0 to 6.2.1.",
+            "relevance": "Specifies the minimum version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check installed Pillow version: pip show Pillow",
+      "Update Pillow to 6.2.1 or higher: pip install 'Pillow>=6.2.1'",
+      "Update requirements.txt or pyproject.toml with Pillow>=6.2.1"
+    ]
+  },
+  {
+    "path_id": "django_42_jinja2_version",
+    "path_name": "Application fails with jinja2 < 2.11.0",
+    "risk_type": "dependency_requirement",
+    "risk_level": "low",
+    "affected_surface": "dependencies",
+    "description": "Django 4.2 requires jinja2 version 2.11.0 or higher for Jinja2 template support. Applications with jinja2 < 2.11.0 will fail if Jinja2 templates are used.",
+    "conditions": [
+      {
+        "condition_id": "jinja2_django_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of jinja2 is increased from 2.9.2 to 2.11.0.",
+            "relevance": "States minimum jinja2 version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "jinja2_dependency_version",
+        "statement": "Application has jinja2 version less than 2.11.0",
+        "category": "dependency",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "2.11.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of jinja2 is increased from 2.9.2 to 2.11.0.",
+            "relevance": "Specifies the minimum version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check installed jinja2 version: pip show jinja2",
+      "Update jinja2 to 2.11.0 or higher: pip install 'jinja2>=2.11.0'",
+      "Update requirements.txt or pyproject.toml with jinja2>=2.11.0"
+    ]
+  },
+  {
+    "path_id": "django_42_redis_version",
+    "path_name": "Application fails with redis-py < 3.4.0",
+    "risk_type": "dependency_requirement",
+    "risk_level": "low",
+    "affected_surface": "dependencies",
+    "description": "Django 4.2 requires redis-py version 3.4.0 or higher for Redis cache backend. Applications with redis-py < 3.4.0 will fail if Redis cache is used.",
+    "conditions": [
+      {
+        "condition_id": "redis_django_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of redis-py is increased from 3.0.0 to 3.4.0.",
+            "relevance": "States minimum redis-py version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "redis_dependency_version",
+        "statement": "Application has redis-py version less than 3.4.0",
+        "category": "dependency",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "3.4.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The minimum supported version of redis-py is increased from 3.0.0 to 3.4.0.",
+            "relevance": "Specifies the minimum version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check installed redis version: pip show redis",
+      "Update redis-py to 3.4.0 or higher: pip install 'redis>=3.4.0'",
+      "Update requirements.txt or pyproject.toml with redis>=3.4.0"
+    ]
+  },
+  {
+    "path_id": "django_42_wsgi_request_validation",
+    "path_name": "Manually instantiated WSGIRequest fails without wsgi.input",
+    "risk_type": "changed_behavior",
+    "risk_level": "low",
+    "affected_surface": "application_code",
+    "description": "Django 4.2 enforces WSGI specification compliance: manually instantiated WSGIRequest objects must be provided a file-like object for wsgi.input. Code that creates WSGIRequest without wsgi.input will fail.",
+    "conditions": [
+      {
+        "condition_id": "wsgi_request_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Manually instantiated WSGIRequest objects must be provided a file-like object for wsgi.input. Previously, Django was more lax than the expected behavior as specified by the WSGI specification.",
+            "relevance": "States the validation requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "wsgi_request_usage",
+        "statement": "Application manually instantiates WSGIRequest objects",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "WSGIRequest instantiation",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Manually instantiated WSGIRequest objects must be provided a file-like object for wsgi.input.",
+            "relevance": "Identifies the requirement for manual WSGIRequest creation"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search for WSGIRequest instantiation: grep -r 'WSGIRequest(' --include='*.py'",
+      "Ensure all WSGIRequest instantiations include wsgi.input in the environ dict",
+      "Use io.BytesIO() for wsgi.input if no actual input is needed",
+      "Test request handling code that manually creates WSGIRequest objects"
+    ]
+  },
+  {
+    "path_id": "django_42_proj_version",
+    "path_name": "GeoDjango fails with PROJ < 5",
+    "risk_type": "runtime_requirement",
+    "risk_level": "medium",
+    "affected_surface": "runtime",
+    "description": "Django 4.2 removes support for PROJ < 5 for GeoDjango spatial operations. Applications using GeoDjango with PROJ < 5 will fail at runtime.",
+    "conditions": [
+      {
+        "condition_id": "proj_django_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Support for PROJ < 5 is removed.",
+            "relevance": "States PROJ < 5 support is removed"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "proj_runtime_version",
+        "statement": "Application is running with PROJ version less than 5",
+        "category": "runtime",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "5",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Support for PROJ < 5 is removed.",
+            "relevance": "Specifies the minimum PROJ version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check PROJ version: python -c 'from django.contrib.gis.gdal import PROJ_VERSION; print(PROJ_VERSION)'",
+      "Upgrade PROJ library to version 5 or higher",
+      "Test GeoDjango spatial operations after PROJ upgrade"
+    ]
+  },
+  {
+    "path_id": "django_42_smtp_ssl_verification",
+    "path_name": "SMTP email fails due to stricter SSL verification",
+    "risk_type": "changed_behavior",
+    "risk_level": "medium",
+    "affected_surface": "runtime",
+    "description": "Django 4.2's SMTP EmailBackend now verifies SSL hostname and certificates by default. Applications connecting to SMTP servers with invalid or self-signed certificates will fail to send emails. To retain the previous less secure behavior, subclass EmailBackend and override the ssl_context property.",
+    "conditions": [
+      {
+        "condition_id": "smtp_ssl_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "SMTP EmailBackend now verifies a hostname and certificates. If you need the previous behavior that is less restrictive and not recommended, subclass EmailBackend and override the ssl_context property.",
+            "relevance": "States the SSL verification change"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "smtp_ssl_usage",
+        "statement": "Application uses SMTP EmailBackend with SSL/TLS",
+        "category": "configuration",
+        "required": true,
+        "operator": "present",
+        "expected_value": "SMTP with SSL/TLS",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "SMTP EmailBackend now verifies a hostname and certificates.",
+            "relevance": "Identifies affected email backend configuration"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Test email sending in development and staging environments",
+      "Ensure SMTP server uses valid SSL certificates",
+      "If using self-signed certificates, either obtain valid certificates or subclass EmailBackend to override ssl_context",
+      "Review EMAIL_USE_TLS and EMAIL_USE_SSL settings in settings.py",
+      "Check SMTP server hostname matches certificate CN/SAN"
+    ]
+  },
+  {
+    "path_id": "django_42_index_together_deprecated",
+    "path_name": "Meta.index_together usage triggers deprecation warnings",
+    "risk_type": "changed_default",
+    "risk_level": "low",
+    "affected_surface": "application_code",
+    "description": "The Meta.index_together option is deprecated in Django 4.2 in favor of Meta.indexes. While still functional in 4.2, it will be removed in Django 5.1. Applications using index_together will see deprecation warnings and need migration.",
+    "conditions": [
+      {
+        "condition_id": "index_together_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The Meta.index_together option is deprecated in favor of the indexes option.",
+            "relevance": "States index_together is deprecated"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "index_together_usage",
+        "statement": "Application models use Meta.index_together",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "index_together in Meta",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The Meta.index_together option is deprecated in favor of the indexes option.",
+            "relevance": "Identifies the deprecated option"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search for index_together usage: grep -r 'index_together' --include='*.py'",
+      "Replace index_together with indexes using models.Index()",
+      "Run makemigrations to generate RenameIndex migration",
+      "Consider squashing migrations to remove index_together from historical migrations",
+      "Test that indexes are correctly maintained after migration"
+    ]
+  },
+  {
+    "path_id": "django_42_jsonfield_encoded_strings_deprecated",
+    "path_name": "JSONField with encoded JSON strings triggers deprecation warnings",
+    "risk_type": "changed_default",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "Passing JSON-encoded string literals to JSONField and associated lookups/aggregates is deprecated in Django 4.2. In 4.2, encoded strings will be decoded with a warning. In Django 5.1+, string literals will be interpreted as JSON string literals. Code must be updated to pass non-encoded values.",
+    "conditions": [
+      {
+        "condition_id": "jsonfield_encoded_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "JSONField and its associated lookups and aggregates used to allow passing JSON encoded string literals which caused ambiguity on whether string literals were already encoded from database backend's perspective. During the deprecation period string literals will be attempted to be JSON decoded and a warning will be emitted on success",
+            "relevance": "States the deprecation of encoded JSON strings"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "jsonfield_encoded_usage",
+        "statement": "Application passes JSON-encoded strings to JSONField or related operations",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "JSON-encoded string literals",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Code that used to pass JSON encoded string literals: Document(data=Value('\"null\"')), Document(data=Value('\"[]\"')), Document(data=Value('\"\\\"foo-bar\\\"\"'))",
+            "relevance": "Shows examples of deprecated usage"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search for JSONField usage with Value(): grep -r 'JSONField.*Value\\|Value.*JSONField' --include='*.py'",
+      "Look for encoded JSON strings like Value('\"null\"'), Value('[]'), etc.",
+      "Replace encoded strings with native Python values: None, [], 'foo-bar', etc.",
+      "For Value() with JSON, use Value(None, JSONField()) instead of Value('\"null\"')",
+      "Test JSONField queries and aggregations after changes"
+    ]
+  },
+  {
+    "path_id": "django_42_default_file_storage_deprecated",
+    "path_name": "DEFAULT_FILE_STORAGE setting triggers deprecation warnings",
+    "risk_type": "changed_default",
+    "risk_level": "low",
+    "affected_surface": "configuration",
+    "description": "The DEFAULT_FILE_STORAGE setting is deprecated in Django 4.2 in favor of STORAGES['default']. While still functional in 4.2, it will be removed in Django 5.1. Applications using DEFAULT_FILE_STORAGE will see deprecation warnings.",
+    "conditions": [
+      {
+        "condition_id": "default_file_storage_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The old DEFAULT_FILE_STORAGE and STATICFILES_STORAGE settings are deprecated as of this release.",
+            "relevance": "States DEFAULT_FILE_STORAGE is deprecated"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "default_file_storage_usage",
+        "statement": "Application uses DEFAULT_FILE_STORAGE setting",
+        "category": "configuration",
+        "required": true,
+        "operator": "present",
+        "expected_value": "DEFAULT_FILE_STORAGE",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The DEFAULT_FILE_STORAGE setting is deprecated in favor of STORAGES['default'].",
+            "relevance": "Identifies the deprecated setting"
+          }
+        ],
+        "confidence": "medium",
+        "ambiguities": [
+          "The exact quote 'The DEFAULT_FILE_STORAGE setting is deprecated in favor of STORAGES[\"default\"].' does not appear verbatim in seed_00 chunk. The source says 'The old DEFAULT_FILE_STORAGE and STATICFILES_STORAGE settings are deprecated as of this release.' and references STORAGES but doesn't state the exact replacement syntax in the quoted portion."
+        ]
+      }
+    ],
+    "suggested_actions": [
+      "Search for DEFAULT_FILE_STORAGE in settings: grep -r 'DEFAULT_FILE_STORAGE' settings.py",
+      "Replace with STORAGES = {'default': {'BACKEND': 'your.storage.backend'}}",
+      "Review the STORAGES setting documentation for configuration options",
+      "Test file upload and storage operations after migration"
+    ]
+  },
+  {
+    "path_id": "django_42_staticfiles_storage_deprecated",
+    "path_name": "STATICFILES_STORAGE setting triggers deprecation warnings",
+    "risk_type": "changed_default",
+    "risk_level": "low",
+    "affected_surface": "configuration",
+    "description": "The STATICFILES_STORAGE setting is deprecated in Django 4.2 in favor of STORAGES['staticfiles']. While still functional in 4.2, it will be removed in Django 5.1. Applications using STATICFILES_STORAGE will see deprecation warnings.",
+    "conditions": [
+      {
+        "condition_id": "staticfiles_storage_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The old DEFAULT_FILE_STORAGE and STATICFILES_STORAGE settings are deprecated as of this release.",
+            "relevance": "States STATICFILES_STORAGE is deprecated"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "staticfiles_storage_usage",
+        "statement": "Application uses STATICFILES_STORAGE setting",
+        "category": "configuration",
+        "required": true,
+        "operator": "present",
+        "expected_value": "STATICFILES_STORAGE",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The STATICFILES_STORAGE setting is deprecated in favor of STORAGES['staticfiles'].",
+            "relevance": "Identifies the deprecated setting"
+          }
+        ],
+        "confidence": "medium",
+        "ambiguities": [
+          "The exact quote 'The STATICFILES_STORAGE setting is deprecated in favor of STORAGES[\"staticfiles\"].' does not appear verbatim in seed_00 chunk. The source says 'The old DEFAULT_FILE_STORAGE and STATICFILES_STORAGE settings are deprecated as of this release.' and references STORAGES but doesn't state the exact replacement syntax in the quoted portion."
+        ]
+      }
+    ],
+    "suggested_actions": [
+      "Search for STATICFILES_STORAGE in settings: grep -r 'STATICFILES_STORAGE' settings.py",
+      "Replace with STORAGES = {'staticfiles': {'BACKEND': 'your.storage.backend'}}",
+      "Review the STORAGES setting documentation for configuration options",
+      "Test static file collection and serving after migration"
+    ]
+  },
+  {
+    "path_id": "django_42_database_backend_features_allows_group_by_pk",
+    "path_name": "Third-party database backends fail due to removed DatabaseFeatures.allows_group_by_pk",
+    "risk_type": "removed_api",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "DatabaseFeatures.allows_group_by_pk is removed in Django 4.2. Third-party database backends that reference this attribute will fail. Use DatabaseFeatures.allows_group_by_selected_pks if functional dependency detection is supported.",
+    "conditions": [
+      {
+        "condition_id": "allows_group_by_pk_version",
+        "statement": "Target Django version is 4.2 or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "4.2",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "DatabaseFeatures.allows_group_by_pk is removed as it only remained to accommodate a MySQL extension that has been supplanted by proper functional dependency detection in MySQL 5.7.15.",
+            "relevance": "States allows_group_by_pk is removed"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "allows_group_by_pk_usage",
+        "statement": "Application or third-party database backend references DatabaseFeatures.allows_group_by_pk",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "allows_group_by_pk",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "DatabaseFeatures.allows_group_by_pk is removed",
+            "relevance": "Identifies the removed attribute"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search for allows_group_by_pk usage: grep -r 'allows_group_by_pk' --include='*.py'",
+      "Replace with allows_group_by_selected_pks if functional dependency detection is supported",
+      "Update custom database backend code",
+      "Test GROUP BY queries with the updated backend"
+    ]
+  }
+]

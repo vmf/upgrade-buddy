@@ -1,0 +1,39 @@
+{
+  "project": "React",
+  "current_version": "17",
+  "target_version": "18",
+  "sources": [
+    {
+      "source_id": "seed_00",
+      "title": "React CHANGELOG.md",
+      "url": "https://raw.githubusercontent.com/facebook/react/main/CHANGELOG.md",
+      "source_type": "official_changelog",
+      "retrieved_at": "2026-09-23T13:29:26.158219+00:00",
+      "why_relevant": "Official official changelog published by the React project; hand-curated as directly relevant to the 17 -> 18 upgrade."
+    },
+    {
+      "source_id": "seed_01",
+      "title": "How to Upgrade to React 18",
+      "url": "https://react.dev/blog/2022/03/08/react-18-upgrade-guide",
+      "source_type": "official_migration_guide",
+      "retrieved_at": "2026-09-23T13:29:26.158219+00:00",
+      "why_relevant": "Official official migration guide published by the React project; hand-curated as directly relevant to the 17 -> 18 upgrade."
+    },
+    {
+      "source_id": "seed_02",
+      "title": "React v18.0 release announcement",
+      "url": "https://react.dev/blog/2022/03/29/react-v18",
+      "source_type": "official_release_notes",
+      "retrieved_at": "2026-09-23T13:29:26.158219+00:00",
+      "why_relevant": "Official official release notes published by the React project; hand-curated as directly relevant to the 17 -> 18 upgrade."
+    },
+    {
+      "source_id": "registry_meta",
+      "title": "npm registry metadata for react",
+      "url": "https://www.npmjs.com/package/react",
+      "source_type": "package_registry_metadata",
+      "retrieved_at": "2026-09-23T13:29:26.158219+00:00",
+      "why_relevant": "Registry metadata for the 18 release of react, used to corroborate runtime/dependency-requirement conditions."
+    }
+  ]
+}

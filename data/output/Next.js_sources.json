@@ -1,0 +1,39 @@
+{
+  "project": "Next.js",
+  "current_version": "12",
+  "target_version": "14",
+  "sources": [
+    {
+      "source_id": "seed_00",
+      "title": "Next.js: upgrading from 13 to 14",
+      "url": "https://nextjs.org/docs/app/guides/upgrading/version-14",
+      "source_type": "official_migration_guide",
+      "retrieved_at": "2026-09-23T13:57:23.469882+00:00",
+      "why_relevant": "Official official migration guide published by the Next.js project; hand-curated as directly relevant to the 12 -> 14 upgrade."
+    },
+    {
+      "source_id": "seed_01",
+      "title": "Next.js 13 announcement",
+      "url": "https://nextjs.org/blog/next-13",
+      "source_type": "official_release_notes",
+      "retrieved_at": "2026-09-23T13:57:23.469882+00:00",
+      "why_relevant": "Official official release notes published by the Next.js project; hand-curated as directly relevant to the 12 -> 14 upgrade."
+    },
+    {
+      "source_id": "seed_02",
+      "title": "Next.js 14 announcement",
+      "url": "https://nextjs.org/blog/next-14",
+      "source_type": "official_release_notes",
+      "retrieved_at": "2026-09-23T13:57:23.469882+00:00",
+      "why_relevant": "Official official release notes published by the Next.js project; hand-curated as directly relevant to the 12 -> 14 upgrade."
+    },
+    {
+      "source_id": "registry_meta",
+      "title": "npm registry metadata for next",
+      "url": "https://www.npmjs.com/package/next",
+      "source_type": "package_registry_metadata",
+      "retrieved_at": "2026-09-23T13:57:23.469882+00:00",
+      "why_relevant": "Registry metadata for the 14 release of next, used to corroborate runtime/dependency-requirement conditions."
+    }
+  ]
+}

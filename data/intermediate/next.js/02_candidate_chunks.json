@@ -1,0 +1,58 @@
+[
+  {
+    "chunk_id": "seed_00::chunk1",
+    "source_id": "seed_00",
+    "source_type": "official_migration_guide",
+    "heading": "v14 Summary",
+    "text": "* The minimum Node.js version has been bumped from 16.14 to 18.17, since 16.x has reached end-of-life.\n* The `next export` command has been removed in favor of `output: 'export'` config. Please see the [docs](https://nextjs.org/docs/app/guides/static-exports) for more information.\n* The `next/server` import for `ImageResponse` was renamed to `next/og`. A [codemod is available](/docs/app/guides/upgrading/codemods#next-og-import) to safely and automatically rename your imports.\n* The `@next/font` package has been fully removed in favor of the built-in `next/font`. A [codemod is available](/docs/app/guides/upgrading/codemods#built-in-next-font) to safely and automatically rename your imports.\n* The WASM target for `next-swc` has been removed.\n---\n\nFor a semantic overview of all documentation, see [/docs/sitemap.md](/docs/sitemap.md)\n\nFor an index of all available documentation, see [/docs/llms.txt](/docs/llms.txt)",
+    "category": "runtime_requirement"
+  },
+  {
+    "chunk_id": "seed_01::chunk7",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Upgrading `next/image` to Next.js 13",
+    "text": "The old Image component was renamed to `next/legacy/image`. We've provided a codemod that will automatically update your existing usage of `next/image` to `next/legacy/image`. For example, this command would run the codemod on your `./pages` directory when run from the root:\n\n```bash filename=\"Terminal\"\nnpx @next/codemod next-image-to-legacy-image ./pages\n```\n\n[Learn more about the codemod](/docs/app/building-your-application/upgrading/codemods).",
+    "category": "migration_step"
+  },
+  {
+    "chunk_id": "seed_01::chunk9",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "`next/link`",
+    "text": "`next/link` no longer requires manually adding `<a>` as a child.\n\nThis was added as an experimental option in [12.2](https://nextjs.org/blog/next-12-2) and is now the default. In Next.js 13, `<Link>` always renders an `<a>` and allows you to forward props to the underlying tag. For example:\n\n```jsx\nimport Link from 'next/link'\n\n// Next.js 12: `<a>` has to be nested otherwise it's excluded\n<Link href=\"/about\">\n  <a>About</a>\n</Link>\n\n// Next.js 13: `<Link>` always renders `<a>`\n<Link href=\"/about\">\n  About\n</Link>\n```\n\n[Learn more about the improved Link component](/docs/app/api-reference/components/link) or [deploy an example to try it out](https://vercel.com/templates/next.js/nextjs-boilerplate).",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk13",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Breaking Changes",
+    "text": "- The minimum React version has been bumped from 17.0.2 to 18.2.0.\n- The minimum Node.js version has been bumped from 12.22.0 to 14.6.0, since 12.x has reached end-of-life ([PR](https://github.com/vercel/next.js/pull/41482)).\n- The `swcMinify` configuration property was changed from `false` to `true`. See [Next.js Compiler](/docs/architecture/nextjs-compiler) for more info.\n- The `next/image` import was renamed to `next/legacy/image`. The `next/future/image` import was renamed to `next/image`. A [codemod is available](/docs/app/building-your-application/upgrading/codemods#next-image-to-legacy-image) to safely and automatically rename your imports.\n- The `next/link` child can no longer be `<a>`. Add the `legacyBehavior` prop to use the legacy behavior or remove the `<a>` to upgrade. A [codemod is available](/docs/app/building-your-application/upgrading/codemods#new-link) to automatically upgrade your code.\n- Routes are no longer prefetched when the `User-Agent` is a bot.\n- The deprecated `target` option of `next.config.js` has been removed.\n- The supported browsers have been changed to drop Internet Explorer and target modern browsers. You can still use Browserslist to change targeted browsers.\n  - Chrome 64+\n  - Edge 79+\n  - Firefox 67+\n  - Opera 51+\n  - Safari 12+\n\nTo learn more, check out the [upgrade guide](/docs/app/building-your-application/upgrading).",
+    "category": "runtime_requirement"
+  },
+  {
+    "chunk_id": "seed_02::chunk8",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Metadata Improvements",
+    "text": "Before your page content can be streamed from the server, there's important metadata about the viewport, color scheme, and theme that need to be sent to the browser first.\n\nEnsuring these `meta` tags are sent with the initial page content helps a smooth user experience, preventing the page from flickering by changing the theme color, or shifting layout due to viewport changes.\n\nIn Next.js 14, we've decoupled blocking and non-blocking metadata. Only a small subset of metadata options are blocking, and we want to ensure non-blocking metadata will not prevent a partially prerendered page from serving the static shell.\n\nThe following metadata options are now deprecated and will be removed from `metadata` in a future major version:\n\n- `viewport`: Sets the initial zoom and other properties of the viewport\n- `colorScheme`: Sets the support modes (light/dark) for the viewport\n- `themeColor`: Sets the color the chrome around the viewport should render with\n\nStarting with Next.js 14, there are new options [`viewport` and `generateViewport`](https://nextjs.org/docs/app/api-reference/functions/generate-viewport) to replace these options. All other `metadata` options remain the same.\n\nYou can start adopting these new APIs today. The existing `metadata` options will continue to work.",
+    "category": "configuration_change"
+  },
+  {
+    "chunk_id": "seed_02::chunk10",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Other Changes",
+    "text": "- **[Breaking]** Minimum Node.js version is now `18.17`\n- **[Breaking]** Removes WASM target for `next-swc` build ([PR](https://github.com/vercel/next.js/pull/57437))\n- **[Breaking]** Dropped support for `@next/font` in favor of `next/font` ([Codemod](https://nextjs.org/docs/app/building-your-application/upgrading/codemods#built-in-next-font))\n- **[Breaking]** Changed `ImageResponse` import from `next/server` to `next/og` ([Codemod](https://nextjs.org/docs/app/building-your-application/upgrading/codemods#next-og-import))\n- **[Breaking]** `next export` command has been removed in favor of `output: 'export'` config ([Docs](https://nextjs.org/docs/app/building-your-application/deploying/static-exports))\n- **[Deprecation]** `onLoadingComplete` for `next/image` is deprecated in favor of [`onLoad`](https://nextjs.org/docs/app/api-reference/components/image#onload)\n- **[Deprecation]** `domains` for `next/image` is deprecated in favor of [`remotePatterns`](https://nextjs.org/docs/app/api-reference/components/image#remotepatterns)\n- **[Feature]** More verbose logging around `fetch` caching can be enabled ([Docs](https://nextjs.org/docs/app/api-reference/next-config-js/logging))\n- **[Improvement]** 80% smaller function size for a basic `create-next-app` application\n- **[Improvement]** Enhanced memory management when using `edge` runtime in development",
+    "category": "runtime_requirement"
+  },
+  {
+    "chunk_id": "registry_meta::chunk0",
+    "source_id": "registry_meta",
+    "source_type": "package_registry_metadata",
+    "heading": "(no heading)",
+    "text": "{\n  \"package\": \"next\",\n  \"queried_version\": \"14.0.0\",\n  \"latest_version\": \"16.3.6\",\n  \"engines\": {\n    \"node\": \">=18.17.0\"\n  },\n  \"deprecated\": \"This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.\",\n  \"peer_dependencies\": {\n    \"sass\": \"^1.3.0\",\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \"^18.2.0\",\n    \"@opentelemetry/api\": \"^1.1.0\"\n  }\n}",
+    "category": "runtime_requirement"
+  }
+]

@@ -1,0 +1,875 @@
+{
+  "project": "Kubernetes",
+  "current_version": "1.23",
+  "target_version": "1.29",
+  "summary": "This upgrade from Kubernetes 1.23 to 1.29 spans six minor versions and introduces multiple critical breaking changes requiring immediate action. The most severe risks include complete removal of PodSecurityPolicy (requiring migration to Pod Security Admission), dockershim removal (requiring container runtime migration to containerd/CRI-O), and removal of 10+ deprecated API versions including CronJob v1beta1, HorizontalPodAutoscaler v2beta1/v2beta2, EndpointSlice v1beta1, Event v1beta1, and PodDisruptionBudget v1beta1\u2014all of which will cause application failures if manifests or API clients haven't been updated. Additionally, the default behavior change for service account token auto-generation and kubeadm's new super-admin.conf separation will break existing automation expecting legacy behavior.",
+  "source_inventory": [
+    {
+      "source_id": "seed_00",
+      "title": "Kubernetes Deprecated API Migration Guide",
+      "url": "https://kubernetes.io/docs/reference/using-api/deprecation-guide/",
+      "source_type": "deprecation_notice",
+      "retrieved_at": "2026-09-23T13:37:46.377283+00:00",
+      "why_relevant": "Official deprecation notice published by the Kubernetes project; hand-curated as directly relevant to the 1.23 -> 1.29 upgrade."
+    },
+    {
+      "source_id": "seed_01",
+      "title": "Kubernetes 1.29 CHANGELOG",
+      "url": "https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG/CHANGELOG-1.29.md",
+      "source_type": "official_changelog",
+      "retrieved_at": "2026-09-23T13:37:46.377283+00:00",
+      "why_relevant": "Official official changelog published by the Kubernetes project; hand-curated as directly relevant to the 1.23 -> 1.29 upgrade."
+    },
+    {
+      "source_id": "seed_02",
+      "title": "Kubernetes 1.24 CHANGELOG",
+      "url": "https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG/CHANGELOG-1.24.md",
+      "source_type": "official_changelog",
+      "retrieved_at": "2026-09-23T13:37:46.377283+00:00",
+      "why_relevant": "Official official changelog published by the Kubernetes project; hand-curated as directly relevant to the 1.23 -> 1.29 upgrade."
+    }
+  ],
+  "risk_paths": [
+    {
+      "path_id": "rp_k8s_1_29_flowcontrol_v1beta2_removed",
+      "path_name": "FlowSchema and PriorityLevelConfiguration v1beta2 API removed",
+      "risk_type": "removed_api",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "The flowcontrol.apiserver.k8s.io/v1beta2 API version of FlowSchema and PriorityLevelConfiguration is no longer served as of v1.29. Applications or tools that reference these API versions in manifests or API clients will fail.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_29",
+          "statement": "Target Kubernetes version is 1.29 or higher",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.29",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "The flowcontrol.apiserver.k8s.io/v1beta2 API version of FlowSchema and PriorityLevelConfiguration is no longer served as of v1.29.",
+              "relevance": "Confirms API removal in v1.29"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_flowcontrol_v1beta2",
+          "statement": "Application manifests or API clients reference flowcontrol.apiserver.k8s.io/v1beta2 API version",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "flowcontrol.apiserver.k8s.io/v1beta2",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the flowcontrol.apiserver.k8s.io/v1 API version, available since v1.29, or the flowcontrol.apiserver.k8s.io/v1beta3 API version, available since v1.26.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: flowcontrol.apiserver.k8s.io/v1beta2'",
+        "Search code for references to 'flowcontrol.apiserver.k8s.io/v1beta2'",
+        "Migrate to flowcontrol.apiserver.k8s.io/v1 or v1beta3 API versions before upgrading to 1.29",
+        "Note that spec.limited.assuredConcurrencyShares is renamed to spec.limited.nominalConcurrencyShares in v1"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_27_csistoragecapacity_v1beta1_removed",
+      "path_name": "CSIStorageCapacity v1beta1 API removed",
+      "risk_type": "removed_api",
+      "risk_level": "medium",
+      "affected_surface": "application_code",
+      "description": "The storage.k8s.io/v1beta1 API version of CSIStorageCapacity is no longer served as of v1.27. Applications or tools that reference this API version in manifests or API clients will fail.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_27_plus",
+          "statement": "Target Kubernetes version is 1.27 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.27",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "The storage.k8s.io/v1beta1 API version of CSIStorageCapacity is no longer served as of v1.27.",
+              "relevance": "Confirms API removal in v1.27"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_csistoragecapacity_v1beta1",
+          "statement": "Application manifests or API clients reference storage.k8s.io/v1beta1 CSIStorageCapacity",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "storage.k8s.io/v1beta1 CSIStorageCapacity",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the storage.k8s.io/v1 API version, available since v1.24.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: storage.k8s.io/v1beta1' with 'kind: CSIStorageCapacity'",
+        "Search code for references to 'storage.k8s.io/v1beta1' CSIStorageCapacity",
+        "Migrate to storage.k8s.io/v1 API version before upgrading to 1.27+"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_26_flowcontrol_v1beta1_removed",
+      "path_name": "FlowSchema and PriorityLevelConfiguration v1beta1 API removed",
+      "risk_type": "removed_api",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "The flowcontrol.apiserver.k8s.io/v1beta1 API version of FlowSchema and PriorityLevelConfiguration is no longer served as of v1.26. Applications or tools that reference these API versions in manifests or API clients will fail.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_26_plus",
+          "statement": "Target Kubernetes version is 1.26 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.26",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "The flowcontrol.apiserver.k8s.io/v1beta1 API version of FlowSchema and PriorityLevelConfiguration is no longer served as of v1.26.",
+              "relevance": "Confirms API removal in v1.26"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_flowcontrol_v1beta1",
+          "statement": "Application manifests or API clients reference flowcontrol.apiserver.k8s.io/v1beta1 API version",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "flowcontrol.apiserver.k8s.io/v1beta1",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the flowcontrol.apiserver.k8s.io/v1beta2 API version.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: flowcontrol.apiserver.k8s.io/v1beta1'",
+        "Search code for references to 'flowcontrol.apiserver.k8s.io/v1beta1'",
+        "Migrate to flowcontrol.apiserver.k8s.io/v1beta2 or v1 API versions before upgrading to 1.26+"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_26_hpa_v2beta2_removed",
+      "path_name": "HorizontalPodAutoscaler v2beta2 API removed",
+      "risk_type": "removed_api",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "The autoscaling/v2beta2 API version of HorizontalPodAutoscaler is no longer served as of v1.26. Applications that reference this API version in manifests or API clients will fail. The targetAverageUtilization field structure has changed.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_26_plus_hpa",
+          "statement": "Target Kubernetes version is 1.26 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.26",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "The autoscaling/v2beta2 API version of HorizontalPodAutoscaler is no longer served as of v1.26.",
+              "relevance": "Confirms API removal in v1.26"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_hpa_v2beta2",
+          "statement": "Application manifests or API clients reference autoscaling/v2beta2 HorizontalPodAutoscaler",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "autoscaling/v2beta2 HorizontalPodAutoscaler",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the autoscaling/v2 API version, available since v1.23.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: autoscaling/v2beta2' with 'kind: HorizontalPodAutoscaler'",
+        "Search code for references to 'autoscaling/v2beta2'",
+        "Migrate to autoscaling/v2 API version before upgrading to 1.26+",
+        "Update targetAverageUtilization to target.averageUtilization and target.type: Utilization"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_25_cronjob_v1beta1_removed",
+      "path_name": "CronJob v1beta1 API removed",
+      "risk_type": "removed_api",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "The batch/v1beta1 API version of CronJob is no longer served as of v1.25. Applications that reference this API version in manifests or API clients will fail.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_25_plus",
+          "statement": "Target Kubernetes version is 1.25 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.25",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "The batch/v1beta1 API version of CronJob is no longer served as of v1.25.",
+              "relevance": "Confirms API removal in v1.25"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_cronjob_v1beta1",
+          "statement": "Application manifests or API clients reference batch/v1beta1 CronJob",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "batch/v1beta1 CronJob",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the batch/v1 API version, available since v1.21.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: batch/v1beta1' with 'kind: CronJob'",
+        "Search code for references to 'batch/v1beta1' CronJob",
+        "Migrate to batch/v1 API version before upgrading to 1.25+"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_25_endpointslice_v1beta1_removed",
+      "path_name": "EndpointSlice v1beta1 API removed with field changes",
+      "risk_type": "removed_api",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "The discovery.k8s.io/v1beta1 API version of EndpointSlice is no longer served as of v1.25. The v1 version has breaking changes including replacement of topology field with deprecatedTopology (not writable), and per-endpoint nodeName and zone fields.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_25_plus_endpointslice",
+          "statement": "Target Kubernetes version is 1.25 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.25",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "The discovery.k8s.io/v1beta1 API version of EndpointSlice is no longer served as of v1.25.",
+              "relevance": "Confirms API removal in v1.25"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_endpointslice_v1beta1",
+          "statement": "Application manifests or API clients reference discovery.k8s.io/v1beta1 EndpointSlice",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "discovery.k8s.io/v1beta1 EndpointSlice",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the discovery.k8s.io/v1 API version, available since v1.21.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: discovery.k8s.io/v1beta1' with 'kind: EndpointSlice'",
+        "Search code for references to 'discovery.k8s.io/v1beta1' EndpointSlice",
+        "Migrate to discovery.k8s.io/v1 API version before upgrading to 1.25+",
+        "Replace topology[\"kubernetes.io/hostname\"] with per-endpoint nodeName field",
+        "Replace topology[\"topology.kubernetes.io/zone\"] with per-endpoint zone field",
+        "Note that topology field becomes deprecatedTopology and is not writable in v1"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_25_event_v1beta1_removed",
+      "path_name": "Event v1beta1 API removed with breaking field changes",
+      "risk_type": "removed_api",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "The events.k8s.io/v1beta1 API version of Event is no longer served as of v1.25. The v1 version has multiple breaking changes including renamed fields (involvedObject to regarding), new required fields, and deprecated timestamp/count fields not permitted in new v1 Events.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_25_plus_event",
+          "statement": "Target Kubernetes version is 1.25 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.25",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "The events.k8s.io/v1beta1 API version of Event is no longer served as of v1.25.",
+              "relevance": "Confirms API removal in v1.25"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_event_v1beta1",
+          "statement": "Application code creates or updates events.k8s.io/v1beta1 Event objects",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "events.k8s.io/v1beta1 Event",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the events.k8s.io/v1 API version, available since v1.19.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: events.k8s.io/v1beta1' with 'kind: Event'",
+        "Search code for references to 'events.k8s.io/v1beta1' Event",
+        "Migrate to events.k8s.io/v1 API version before upgrading to 1.25+",
+        "Update involvedObject field to regarding",
+        "Ensure action, reason, reportingController, and reportingInstance are provided when creating events",
+        "Replace firstTimestamp with eventTime, lastTimestamp with series.lastObservedTime, count with series.count",
+        "Replace source.component with reportingController and source.host with reportingInstance"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_25_hpa_v2beta1_removed",
+      "path_name": "HorizontalPodAutoscaler v2beta1 API removed",
+      "risk_type": "removed_api",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "The autoscaling/v2beta1 API version of HorizontalPodAutoscaler is no longer served as of v1.25. Applications that reference this API version in manifests or API clients will fail. The targetAverageUtilization field structure has changed.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_25_plus_hpa_v2beta1",
+          "statement": "Target Kubernetes version is 1.25 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.25",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "The autoscaling/v2beta1 API version of HorizontalPodAutoscaler is no longer served as of v1.25.",
+              "relevance": "Confirms API removal in v1.25"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_hpa_v2beta1",
+          "statement": "Application manifests or API clients reference autoscaling/v2beta1 HorizontalPodAutoscaler",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "autoscaling/v2beta1 HorizontalPodAutoscaler",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the autoscaling/v2 API version, available since v1.23.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: autoscaling/v2beta1' with 'kind: HorizontalPodAutoscaler'",
+        "Search code for references to 'autoscaling/v2beta1'",
+        "Migrate to autoscaling/v2 API version before upgrading to 1.25+",
+        "Update targetAverageUtilization to target.averageUtilization and target.type: Utilization"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_25_pdb_v1beta1_removed",
+      "path_name": "PodDisruptionBudget v1beta1 API removed with selector behavior change",
+      "risk_type": "removed_api",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "The policy/v1beta1 API version of PodDisruptionBudget is no longer served as of v1.25. The v1 version has a breaking change: an empty spec.selector ({}) selects all pods in the namespace, whereas in v1beta1 it selected no pods.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_25_plus_pdb",
+          "statement": "Target Kubernetes version is 1.25 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.25",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "The policy/v1beta1 API version of PodDisruptionBudget is no longer served as of v1.25.",
+              "relevance": "Confirms API removal in v1.25"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_pdb_v1beta1",
+          "statement": "Application manifests or API clients reference policy/v1beta1 PodDisruptionBudget",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "policy/v1beta1 PodDisruptionBudget",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the policy/v1 API version, available since v1.21.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: policy/v1beta1' with 'kind: PodDisruptionBudget'",
+        "Search code for references to 'policy/v1beta1' PodDisruptionBudget",
+        "Migrate to policy/v1 API version before upgrading to 1.25+",
+        "Review any PodDisruptionBudgets with empty spec.selector ({}): in v1 this selects ALL pods in namespace, not zero pods"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_25_psp_removed",
+      "path_name": "PodSecurityPolicy removed entirely",
+      "risk_type": "removed_api",
+      "risk_level": "critical",
+      "affected_surface": "configuration",
+      "description": "PodSecurityPolicy in the policy/v1beta1 API version is no longer served as of v1.25, and the PodSecurityPolicy admission controller is removed. Pods will no longer be validated or mutated by PSPs after upgrade.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_25_plus_psp",
+          "statement": "Target Kubernetes version is 1.25 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.25",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "PodSecurityPolicy in the policy/v1beta1 API version is no longer served as of v1.25, and the PodSecurityPolicy admission controller will be removed.",
+              "relevance": "Confirms PSP removal in v1.25"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_psp",
+          "statement": "Cluster has PodSecurityPolicy objects or relies on PSP admission controller",
+          "category": "configuration",
+          "required": true,
+          "operator": "present",
+          "expected_value": "PodSecurityPolicy objects",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate to Pod Security Admission or a 3rd party admission webhook. For a migration guide, see Migrate from PodSecurityPolicy to the Built-In PodSecurity Admission Controller.",
+              "relevance": "Specifies migration path from PSP"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "List all PodSecurityPolicy objects in the cluster: kubectl get psp",
+        "Identify workloads relying on PSP for security constraints",
+        "Migrate to Pod Security Admission (PSA) or 3rd party admission webhooks before upgrading to 1.25+",
+        "Follow migration guide: https://kubernetes.io/docs/tasks/configure-pod-container/migrate-from-psp/",
+        "Test PSA configuration in audit/warn mode before enforcing"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_25_runtimeclass_v1beta1_removed",
+      "path_name": "RuntimeClass v1beta1 API removed",
+      "risk_type": "removed_api",
+      "risk_level": "medium",
+      "affected_surface": "application_code",
+      "description": "RuntimeClass in the node.k8s.io/v1beta1 API version is no longer served as of v1.25. Applications that reference this API version in manifests or API clients will fail.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_25_plus_runtimeclass",
+          "statement": "Target Kubernetes version is 1.25 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.25",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "RuntimeClass in the node.k8s.io/v1beta1 API version is no longer served as of v1.25.",
+              "relevance": "Confirms API removal in v1.25"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_runtimeclass_v1beta1",
+          "statement": "Application manifests or API clients reference node.k8s.io/v1beta1 RuntimeClass",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "node.k8s.io/v1beta1 RuntimeClass",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "deprecation_notice",
+              "quote_or_summary": "Migrate manifests and API clients to use the node.k8s.io/v1 API version, available since v1.20.",
+              "relevance": "Specifies that manifests and API clients need migration"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Grep manifests for 'apiVersion: node.k8s.io/v1beta1' with 'kind: RuntimeClass'",
+        "Search code for references to 'node.k8s.io/v1beta1' RuntimeClass",
+        "Migrate to node.k8s.io/v1 API version before upgrading to 1.25+"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_24_dockershim_removed",
+      "path_name": "Dockershim removed from kubelet",
+      "risk_type": "runtime_requirement",
+      "risk_level": "critical",
+      "affected_surface": "runtime",
+      "description": "Docker runtime support using dockershim in the kubelet is completely removed in 1.24. Clusters using Docker as the container runtime will fail unless migrated to a CRI-compliant runtime (containerd, CRI-O) or cri-dockerd.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_24_plus",
+          "statement": "Target Kubernetes version is 1.24 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.24",
+          "evidence": [
+            {
+              "source_id": "seed_02",
+              "source_type": "official_changelog",
+              "quote_or_summary": "Docker runtime support using dockershim in the kubelet is now completely removed in 1.24.",
+              "relevance": "Confirms dockershim removal in 1.24"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_docker_runtime",
+          "statement": "Kubelet is configured to use Docker as container runtime (via dockershim)",
+          "category": "runtime",
+          "required": true,
+          "operator": "equals",
+          "expected_value": "docker",
+          "evidence": [
+            {
+              "source_id": "seed_02",
+              "source_type": "official_changelog",
+              "quote_or_summary": "From v1.24 onwards, you will need to either use one of the other supported runtimes (such as containerd or CRI-O) or use cri-dockerd if you are relying on Docker Engine as your container runtime.",
+              "relevance": "Specifies alternatives after dockershim removal"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Check kubelet configuration for --container-runtime=docker or absence of --container-runtime-endpoint",
+        "Verify container runtime on nodes: kubectl get nodes -o wide (check CONTAINER-RUNTIME column)",
+        "Migrate to containerd, CRI-O, or install cri-dockerd before upgrading to 1.24+",
+        "Follow migration guide: https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/",
+        "Test workloads with new runtime before production upgrade"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_29_kubeadm_super_admin_conf",
+      "path_name": "Kubeadm generates separate super-admin.conf with system:masters binding",
+      "risk_type": "operational_risk",
+      "risk_level": "medium",
+      "affected_surface": "deployment",
+      "description": "Kubeadm 1.29 generates a separate super-admin.conf file. The admin.conf user is now bound to kubeadm:cluster-admins group (with cluster-admin role) instead of system:masters. Existing automation or procedures expecting admin.conf to have system:masters privileges will fail.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_29_kubeadm",
+          "statement": "Target Kubernetes version is 1.29 or higher",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.29",
+          "evidence": [
+            {
+              "source_id": "seed_01",
+              "source_type": "official_changelog",
+              "quote_or_summary": "kubeadm: a separate \"super-admin.conf\" file is now deployed. The User in admin.conf is now bound to a new RBAC Group kubeadm:cluster-admins that has cluster-admin ClusterRole access. The User in super-admin.conf is now bound to the system:masters built-in super-powers / break-glass Group",
+              "relevance": "Describes the new admin.conf vs super-admin.conf separation"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_kubeadm_admin_conf",
+          "statement": "Deployment or automation relies on admin.conf having system:masters privileges",
+          "category": "deployment",
+          "required": true,
+          "operator": "present",
+          "expected_value": "admin.conf with system:masters",
+          "evidence": [
+            {
+              "source_id": "seed_01",
+              "source_type": "official_changelog",
+              "quote_or_summary": "Before this change, the default admin.conf was bound to system:masters Group, which was undesired.",
+              "relevance": "Confirms previous behavior that is changing"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Review automation and procedures using /etc/kubernetes/admin.conf",
+        "Determine if system:masters privileges are truly needed, or if cluster-admin role suffices",
+        "If system:masters is required, update scripts to use super-admin.conf instead",
+        "Note that super-admin.conf will only be generated on control plane nodes upgraded/initialized with kubeadm 1.29+",
+        "Consider migrating away from system:masters usage as it bypasses RBAC"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_24_legacy_sa_token_auto_generation",
+      "path_name": "Legacy service account token auto-generation disabled by default",
+      "risk_type": "changed_default",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "The LegacyServiceAccountTokenNoAutoGeneration feature is beta and enabled by default in 1.24. Secret API objects containing service account tokens are no longer auto-generated for every ServiceAccount. Applications expecting auto-generated secrets will fail.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_24_plus_sa_token",
+          "statement": "Target Kubernetes version is 1.24 or higher (upgrade to 1.29 includes this)",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.24",
+          "evidence": [
+            {
+              "source_id": "seed_02",
+              "source_type": "official_changelog",
+              "quote_or_summary": "The LegacyServiceAccountTokenNoAutoGeneration feature gate is beta, and enabled by default. When enabled, Secret API objects containing service account tokens are no longer auto-generated for every ServiceAccount.",
+              "relevance": "Confirms feature is enabled by default in 1.24"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_expects_auto_generated_sa_secrets",
+          "statement": "Application expects auto-generated service account token secrets to exist",
+          "category": "api_usage",
+          "required": true,
+          "operator": "present",
+          "expected_value": "auto-generated SA secrets",
+          "evidence": [
+            {
+              "source_id": "seed_02",
+              "source_type": "official_changelog",
+              "quote_or_summary": "Use the TokenRequest API to acquire service account tokens, or if a non-expiring token is required, create a Secret API object for the token controller to populate",
+              "relevance": "Specifies alternatives to auto-generated secrets"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Identify applications reading service account tokens from auto-generated secrets",
+        "Migrate to TokenRequest API for short-lived tokens",
+        "For non-expiring tokens, manually create Secret objects following guide: https://kubernetes.io/docs/concepts/configuration/secret/#service-account-token-secrets",
+        "Search for code mounting serviceaccount secrets or reading from /var/run/secrets/kubernetes.io/serviceaccount/token that may be affected"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_29_kube_scheduler_config_v1beta3_removed",
+      "path_name": "KubeSchedulerConfiguration v1beta3 removed",
+      "risk_type": "removed_api",
+      "risk_level": "medium",
+      "affected_surface": "configuration",
+      "description": "The kube-scheduler component config kubescheduler.config.k8s.io/v1beta3 is removed in v1.29. Scheduler configuration files must be migrated to kubescheduler.config.k8s.io/v1.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_29_scheduler",
+          "statement": "Target Kubernetes version is 1.29 or higher",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.29",
+          "evidence": [
+            {
+              "source_id": "seed_01",
+              "source_type": "official_changelog",
+              "quote_or_summary": "kube-scheduler component config (KubeSchedulerConfiguration) kubescheduler.config.k8s.io/v1beta3 is removed in v1.29. Migrated kube-scheduler configuration files to kubescheduler.config.k8s.io/v1.",
+              "relevance": "Confirms v1beta3 removal in v1.29"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_uses_scheduler_v1beta3_config",
+          "statement": "Kube-scheduler is configured with a v1beta3 configuration file",
+          "category": "configuration",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "kubescheduler.config.k8s.io/v1beta3",
+          "evidence": [
+            {
+              "source_id": "seed_01",
+              "source_type": "official_changelog",
+              "quote_or_summary": "Migrated kube-scheduler configuration files to kubescheduler.config.k8s.io/v1.",
+              "relevance": "Specifies migration to v1"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Check kube-scheduler configuration for --config flag and inspect referenced file",
+        "Grep scheduler config files for 'apiVersion: kubescheduler.config.k8s.io/v1beta3'",
+        "Migrate scheduler configuration to kubescheduler.config.k8s.io/v1 before upgrading to 1.29"
+      ]
+    },
+    {
+      "path_id": "rp_k8s_1_29_kubeadm_upgrade_no_component_config",
+      "path_name": "Kubeadm upgrade no longer accepts component config for kube-proxy and kubelet",
+      "risk_type": "changed_behavior",
+      "risk_level": "low",
+      "affected_surface": "deployment",
+      "description": "Kubeadm upgrade plan --config no longer accepts component configuration for kube-proxy and kubelet. This legacy behavior has been removed. Upgrade procedures passing these configs will fail.",
+      "conditions": [
+        {
+          "condition_id": "cond_target_version_1_29_kubeadm_upgrade",
+          "statement": "Target Kubernetes version is 1.29 or higher",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "1.29",
+          "evidence": [
+            {
+              "source_id": "seed_01",
+              "source_type": "official_changelog",
+              "quote_or_summary": "Stopped accepting component configuration for kube-proxy and kubelet during kubeadm upgrade plan --config. This was a legacy behavior that was not well supported for upgrades",
+              "relevance": "Confirms behavior change in upgrade command"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "cond_passes_component_config_to_upgrade",
+          "statement": "Kubeadm upgrade procedures pass kube-proxy or kubelet component config via --config",
+          "category": "deployment",
+          "required": true,
+          "operator": "present",
+          "expected_value": "component config in upgrade --config",
+          "evidence": [
+            {
+              "source_id": "seed_01",
+              "source_type": "official_changelog",
+              "quote_or_summary": "In the future, kubeadm will attempt alternative component config migration approaches.",
+              "relevance": "Indicates this functionality is being removed"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Review kubeadm upgrade scripts and procedures",
+        "Remove kube-proxy and kubelet component configuration from kubeadm upgrade plan --config invocations",
+        "Manage component configuration separately from kubeadm upgrade process"
+      ]
+    }
+  ],
+  "open_questions": [
+    "This report is based exclusively on official Kubernetes deprecation notices and changelogs; it has not analyzed the target application's actual manifests, code, or cluster configuration to determine which deprecated APIs are actively used",
+    "The runtime environment (current container runtime, service account token usage patterns, PSP deployment) has not been inspected\u2014actual risk severity depends on whether these features are in use",
+    "Custom controllers or operators may use deprecated APIs internally even if application manifests are clean",
+    "The kubeadm-specific risks assume kubeadm is used for cluster management; clusters using other tools (kops, kubespray, managed services) may have different operational impacts"
+  ],
+  "overall_confidence": "high"
+}

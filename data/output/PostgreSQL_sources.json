@@ -1,0 +1,31 @@
+{
+  "project": "PostgreSQL",
+  "current_version": "13",
+  "target_version": "16",
+  "sources": [
+    {
+      "source_id": "seed_00",
+      "title": "PostgreSQL 16 release notes",
+      "url": "https://www.postgresql.org/docs/16/release-16.html",
+      "source_type": "official_release_notes",
+      "retrieved_at": "2026-09-23T13:45:37.863824+00:00",
+      "why_relevant": "Official official release notes published by the PostgreSQL project; hand-curated as directly relevant to the 13 -> 16 upgrade."
+    },
+    {
+      "source_id": "seed_01",
+      "title": "PostgreSQL 15 release notes",
+      "url": "https://www.postgresql.org/docs/16/release-15.html",
+      "source_type": "official_release_notes",
+      "retrieved_at": "2026-09-23T13:45:37.863824+00:00",
+      "why_relevant": "Official official release notes published by the PostgreSQL project; hand-curated as directly relevant to the 13 -> 16 upgrade."
+    },
+    {
+      "source_id": "seed_02",
+      "title": "PostgreSQL 14 release notes",
+      "url": "https://www.postgresql.org/docs/16/release-14.html",
+      "source_type": "official_release_notes",
+      "retrieved_at": "2026-09-23T13:45:37.863824+00:00",
+      "why_relevant": "Official official release notes published by the PostgreSQL project; hand-curated as directly relevant to the 13 -> 16 upgrade."
+    }
+  ]
+}

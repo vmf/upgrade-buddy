@@ -1,0 +1,462 @@
+[
+  {
+    "path_id": "nextjs_14_node_version_requirement",
+    "path_name": "Node.js 18.17+ required for Next.js 14",
+    "risk_type": "runtime_requirement",
+    "risk_level": "critical",
+    "affected_surface": "runtime",
+    "description": "Next.js 14 requires Node.js version 18.17 or higher. Applications running on Node.js 16.x or 17.x will fail to start or install because Next.js 14 explicitly requires Node.js >= 18.17.0. Node.js 16.x reached end-of-life and is no longer supported.",
+    "conditions": [
+      {
+        "condition_id": "c1_target_version",
+        "statement": "Target Next.js version is 14.x or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "14.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The minimum Node.js version has been bumped from 16.14 to 18.17, since 16.x has reached end-of-life.",
+            "relevance": "Documents the Node.js version requirement change in Next.js 14"
+          },
+          {
+            "source_id": "seed_02",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "[Breaking] Minimum Node.js version is now `18.17`",
+            "relevance": "Confirms Node.js 18.17 as minimum version and marks it as breaking change"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "c2_current_node_version",
+        "statement": "Current Node.js runtime version is less than 18.17.0",
+        "category": "runtime",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "18.17.0",
+        "evidence": [
+          {
+            "source_id": "registry_meta",
+            "source_type": "package_registry_metadata",
+            "quote_or_summary": "\"engines\": { \"node\": \">=18.17.0\" }",
+            "relevance": "Package registry metadata explicitly requires Node.js >= 18.17.0"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check the Node.js version in production, staging, and development environments using `node --version`",
+      "Verify Node.js version specified in Dockerfile, CI/CD pipelines, and deployment configurations",
+      "Upgrade to Node.js 18.17 or higher (Node.js 20 LTS recommended)",
+      "Update any Node.js version managers (nvm, volta, etc.) and configuration files (.nvmrc, package.json engines field)"
+    ]
+  },
+  {
+    "path_id": "nextjs_14_next_export_removed",
+    "path_name": "next export command removed in Next.js 14",
+    "risk_type": "removed_api",
+    "risk_level": "high",
+    "affected_surface": "deployment",
+    "description": "The `next export` CLI command has been removed in Next.js 14. Applications that use `next export` in their build scripts, CI/CD pipelines, or deployment configurations will fail. The functionality has been replaced with the `output: 'export'` configuration option in next.config.js.",
+    "conditions": [
+      {
+        "condition_id": "c1_target_version",
+        "statement": "Target Next.js version is 14.x or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "14.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The `next export` command has been removed in favor of `output: 'export'` config.",
+            "relevance": "Documents removal of next export command in Next.js 14"
+          },
+          {
+            "source_id": "seed_02",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "`next export` command has been removed in favor of `output: 'export'` config",
+            "relevance": "Confirms removal as a breaking change in Next.js 14"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "c2_uses_next_export",
+        "statement": "Application uses `next export` command in build or deployment scripts",
+        "category": "deployment",
+        "required": true,
+        "operator": "contains",
+        "expected_value": "next export",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The `next export` command has been removed in favor of `output: 'export'` config.",
+            "relevance": "Documents that the command is removed and needs replacement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search build scripts, package.json scripts, and CI/CD configuration files for usage of `next export`",
+      "Replace `next export` command invocations with standard `next build`",
+      "Add `output: 'export'` to next.config.js configuration",
+      "Review the Next.js static exports documentation at https://nextjs.org/docs/app/guides/static-exports",
+      "Test the static export process with the new configuration to ensure output matches expectations"
+    ]
+  },
+  {
+    "path_id": "nextjs_14_imageresponse_import_path",
+    "path_name": "ImageResponse import path changed from next/server to next/og",
+    "risk_type": "removed_api",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "The `ImageResponse` import has been moved from `next/server` to `next/og` in Next.js 14. Code that imports ImageResponse from next/server will fail with a module not found or import error. A codemod is available to automatically update imports.",
+    "conditions": [
+      {
+        "condition_id": "c1_target_version",
+        "statement": "Target Next.js version is 14.x or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "14.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The `next/server` import for `ImageResponse` was renamed to `next/og`. A codemod is available to safely and automatically rename your imports.",
+            "relevance": "Documents the import path change in Next.js 14"
+          },
+          {
+            "source_id": "seed_02",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Changed `ImageResponse` import from `next/server` to `next/og` (Codemod)",
+            "relevance": "Confirms import path change as breaking in Next.js 14"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "c2_imports_imageresponse_from_server",
+        "statement": "Application imports ImageResponse from next/server",
+        "category": "api_usage",
+        "required": true,
+        "operator": "contains",
+        "expected_value": "import { ImageResponse } from 'next/server' OR import { ImageResponse } from \"next/server\"",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The `next/server` import for `ImageResponse` was renamed to `next/og`.",
+            "relevance": "Indicates the old import path that will break"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for imports of ImageResponse from next/server using: grep -r \"from 'next/server'\" or grep -r 'from \"next/server\"'",
+      "Run the automated codemod: npx @next/codemod next-og-import ./",
+      "Manually verify and update any remaining instances to import from next/og instead",
+      "Update TypeScript types if using custom type definitions that reference next/server exports"
+    ]
+  },
+  {
+    "path_id": "nextjs_14_next_font_package_removed",
+    "path_name": "@next/font package removed in Next.js 14",
+    "risk_type": "removed_api",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "The standalone @next/font package has been fully removed in Next.js 14. Applications that import from @next/font will fail with module not found errors. The functionality has been moved to the built-in next/font package. A codemod is available to automatically update imports.",
+    "conditions": [
+      {
+        "condition_id": "c1_target_version",
+        "statement": "Target Next.js version is 14.x or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "14.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The `@next/font` package has been fully removed in favor of the built-in `next/font`. A codemod is available to safely and automatically rename your imports.",
+            "relevance": "Documents the removal of @next/font package in Next.js 14"
+          },
+          {
+            "source_id": "seed_02",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Dropped support for `@next/font` in favor of `next/font` (Codemod)",
+            "relevance": "Confirms package removal as breaking change in Next.js 14"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "c2_imports_next_font_package",
+        "statement": "Application imports from @next/font package",
+        "category": "api_usage",
+        "required": true,
+        "operator": "contains",
+        "expected_value": "from '@next/font' OR from \"@next/font\"",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The `@next/font` package has been fully removed in favor of the built-in `next/font`.",
+            "relevance": "Indicates the removed package that will cause import failures"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for imports from @next/font: grep -r \"@next/font\" --include=\"*.js\" --include=\"*.jsx\" --include=\"*.ts\" --include=\"*.tsx\"",
+      "Run the automated codemod: npx @next/codemod built-in-next-font ./",
+      "Check package.json for @next/font dependency and remove it if present",
+      "Verify all font imports are updated to use next/font instead of @next/font",
+      "Test font loading functionality after migration"
+    ]
+  },
+  {
+    "path_id": "nextjs_14_next_swc_wasm_removed",
+    "path_name": "WASM target for next-swc removed in Next.js 14",
+    "risk_type": "removed_api",
+    "risk_level": "medium",
+    "affected_surface": "runtime",
+    "description": "The WebAssembly (WASM) target for next-swc has been removed in Next.js 14. Applications or environments that relied on the WASM build of the SWC compiler (e.g., certain edge environments or architectures without native binaries) will fail to compile or run. This primarily affects non-standard deployment targets.",
+    "conditions": [
+      {
+        "condition_id": "c1_target_version",
+        "statement": "Target Next.js version is 14.x or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "14.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The WASM target for `next-swc` has been removed.",
+            "relevance": "Documents WASM target removal in Next.js 14"
+          },
+          {
+            "source_id": "seed_02",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Removes WASM target for `next-swc` build (PR)",
+            "relevance": "Confirms WASM removal as breaking change"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "c2_depends_on_wasm_swc",
+        "statement": "Application or deployment environment depends on WASM build of next-swc",
+        "category": "runtime",
+        "required": true,
+        "operator": "present",
+        "expected_value": "WASM-based SWC configuration or fallback",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The WASM target for `next-swc` has been removed.",
+            "relevance": "Indicates the WASM build is no longer available"
+          }
+        ],
+        "confidence": "medium",
+        "ambiguities": [
+          "Documentation does not specify exactly which environments or configurations used the WASM target, making it difficult to identify affected deployments without testing"
+        ]
+      }
+    ],
+    "suggested_actions": [
+      "Check deployment environment and architecture to determine if WASM build of next-swc was being used",
+      "Review build logs for any mentions of WASM or SWC fallback behavior",
+      "Test Next.js 14 build process in target environment to verify native SWC binary is available and working",
+      "If running on unsupported architecture, consider switching to a supported platform or using a different build strategy",
+      "Contact Next.js team or check GitHub issues if deployment fails due to missing SWC support"
+    ]
+  },
+  {
+    "path_id": "nextjs_14_react_version_requirement",
+    "path_name": "React 18.2.0+ required for Next.js 14",
+    "risk_type": "dependency_requirement",
+    "risk_level": "high",
+    "affected_surface": "dependencies",
+    "description": "Next.js 14 requires React 18.2.0 or higher as a peer dependency. Applications using React 17.x or earlier versions of React 18 will encounter peer dependency errors during installation and may experience runtime failures. Both react and react-dom must be upgraded to at least 18.2.0.",
+    "conditions": [
+      {
+        "condition_id": "c1_target_version",
+        "statement": "Target Next.js version is 14.x or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "14.0.0",
+        "evidence": [
+          {
+            "source_id": "registry_meta",
+            "source_type": "package_registry_metadata",
+            "quote_or_summary": "\"peer_dependencies\": { \"react\": \"^18.2.0\", \"react-dom\": \"^18.2.0\" }",
+            "relevance": "Package registry metadata shows React 18.2.0+ peer dependency requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "c2_react_version_below_requirement",
+        "statement": "Application uses React version below 18.2.0",
+        "category": "dependency",
+        "required": true,
+        "operator": "less_than",
+        "expected_value": "18.2.0",
+        "evidence": [
+          {
+            "source_id": "registry_meta",
+            "source_type": "package_registry_metadata",
+            "quote_or_summary": "\"peer_dependencies\": { \"react\": \"^18.2.0\", \"react-dom\": \"^18.2.0\" }",
+            "relevance": "Specifies minimum React version requirement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Check package.json for react and react-dom versions",
+      "Upgrade both react and react-dom to version 18.2.0 or higher: npm install react@^18.2.0 react-dom@^18.2.0",
+      "Review React 18 migration guide if upgrading from React 17.x: https://react.dev/blog/2022/03/08/react-18-upgrade-guide",
+      "Test application thoroughly after React upgrade, especially concurrent features and suspense boundaries",
+      "Check for deprecated React APIs that may have been removed in React 18"
+    ]
+  },
+  {
+    "path_id": "nextjs_13_link_nested_anchor_removed",
+    "path_name": "next/link no longer requires nested <a> tag in Next.js 13+",
+    "risk_type": "changed_behavior",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "Starting in Next.js 13, the Link component automatically renders an <a> tag and no longer requires (or allows) a manually nested <a> child element. Applications with nested <a> tags inside Link components may experience rendering issues or hydration errors. The legacyBehavior prop can be used for backward compatibility, or a codemod can automatically update the code.",
+    "conditions": [
+      {
+        "condition_id": "c1_target_version",
+        "statement": "Target Next.js version is 13.x or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "13.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "In Next.js 13, `<Link>` always renders an `<a>` and allows you to forward props to the underlying tag.",
+            "relevance": "Documents the Link behavior change in Next.js 13"
+          },
+          {
+            "source_id": "seed_01",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The `next/link` child can no longer be `<a>`. Add the `legacyBehavior` prop to use the legacy behavior or remove the `<a>` to upgrade. A codemod is available to automatically upgrade your code.",
+            "relevance": "Confirms this is a breaking change affecting Next.js 13+"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "c2_link_with_nested_anchor",
+        "statement": "Application has Link components with nested <a> tags",
+        "category": "api_usage",
+        "required": true,
+        "operator": "contains",
+        "expected_value": "<Link><a> OR <Link ...><a>",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "Next.js 12: `<a>` has to be nested otherwise it's excluded. Next.js 13: `<Link>` always renders `<a>`",
+            "relevance": "Shows the pattern that needs to be changed"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for Link components with nested anchor tags: grep -r \"<Link\" --include=\"*.jsx\" --include=\"*.tsx\" | grep \"<a\"",
+      "Run the automated codemod: npx @next/codemod new-link ./",
+      "Manually review Link components to ensure <a> tags are removed and props are moved to Link",
+      "Alternatively, add legacyBehavior prop to preserve old behavior temporarily: <Link legacyBehavior>",
+      "Test all navigation links after migration to ensure proper routing and styling"
+    ]
+  },
+  {
+    "path_id": "nextjs_13_image_component_renamed",
+    "path_name": "next/image renamed to next/legacy/image in Next.js 13",
+    "risk_type": "removed_api",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "In Next.js 13, the old Image component was moved from next/image to next/legacy/image, and a new improved Image component now exists at next/image. Applications importing Image from next/image will get the new component with different behavior and API. A codemod is available to automatically migrate existing usage to next/legacy/image to preserve exact behavior.",
+    "conditions": [
+      {
+        "condition_id": "c1_target_version",
+        "statement": "Target Next.js version is 13.x or higher",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "13.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The `next/image` import was renamed to `next/legacy/image`. The `next/future/image` import was renamed to `next/image`. A codemod is available to safely and automatically rename your imports.",
+            "relevance": "Documents the Image component import path changes in Next.js 13"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "c2_imports_next_image",
+        "statement": "Application imports Image component from next/image",
+        "category": "api_usage",
+        "required": true,
+        "operator": "contains",
+        "expected_value": "from 'next/image' OR from \"next/image\"",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_release_notes",
+            "quote_or_summary": "The old Image component was renamed to `next/legacy/image`. We've provided a codemod that will automatically update your existing usage of `next/image` to `next/legacy/image`.",
+            "relevance": "Indicates the import path that will resolve to different component"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for Image imports from next/image: grep -r \"from 'next/image'\" --include=\"*.js\" --include=\"*.jsx\" --include=\"*.ts\" --include=\"*.tsx\"",
+      "Run the codemod to migrate to legacy image: npx @next/codemod next-image-to-legacy-image ./",
+      "Review the new next/image component documentation to understand API differences",
+      "Consider migrating to the new Image component API for improved performance and features",
+      "Test all image rendering after migration to verify correct display and lazy loading behavior"
+    ]
+  }
+]

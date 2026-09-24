@@ -1,0 +1,330 @@
+[
+  {
+    "chunk_id": "seed_00::chunk3",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Psycopg 3 support",
+    "text": "-----------------\n\nDjango now supports `psycopg`_ version 3.1.8 or higher. To update your code,\ninstall the :pypi:`psycopg library <psycopg>`, you don't need to change the\n:setting:`ENGINE <DATABASE-ENGINE>` as ``django.db.backends.postgresql``\nsupports both libraries.\n\nSupport for ``psycopg2`` is likely to be deprecated and removed at some point\nin the future.\n\nBe aware that ``psycopg`` 3 introduces some breaking changes over ``psycopg2``.\nAs a consequence, you may need to make some changes to account for\n`differences from psycopg2`_.\n\n.. _psycopg: https://www.psycopg.org/psycopg3/\n.. _differences from psycopg2: https://www.psycopg.org/psycopg3/docs/basic/from_pg2.html",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_00::chunk7",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Custom file storages",
+    "text": "--------------------\n\nThe new :setting:`STORAGES` setting allows configuring multiple custom file\nstorage backends. It also controls storage engines for managing\n:doc:`files </topics/files>` (the ``\"default\"`` key) and :doc:`static files\n</ref/contrib/staticfiles>` (the ``\"staticfiles\"`` key).\n\nThe old ``DEFAULT_FILE_STORAGE`` and ``STATICFILES_STORAGE`` settings are\ndeprecated as of this release.",
+    "category": "configuration_change"
+  },
+  {
+    "chunk_id": "seed_00::chunk28",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Database backend API",
+    "text": "--------------------\n\nThis section describes changes that may be needed in third-party database\nbackends.\n\n* ``DatabaseFeatures.allows_group_by_pk`` is removed as it only remained to\n  accommodate a MySQL extension that has been supplanted by proper functional\n  dependency detection in MySQL 5.7.15. Note that\n  ``DatabaseFeatures.allows_group_by_selected_pks`` is still supported and\n  should be enabled if your backend supports functional dependency detection in\n  ``GROUP BY`` clauses as specified by the ``SQL:1999`` standard.\n\n* :djadmin:`inspectdb` now uses ``display_size`` from\n  ``DatabaseIntrospection.get_table_description()`` rather than\n  ``internal_size`` for ``CharField``.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk29",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Dropped support for MariaDB 10.3",
+    "text": "--------------------------------\n\nUpstream support for MariaDB 10.3 ends in May 2023. Django 4.2 supports MariaDB\n10.4 and higher.",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_00::chunk30",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Dropped support for MySQL 5.7",
+    "text": "-----------------------------\n\nUpstream support for MySQL 5.7 ends in October 2023. Django 4.2 supports MySQL\n8 and higher.",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_00::chunk31",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Dropped support for PostgreSQL 11",
+    "text": "---------------------------------\n\nUpstream support for PostgreSQL 11 ends in November 2023. Django 4.2 supports\nPostgreSQL 12 and higher.",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_00::chunk33",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Dropped support for raw aggregations on MySQL",
+    "text": "---------------------------------------------\n\nMySQL 8+ allows functional dependencies on ``GROUP BY`` columns, so the\npre-Django 4.2 workaround of grouping by primary keys of the main table is\nremoved. As a consequence, using ``RawSQL()`` aggregations is no longer\nsupported on MySQL as there is no way to determine if such aggregations are\nneeded or valid in the ``GROUP BY`` clause. Use :ref:`aggregation-functions`\ninstead.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk34",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Miscellaneous",
+    "text": "-------------\n\n* The undocumented ``django.http.multipartparser.parse_header()`` function is\n  removed. Use ``django.utils.http.parse_header_parameters()`` instead.\n\n* :ttag:`{% blocktranslate asvar \u2026 %}<blocktranslate>` result is now marked as\n  safe for (HTML) output purposes.\n\n* The ``autofocus`` HTML attribute in the admin search box is removed as it can\n  be confusing for screen readers.\n\n* The :option:`makemigrations --check` option no longer creates missing\n  migration files.\n\n* The ``alias`` argument for :meth:`.Expression.get_group_by_cols` is removed.\n\n* The minimum supported version of ``sqlparse`` is increased from 0.2.2 to\n  0.3.1.\n\n* The undocumented ``negated`` parameter of the\n  :class:`~django.db.models.Exists` expression is removed.\n\n* The ``is_summary`` argument of the undocumented ``Query.add_annotation()``\n  method is removed.\n\n* The minimum supported version of SQLite is increased from 3.9.0 to 3.21.0.\n\n* The minimum supported version of ``asgiref`` is increased from 3.5.2 to\n  3.6.0.\n\n* :class:`~django.contrib.auth.forms.UserCreationForm` now rejects usernames\n  that differ only in case. If you need the previous behavior, use\n  :class:`~django.contrib.auth.forms.BaseUserCreationForm` instead.\n\n* The minimum supported version of ``mysqlclient`` is increased from 1.4.0 to\n  1.4.3.\n\n* The minimum supported version of ``argon2-cffi`` is increased  from 19.1.0 to\n  19.2.0.\n\n* The minimum supported version of ``Pillow`` is increased from 6.2.0 to 6.2.1.\n\n* The minimum supported version of ``jinja2`` is increased from 2.9.2 to\n  2.11.0.\n\n* The minimum supported version of :pypi:`redis-py <redis>` is increased from\n  3.0.0 to 3.4.0.\n\n* Manually instantiated ``WSGIRequest`` objects must be provided a file-like\n  object for ``wsgi.input``. Previously, Django was more lax than the expected\n  behavior as specified by the WSGI specification.\n\n* Support for ``PROJ`` < 5 is removed.\n\n* :ref:`SMTP EmailBackend <topic-email-smtp-backend>` now verifies a\n  :attr:`hostname <ssl.SSLContext.check_hostname>` and\n  :attr:`certificates <ssl.SSLContext.verify_mode>`. If you need the\n  previous behavior that is less restrictive and not recommended, subclass\n  ``EmailBackend`` and override the ``ssl_context`` property.\n\n.. _deprecated-features-4.2:",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk36",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "``index_together`` option is deprecated in favor of ``indexes``",
+    "text": "---------------------------------------------------------------\n\nThe ``Meta.index_together`` option is deprecated in favor of the\n:attr:`~django.db.models.Options.indexes` option.\n\nMigrating existing ``index_together`` should be handled as a migration. For\nexample::\n\n    class Author(models.Model):\n        rank = models.IntegerField()\n        name = models.CharField(max_length=30)\n\n        class Meta:\n            index_together = [[\"rank\", \"name\"]]\n\nShould become::\n\n    class Author(models.Model):\n        rank = models.IntegerField()\n        name = models.CharField(max_length=30)\n\n        class Meta:\n            indexes = [models.Index(fields=[\"rank\", \"name\"])]\n\nRunning the :djadmin:`makemigrations` command will generate a migration\ncontaining a :class:`~django.db.migrations.operations.RenameIndex` operation\nwhich will rename the existing index. Next, consider squashing migrations to\nremove ``index_together`` from historical migrations.\n\nThe ``AlterIndexTogether`` migration operation is now officially supported only\nfor pre-Django 4.2 migration files. For backward compatibility reasons, it's\nstill part of the public API, and there's no plan to deprecate or remove it,\nbut it should not be used for new migrations. Use\n:class:`~django.db.migrations.operations.AddIndex` and\n:class:`~django.db.migrations.operations.RemoveIndex` operations instead.",
+    "category": "configuration_change"
+  },
+  {
+    "chunk_id": "seed_00::chunk37",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Passing encoded JSON string literals to ``JSONField`` is deprecated",
+    "text": "-------------------------------------------------------------------\n\n``JSONField`` and its associated lookups and aggregates used to allow passing\nJSON encoded string literals which caused ambiguity on whether string literals\nwere already encoded from database backend's perspective.\n\nDuring the deprecation period string literals will be attempted to be JSON\ndecoded and a warning will be emitted on success that points at passing\nnon-encoded forms instead.\n\nCode that used to pass JSON encoded string literals::\n\n    Document.objects.bulk_create(\n        Document(data=Value(\"null\")),\n        Document(data=Value(\"[]\")),\n        Document(data=Value('\"foo-bar\"')),\n    )\n    Document.objects.annotate(\n        JSONBAgg(\"field\", default=Value(\"[]\")),\n    )\n\nShould become::\n\n    Document.objects.bulk_create(\n        Document(data=Value(None, JSONField())),\n        Document(data=[]),\n        Document(data=\"foo-bar\"),\n    )\n    Document.objects.annotate(\n        JSONBAgg(\"field\", default=[]),\n    )\n\nFrom Django 5.1+ string literals will be implicitly interpreted as JSON string\nliterals.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk38",
+    "source_id": "seed_00",
+    "source_type": "official_release_notes",
+    "heading": "Miscellaneous",
+    "text": "-------------\n\n* The ``BaseUserManager.make_random_password()`` method is deprecated. See\n  `recipes and best practices\n  <https://docs.python.org/3/library/secrets.html#recipes-and-best-practices>`_\n  for using Python's :mod:`secrets` module to generate passwords.\n\n* The ``length_is`` template filter is deprecated in favor of :tfilter:`length`\n  and the ``==`` operator within an :ttag:`{% if %}<if>` tag. For example\n\n  .. code-block:: html+django\n\n    {% if value|length == 4 %}\u2026{% endif %}\n    {% if value|length == 4 %}True{% else %}False{% endif %}\n\n  instead of:\n\n  .. code-block:: html+django\n\n    {% if value|length_is:4 %}\u2026{% endif %}\n    {{ value|length_is:4 }}\n\n* ``django.contrib.auth.hashers.SHA1PasswordHasher``,\n  ``django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher``, and\n  ``django.contrib.auth.hashers.UnsaltedMD5PasswordHasher`` are deprecated.\n\n* ``django.contrib.postgres.fields.CICharField`` is deprecated in favor of\n  ``CharField(db_collation=\"\u2026\")`` with a case-insensitive non-deterministic\n  collation.\n\n* ``django.contrib.postgres.fields.CIEmailField`` is deprecated in favor of\n  ``EmailField(db_collation=\"\u2026\")`` with a case-insensitive non-deterministic\n  collation.\n\n* ``django.contrib.postgres.fields.CITextField`` is deprecated in favor of\n  ``TextField(db_collation=\"\u2026\")`` with a case-insensitive non-deterministic\n  collation.\n\n* ``django.contrib.postgres.fields.CIText`` mixin is deprecated.\n\n* The ``map_height`` and ``map_width`` attributes of ``BaseGeometryWidget`` are\n  deprecated, use CSS to size map widgets instead.\n\n* ``SimpleTestCase.assertFormsetError()`` is deprecated in favor of\n  ``assertFormSetError()``.\n\n* ``TransactionTestCase.assertQuerysetEqual()`` is deprecated in favor of\n  ``assertQuerySetEqual()``.\n\n* Passing positional arguments to ``Signer`` and ``TimestampSigner`` is\n  deprecated in favor of keyword-only arguments.\n\n* The ``DEFAULT_FILE_STORAGE`` setting is deprecated in favor of\n  ``STORAGES[\"default\"]``.\n\n* The ``STATICFILES_STORAGE`` setting is deprecated in favor of\n  ``STORAGES[\"staticfiles\"]``.\n\n* The ``django.core.files.storage.get_storage_class()`` function is deprecated.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_01::chunk7",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "``CSRF_COOKIE_MASKED`` setting",
+    "text": "------------------------------\n\nThe new ``CSRF_COOKIE_MASKED`` transitional setting allows specifying whether\nto mask the CSRF cookie.\n\n:class:`~django.middleware.csrf.CsrfViewMiddleware` no longer masks the CSRF\ncookie like it does the CSRF token in the DOM. If you are upgrading multiple\ninstances of the same project to Django 4.1, you should set\n``CSRF_COOKIE_MASKED`` to ``True`` during the transition, in order to allow\ncompatibility with the older versions of Django. Once the transition to 4.1 is\ncomplete you can stop overriding ``CSRF_COOKIE_MASKED``.\n\nThis setting is deprecated as of this release and will be removed in Django\n5.0.",
+    "category": "changed_default"
+  },
+  {
+    "chunk_id": "seed_01::chunk24",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Templates",
+    "text": "~~~~~~~~~\n\n* The HTML ``<script>`` element ``id`` attribute is no longer required when\n  wrapping the :tfilter:`json_script` template filter.\n\n* The :class:`cached template loader <django.template.loaders.cached.Loader>`\n  is now enabled in development, when :setting:`DEBUG` is ``True``, and\n  :setting:`OPTIONS['loaders'] <TEMPLATES-OPTIONS>` isn't specified. You may\n  specify ``OPTIONS['loaders']`` to override this, if necessary.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk30",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Database backend API",
+    "text": "--------------------\n\nThis section describes changes that may be needed in third-party database\nbackends.\n\n* ``BaseDatabaseFeatures.has_case_insensitive_like`` is changed from ``True``\n  to ``False`` to reflect the behavior of most databases.\n\n* ``DatabaseIntrospection.get_key_columns()`` is removed. Use\n  ``DatabaseIntrospection.get_relations()`` instead.\n\n* ``DatabaseOperations.ignore_conflicts_suffix_sql()`` method is replaced by\n  ``DatabaseOperations.on_conflict_suffix_sql()`` that accepts the ``fields``,\n  ``on_conflict``, ``update_fields``, and ``unique_fields`` arguments.\n\n* The ``ignore_conflicts`` argument of the\n  ``DatabaseOperations.insert_statement()`` method is replaced by\n  ``on_conflict`` that accepts ``django.db.models.constants.OnConflict``.\n\n* ``DatabaseOperations._convert_field_to_tz()`` is replaced by\n  ``DatabaseOperations._convert_sql_to_tz()`` that accepts the ``sql``,\n  ``params``, and ``tzname`` arguments.\n\n* Several date and time methods on ``DatabaseOperations`` now take ``sql`` and\n  ``params`` arguments instead of ``field_name`` and return 2-tuple containing\n  some SQL and the parameters to be interpolated into that SQL. The changed\n  methods have these new signatures:\n\n  * ``DatabaseOperations.date_extract_sql(lookup_type, sql, params)``\n  * ``DatabaseOperations.datetime_extract_sql(lookup_type, sql, params, tzname)``\n  * ``DatabaseOperations.time_extract_sql(lookup_type, sql, params)``\n  * ``DatabaseOperations.date_trunc_sql(lookup_type, sql, params, tzname=None)``\n  * ``DatabaseOperations.datetime_trunc_sql(self, lookup_type, sql, params, tzname)``\n  * ``DatabaseOperations.time_trunc_sql(lookup_type, sql, params, tzname=None)``\n  * ``DatabaseOperations.datetime_cast_date_sql(sql, params, tzname)``\n  * ``DatabaseOperations.datetime_cast_time_sql(sql, params, tzname)``",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_01::chunk31",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": ":mod:`django.contrib.gis`",
+    "text": "-------------------------\n\n* Support for GDAL 2.1 is removed.\n\n* Support for PostGIS 2.4 is removed.",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_01::chunk32",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Dropped support for PostgreSQL 10",
+    "text": "---------------------------------\n\nUpstream support for PostgreSQL 10 ends in November 2022. Django 4.1 supports\nPostgreSQL 11 and higher.",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_01::chunk33",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Dropped support for MariaDB 10.2",
+    "text": "--------------------------------\n\nUpstream support for MariaDB 10.2 ends in May 2022. Django 4.1 supports MariaDB\n10.3 and higher.",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_01::chunk34",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Admin changelist searches spanning multi-valued relationships changes",
+    "text": "---------------------------------------------------------------------\n\nAdmin changelist searches using multiple search terms are now applied in a\nsingle call to ``filter()``, rather than in sequential ``filter()`` calls.\n\nFor multi-valued relationships, this means that rows from the related model\nmust match all terms rather than any term. For example, if ``search_fields``\nis set to ``['child__name', 'child__age']``, and a user searches for\n``'Jamal 17'``, parent rows will be returned only if there is a relationship to\nsome 17-year-old child named Jamal, rather than also returning parents who\nmerely have a younger or older child named Jamal in addition to some other\n17-year-old.\n\nSee the :ref:`spanning-multi-valued-relationships` topic for more discussion of\nthis difference. In Django 4.0 and earlier,\n:meth:`~django.contrib.admin.ModelAdmin.get_search_results` followed the\nsecond example query, but this undocumented behavior led to queries with\nexcessive joins.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk36",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Miscellaneous",
+    "text": "-------------\n\n* Related managers for :class:`~django.db.models.ForeignKey`,\n  :class:`~django.db.models.ManyToManyField`, and\n  :class:`~django.contrib.contenttypes.fields.GenericRelation` are now cached\n  on the :class:`~django.db.models.Model` instance to which they belong. *This\n  change was reverted in Django 4.1.2.*\n\n* :class:`~django.test.runner.DiscoverRunner` now returns a non-zero error code\n  for unexpected successes from tests marked with\n  :func:`unittest.expectedFailure`.\n\n* :class:`~django.middleware.csrf.CsrfViewMiddleware` no longer masks the CSRF\n  cookie like it does the CSRF token in the DOM.\n\n* :class:`~django.middleware.csrf.CsrfViewMiddleware` now uses\n  ``request.META['CSRF_COOKIE']`` for storing the unmasked CSRF secret rather\n  than a masked version. This is an undocumented, private API.\n\n* The :attr:`.ModelAdmin.actions` and\n  :attr:`~django.contrib.admin.ModelAdmin.inlines` attributes now default to an\n  empty tuple rather than an empty list to discourage unintended mutation.\n\n* The ``type=\"text/css\"`` attribute is no longer included in ``<link>`` tags\n  for CSS :doc:`form media </topics/forms/media>`.\n\n* ``formset:added`` and ``formset:removed`` JavaScript events are now pure\n  JavaScript events and don't depend on jQuery. See\n  :ref:`admin-javascript-inline-form-events` for more details on the change.\n\n* The ``exc_info`` argument of the undocumented\n  ``django.utils.log.log_response()`` function is replaced by ``exception``.\n\n* The ``size`` argument of the undocumented\n  ``django.views.static.was_modified_since()`` function is removed.\n\n* The admin log out UI now uses ``POST`` requests.\n\n* The undocumented ``InlineAdminFormSet.non_form_errors`` property is replaced\n  by the ``non_form_errors()`` method. This is consistent with ``BaseFormSet``.\n\n* As per :ref:`above<templates-4.1>`, the cached template loader is now\n  enabled in development. You may specify ``OPTIONS['loaders']`` to override\n  this, if necessary.\n\n* The undocumented ``django.contrib.auth.views.SuccessURLAllowedHostsMixin``\n  mixin is replaced by ``RedirectURLMixin``.\n\n* :class:`~django.db.models.BaseConstraint` subclasses must implement\n  :meth:`~django.db.models.BaseConstraint.validate` method to allow those\n  constraints to be used for validation.\n\n* The undocumented ``URLResolver._is_callback()``,\n  ``URLResolver._callback_strs``, and ``URLPattern.lookup_str()`` are\n  moved to ``django.contrib.admindocs.utils``.\n\n* The :meth:`.Model.full_clean` method now converts an ``exclude`` value to a\n  ``set``. It\u2019s also preferable to pass an ``exclude`` value as a ``set`` to\n  the :meth:`.Model.clean_fields`, :meth:`.Model.full_clean`,\n  :meth:`.Model.validate_unique`, and :meth:`.Model.validate_constraints`\n  methods.\n\n* The minimum supported version of ``asgiref`` is increased from 3.4.1 to\n  3.5.2.\n\n* Combined expressions no longer use the error-prone behavior of guessing\n  ``output_field`` when argument types match. As a consequence, resolving an\n  ``output_field`` for database functions and combined expressions may now\n  crash with mixed types. You will need to explicitly set the ``output_field``\n  in such cases.\n\n* The :djadmin:`makemessages` command no longer changes ``.po`` files when up\n  to date. In older versions, ``POT-Creation-Date`` was always updated.\n\n.. _deprecated-features-4.1:",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk38",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Log out via GET",
+    "text": "---------------\n\nLogging out via ``GET`` requests to the :class:`built-in logout view\n<django.contrib.auth.views.LogoutView>` is deprecated. Use ``POST`` requests\ninstead.\n\nIf you want to retain the user experience of an HTML link, you can use a form\nthat is styled to appear as a link:\n\n.. code-block:: html\n\n  <form id=\"logout-form\" method=\"post\" action=\"{% url 'admin:logout' %}\">\n    {% csrf_token %}\n    <button type=\"submit\">{% translate \"Log out\" %}</button>\n  </form>\n\n.. code-block:: css\n\n  #logout-form {\n    display: inline;\n  }\n  #logout-form button {\n    background: none;\n    border: none;\n    cursor: pointer;\n    padding: 0;\n    text-decoration: underline;\n  }",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk39",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Miscellaneous",
+    "text": "-------------\n\n* The context for sitemap index templates of a flat list of URLs is deprecated.\n  Custom sitemap index templates should be updated for the adjusted\n  :ref:`context variables <sitemap-index-context-variables>`, expecting a list\n  of objects with ``location`` and optional ``lastmod`` attributes.\n\n* ``CSRF_COOKIE_MASKED`` transitional setting is deprecated.\n\n* The ``name`` argument of :func:`django.utils.functional.cached_property` is\n  deprecated as it's unnecessary as of Python 3.6.\n\n* The ``opclasses`` argument of\n  ``django.contrib.postgres.constraints.ExclusionConstraint`` is deprecated in\n  favor of using :class:`OpClass() <django.contrib.postgres.indexes.OpClass>`\n  in :attr:`.ExclusionConstraint.expressions`. To use it, you need to add\n  ``'django.contrib.postgres'`` in your :setting:`INSTALLED_APPS`.\n\n  After making this change, :djadmin:`makemigrations` will generate a new\n  migration with two operations: ``RemoveConstraint`` and ``AddConstraint``.\n  Since this change has no effect on the database schema,\n  the :class:`~django.db.migrations.operations.SeparateDatabaseAndState`\n  operation can be used to only update the migration state without running any\n  SQL. Move the generated operations into the ``state_operations`` argument of\n  :class:`~django.db.migrations.operations.SeparateDatabaseAndState`. For\n  example::\n\n    class Migration(migrations.Migration):\n        ...\n\n        operations = [\n            migrations.SeparateDatabaseAndState(\n                database_operations=[],\n                state_operations=[\n                    migrations.RemoveConstraint(...),\n                    migrations.AddConstraint(...),\n                ],\n            ),\n        ]\n\n* The undocumented ability to pass ``errors=None`` to\n  :meth:`.SimpleTestCase.assertFormError` and\n  :meth:`assertFormsetError() <django.test.SimpleTestCase.assertFormSetError>`\n  is deprecated. Use ``errors=[]`` instead.\n\n* ``django.contrib.sessions.serializers.PickleSerializer`` is deprecated due to\n  the risk of remote code execution.\n\n* The usage of ``QuerySet.iterator()`` on a queryset that prefetches related\n  objects without providing the ``chunk_size`` argument is deprecated. In older\n  versions, no prefetching was done. Providing a value for ``chunk_size``\n  signifies that the additional query per chunk needed to prefetch is desired.\n\n* Passing unsaved model instances to related filters is deprecated. In Django\n  5.0, the exception will be raised.\n\n* ``created=True`` is added to the signature of\n  :meth:`.RemoteUserBackend.configure_user`. Support  for ``RemoteUserBackend``\n  subclasses that do not accept this argument is deprecated.\n\n* The ``django.utils.timezone.utc`` alias to :attr:`datetime.timezone.utc` is\n  deprecated. Use :attr:`datetime.timezone.utc` directly.\n\n* Passing a response object and a form/formset name to\n  ``SimpleTestCase.assertFormError()`` and ``assertFormsetError()`` is\n  deprecated. Use::\n\n    assertFormError(response.context[\"form_name\"], ...)\n    assertFormsetError(response.context[\"formset_name\"], ...)\n\n  or pass the form/formset object directly instead.\n\n* The undocumented ``django.contrib.gis.admin.OpenLayersWidget`` is deprecated.\n\n* ``django.contrib.auth.hashers.CryptPasswordHasher`` is deprecated.\n\n* The ability to pass ``nulls_first=False`` or ``nulls_last=False`` to\n  ``Expression.asc()`` and ``Expression.desc()`` methods, and the ``OrderBy``\n  expression is deprecated. Use ``None`` instead.\n\n* The ``\"django/forms/default.html\"`` and\n  ``\"django/forms/formsets/default.html\"`` templates which are a proxy to the\n  table-based templates are deprecated. Use the specific template instead.\n\n* The undocumented ``LogoutView.get_next_page()`` method is renamed to\n  ``get_success_url()``.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk40",
+    "source_id": "seed_01",
+    "source_type": "official_release_notes",
+    "heading": "Features removed in 4.1",
+    "text": "=======================\n\nThese features have reached the end of their deprecation cycle and are removed\nin Django 4.1.\n\nSee :ref:`deprecated-features-3.2` for details on these changes, including how\nto remove usage of these features.\n\n* Support for assigning objects which don't support creating deep copies with\n  ``copy.deepcopy()`` to class attributes in ``TestCase.setUpTestData()`` is\n  removed.\n\n* Support for using a boolean value in\n  :attr:`.BaseCommand.requires_system_checks` is removed.\n\n* The ``whitelist`` argument and ``domain_whitelist`` attribute of\n  ``django.core.validators.EmailValidator`` are removed.\n\n* The ``default_app_config`` application configuration variable is removed.\n\n* ``TransactionTestCase.assertQuerysetEqual()`` no longer calls ``repr()`` on a\n  queryset when compared to string values.\n\n* The ``django.core.cache.backends.memcached.MemcachedCache`` backend is\n  removed.\n\n* Support for the pre-Django 3.2 format of messages used by\n  ``django.contrib.messages.storage.cookie.CookieStorage`` is removed.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_02::chunk3",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "``zoneinfo`` default timezone implementation",
+    "text": "--------------------------------------------\n\nThe Python standard library's :mod:`zoneinfo` is now the default timezone\nimplementation in Django.\n\nThis is the next step in the migration from using ``pytz`` to using\n:mod:`zoneinfo`. Django 3.2 allowed the use of non-``pytz`` time zones. Django\n4.0 makes ``zoneinfo`` the default implementation. Support for ``pytz`` is now\ndeprecated and will be removed in Django 5.0.\n\n:mod:`zoneinfo` is part of the Python standard library from Python 3.9. The\n``backports.zoneinfo`` package is automatically installed alongside Django if\nyou are using Python 3.8.\n\nThe move to ``zoneinfo`` should be largely transparent. Selection of the\ncurrent timezone, conversion of datetime instances to the current timezone in\nforms and templates, as well as operations on aware datetimes in UTC are\nunaffected.\n\nHowever, if you are working with non-UTC time zones, and using the ``pytz``\n``normalize()`` and ``localize()`` APIs, possibly with the :setting:`TIME_ZONE\n<DATABASE-TIME_ZONE>` setting, you will need to audit your code, since ``pytz``\nand ``zoneinfo`` are not entirely equivalent.\n\nTo give time for such an audit, the transitional ``USE_DEPRECATED_PYTZ``\nsetting allows continued use of ``pytz`` during the 4.x release cycle. This\nsetting will be removed in Django 5.0.\n\nIn addition, a `pytz_deprecation_shim`_ package, created by the ``zoneinfo``\nauthor, can be used to assist with the migration from ``pytz``. This package\nprovides shims to help you safely remove ``pytz``, and has a detailed\n`migration guide`_ showing how to move to the new ``zoneinfo`` APIs.\n\nUsing `pytz_deprecation_shim`_ and the ``USE_DEPRECATED_PYTZ``\ntransitional setting is recommended if you need a gradual update path.\n\n.. _pytz_deprecation_shim: https://pytz-deprecation-shim.readthedocs.io/en/latest/index.html\n.. _migration guide: https://pytz-deprecation-shim.readthedocs.io/en/latest/migration.html",
+    "category": "changed_default"
+  },
+  {
+    "chunk_id": "seed_02::chunk29",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": ":mod:`django.contrib.gis`",
+    "text": "-------------------------\n\n* Support for PostGIS 2.3 is removed.\n\n* Support for GDAL 2.0 and GEOS 3.5 is removed.",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_02::chunk30",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Dropped support for PostgreSQL 9.6",
+    "text": "----------------------------------\n\nUpstream support for PostgreSQL 9.6 ends in November 2021. Django 4.0 supports\nPostgreSQL 10 and higher.\n\nAlso, the minimum supported version of ``psycopg2`` is increased from 2.5.4 to\n2.8.4, as ``psycopg2`` 2.8.4 is the first release to support Python 3.8.",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_02::chunk31",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Dropped support for Oracle 12.2 and 18c",
+    "text": "---------------------------------------\n\nUpstream support for Oracle 12.2 ends in March 2022 and for Oracle 18c it ends\nin June 2021. Django 3.2 will be supported until April 2024. Django 4.0\nofficially supports Oracle 19c.\n\n.. _csrf-trusted-origins-changes-4.0:",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_02::chunk33",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Format change",
+    "text": "~~~~~~~~~~~~~\n\nValues in the :setting:`CSRF_TRUSTED_ORIGINS` setting must include the scheme\n(e.g. ``'http://'`` or ``'https://'``) instead of only the hostname.\n\nAlso, values that started with a dot, must now also include an asterisk before\nthe dot. For example, change ``'.example.com'`` to ``'https://*.example.com'``.\n\nA system check detects any required changes.",
+    "category": "configuration_change"
+  },
+  {
+    "chunk_id": "seed_02::chunk35",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "``SecurityMiddleware`` no longer sets the ``X-XSS-Protection`` header",
+    "text": "---------------------------------------------------------------------\n\nThe :class:`~django.middleware.security.SecurityMiddleware` no longer sets the\n``X-XSS-Protection`` header if the ``SECURE_BROWSER_XSS_FILTER`` setting is\n``True``. The setting is removed.\n\nMost modern browsers don't honor the ``X-XSS-Protection`` HTTP header. You can\nuse Content-Security-Policy_ without allowing ``'unsafe-inline'`` scripts\ninstead.\n\nIf you want to support legacy browsers and set the header, use this line in a\ncustom middleware::\n\n    response.headers.setdefault(\"X-XSS-Protection\", \"1; mode=block\")\n\n.. _Content-Security-Policy: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_02::chunk36",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Migrations autodetector changes",
+    "text": "-------------------------------\n\nThe migrations autodetector now uses model states instead of model classes.\nAlso, migration operations for ``ForeignKey`` and ``ManyToManyField`` fields no\nlonger specify attributes which were not passed to the fields during\ninitialization.\n\nAs a side-effect, running ``makemigrations`` might generate no-op\n``AlterField`` operations for ``ManyToManyField`` and ``ForeignKey`` fields in\nsome cases.",
+    "category": "operational_risk"
+  },
+  {
+    "chunk_id": "seed_02::chunk38",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Table and column naming scheme changes on Oracle",
+    "text": "------------------------------------------------\n\nDjango 4.0 inadvertently changed the table and column naming scheme on Oracle.\nThis causes errors for models and fields with names longer than 30 characters.\nUnfortunately, renaming some Oracle tables and columns is required. Use the\nupgrade script in :ticket:`33789 <33789#comment:15>` to generate ``RENAME``\nstatements to change naming scheme.",
+    "category": "data_migration"
+  },
+  {
+    "chunk_id": "seed_02::chunk39",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Miscellaneous",
+    "text": "-------------\n\n* Support for ``cx_Oracle`` < 7.0 is removed.\n\n* To allow serving a Django site on a subpath without changing the value of\n  :setting:`STATIC_URL`, the leading slash is removed from that setting (now\n  ``'static/'``) in the default :djadmin:`startproject` template.\n\n* The :class:`~django.contrib.admin.AdminSite` method for the admin ``index``\n  view is no longer decorated with ``never_cache`` when accessed directly,\n  rather than via the recommended ``AdminSite.urls`` property, or\n  ``AdminSite.get_urls()`` method.\n\n* Unsupported operations on a sliced queryset now raise ``TypeError`` instead\n  of ``AssertionError``.\n\n* The undocumented ``django.test.runner.reorder_suite()`` function is renamed\n  to ``reorder_tests()``. It now accepts an iterable of tests rather than a\n  test suite, and returns an iterator of tests.\n\n* Calling ``FileSystemStorage.delete()`` with an empty ``name`` now raises\n  ``ValueError`` instead of ``AssertionError``.\n\n* Calling ``EmailMultiAlternatives.attach_alternative()`` or\n  ``EmailMessage.attach()`` with an invalid ``content`` or ``mimetype``\n  arguments now raise ``ValueError`` instead of ``AssertionError``.\n\n* :meth:`~django.test.SimpleTestCase.assertHTMLEqual` no longer considers a\n  non-boolean attribute without a value equal to an attribute with the same\n  name and value.\n\n* Tests that fail to load, for example due to syntax errors, now always match\n  when using :option:`test --tag`.\n\n* The undocumented ``django.contrib.admin.utils.lookup_needs_distinct()``\n  function is renamed to ``lookup_spawns_duplicates()``.\n\n* The undocumented ``HttpRequest.get_raw_uri()`` method is removed. The\n  :meth:`.HttpRequest.build_absolute_uri` method may be a suitable alternative.\n\n* The ``object`` argument of undocumented ``ModelAdmin.log_addition()``,\n  ``log_change()``, and ``log_deletion()`` methods is renamed to ``obj``.\n\n* :class:`~django.utils.feedgenerator.RssFeed`,\n  :class:`~django.utils.feedgenerator.Atom1Feed`, and their subclasses now emit\n  elements with no content as self-closing tags.\n\n* ``NodeList.render()`` no longer casts the output of ``render()`` method for\n  individual nodes to a string. ``Node.render()`` should always return a string\n  as documented.\n\n* The ``where_class`` property of ``django.db.models.sql.query.Query`` and the\n  ``where_class`` argument to the private ``get_extra_restriction()`` method of\n  ``ForeignObject`` and ``ForeignObjectRel`` are removed. If needed, initialize\n  ``django.db.models.sql.where.WhereNode`` instead.\n\n* The ``filter_clause`` argument of the undocumented ``Query.add_filter()``\n  method is replaced by two positional arguments ``filter_lhs`` and\n  ``filter_rhs``.\n\n* :class:`~django.middleware.csrf.CsrfViewMiddleware` now uses\n  ``request.META['CSRF_COOKIE_NEEDS_UPDATE']`` in place of\n  ``request.META['CSRF_COOKIE_USED']``, ``request.csrf_cookie_needs_reset``,\n  and ``response.csrf_cookie_set`` to track whether the CSRF cookie should be\n  sent. This is an undocumented, private API.\n\n* The undocumented ``TRANSLATOR_COMMENT_MARK`` constant is moved from\n  ``django.template.base`` to ``django.utils.translation.template``.\n\n* The ``real_apps`` argument of the undocumented\n  ``django.db.migrations.state.ProjectState.__init__()`` method must now be a\n  set if provided.\n\n* :class:`~django.forms.RadioSelect` and\n  :class:`~django.forms.CheckboxSelectMultiple` widgets are now rendered in\n  ``<div>`` tags so they are announced more concisely by screen readers. If you\n  need the previous behavior, :ref:`override the widget template\n  <overriding-built-in-widget-templates>` with the appropriate template from\n  Django 3.2.\n\n* The :tfilter:`floatformat` template filter no longer depends on the\n  ``USE_L10N`` setting and always returns localized output. Use the ``u``\n  suffix to disable localization.\n\n* The default value of the ``USE_L10N`` setting is changed to ``True``. See the\n  :ref:`Localization section <use_l10n_deprecation>` above for more details.\n\n* As part of the :ref:`move to zoneinfo <whats-new-4.0>`,\n  ``django.utils.timezone.utc`` is changed to alias\n  :attr:`datetime.timezone.utc`.\n\n* The minimum supported version of ``asgiref`` is increased from 3.3.2 to\n  3.4.1.\n\n.. _deprecated-features-4.0:",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_02::chunk41",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Use of ``pytz`` time zones",
+    "text": "--------------------------\n\nAs part of the :ref:`move to zoneinfo <whats-new-4.0>`, use of ``pytz`` time\nzones is deprecated.\n\nAccordingly, the ``is_dst`` arguments to the following are also deprecated:\n\n* :meth:`django.db.models.query.QuerySet.datetimes`\n* :func:`django.db.models.functions.Trunc`\n* :func:`django.db.models.functions.TruncSecond`\n* :func:`django.db.models.functions.TruncMinute`\n* :func:`django.db.models.functions.TruncHour`\n* :func:`django.db.models.functions.TruncDay`\n* :func:`django.db.models.functions.TruncWeek`\n* :func:`django.db.models.functions.TruncMonth`\n* :func:`django.db.models.functions.TruncQuarter`\n* :func:`django.db.models.functions.TruncYear`\n* :func:`django.utils.timezone.make_aware`\n\nSupport for use of ``pytz`` will be removed in Django 5.0.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_02::chunk42",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Time zone support",
+    "text": "-----------------\n\nIn order to follow good practice, the default value of the :setting:`USE_TZ`\nsetting will change from ``False`` to ``True``, and time zone support will be\nenabled by default, in Django 5.0.\n\nNote that the default :file:`settings.py` file created by\n:djadmin:`django-admin startproject <startproject>` includes\n:setting:`USE_TZ = True <USE_TZ>` since Django 1.4.\n\nYou can set ``USE_TZ`` to ``False`` in your project settings before then to\nopt-out.\n\n.. _use_l10n_deprecation:",
+    "category": "changed_default"
+  },
+  {
+    "chunk_id": "seed_02::chunk43",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Localization",
+    "text": "------------\n\nIn order to follow good practice, the default value of the ``USE_L10N`` setting\nis changed from ``False`` to ``True``.\n\nMoreover ``USE_L10N`` is deprecated as of this release. Starting with Django\n5.0, by default, any date or number displayed by Django will be localized.\n\nThe :ttag:`{% localize %} <localize>` tag and the :tfilter:`localize`/\n:tfilter:`unlocalize` filters will still be honored by Django.",
+    "category": "changed_default"
+  },
+  {
+    "chunk_id": "seed_02::chunk44",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Miscellaneous",
+    "text": "-------------\n\n* ``SERIALIZE`` test setting is deprecated as it can be inferred from the\n  :attr:`~django.test.TestCase.databases` with the\n  :ref:`serialized_rollback <test-case-serialized-rollback>` option enabled.\n\n* The undocumented ``django.utils.baseconv`` module is deprecated.\n\n* The undocumented ``django.utils.datetime_safe`` module is deprecated.\n\n* The default sitemap protocol for sitemaps built outside the context of a\n  request will change from ``'http'`` to ``'https'`` in Django 5.0.\n\n* The ``extra_tests`` argument for :meth:`.DiscoverRunner.build_suite` and\n  :meth:`.DiscoverRunner.run_tests` is deprecated.\n\n* The :class:`~django.contrib.postgres.aggregates.ArrayAgg`,\n  :class:`~django.contrib.postgres.aggregates.JSONBAgg`, and\n  :class:`~django.contrib.postgres.aggregates.StringAgg` aggregates will return\n  ``None`` when there are no rows instead of ``[]``, ``[]``, and ``''``\n  respectively in Django 5.0. If you need the previous behavior, explicitly set\n  ``default`` to ``Value([])``, ``Value('[]')``, or ``Value('')``.\n\n* The ``django.contrib.gis.admin.GeoModelAdmin`` and ``OSMGeoAdmin`` classes\n  are deprecated. Use :class:`~django.contrib.admin.ModelAdmin` and\n  :class:`~django.contrib.gis.admin.GISModelAdmin` instead.\n\n* Since form rendering now uses the template engine, the undocumented\n  ``BaseForm._html_output()`` helper method is deprecated.\n\n* The ability to return a ``str`` from ``ErrorList`` and ``ErrorDict`` is\n  deprecated. It is expected these methods return a ``SafeString``.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_02::chunk45",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Features removed in 4.0",
+    "text": "=======================\n\nThese features have reached the end of their deprecation cycle and are removed\nin Django 4.0.\n\nSee :ref:`deprecated-features-3.0` for details on these changes, including how\nto remove usage of these features.\n\n* ``django.utils.http.urlquote()``, ``urlquote_plus()``, ``urlunquote()``, and\n  ``urlunquote_plus()`` are removed.\n\n* ``django.utils.encoding.force_text()`` and ``smart_text()`` are removed.\n\n* ``django.utils.translation.ugettext()``, ``ugettext_lazy()``,\n  ``ugettext_noop()``, ``ungettext()``, and ``ungettext_lazy()`` are removed.\n\n* ``django.views.i18n.set_language()`` doesn't set the user language in\n  ``request.session`` (key ``_language``).\n\n* ``alias=None`` is required in the signature of\n  ``django.db.models.Expression.get_group_by_cols()`` subclasses.\n\n* ``django.utils.text.unescape_entities()`` is removed.\n\n* ``django.utils.http.is_safe_url()`` is removed.\n\nSee :ref:`deprecated-features-3.1` for details on these changes, including how\nto remove usage of these features.\n\n* The ``PASSWORD_RESET_TIMEOUT_DAYS`` setting is removed.\n\n* The :lookup:`isnull` lookup no longer allows using non-boolean values as the\n  right-hand side.\n\n* The ``django.db.models.query_utils.InvalidQuery`` exception class is removed.\n\n* The ``django-admin.py`` entry point is removed.\n\n* The ``HttpRequest.is_ajax()`` method is removed.\n\n* Support for the pre-Django 3.1 encoding format of cookies values used by\n  ``django.contrib.messages.storage.cookie.CookieStorage`` is removed.\n\n* Support for the pre-Django 3.1 password reset tokens in the admin site (that\n  use the SHA-1 hashing algorithm) is removed.\n\n* Support for the pre-Django 3.1 encoding format of sessions is removed.\n\n* Support for the pre-Django 3.1 ``django.core.signing.Signer`` signatures\n  (encoded with the SHA-1 algorithm) is removed.\n\n* Support for the pre-Django 3.1 ``django.core.signing.dumps()`` signatures\n  (encoded with the SHA-1 algorithm) in ``django.core.signing.loads()`` is\n  removed.\n\n* Support for the pre-Django 3.1 user sessions (that use the SHA-1 algorithm)\n  is removed.\n\n* The ``get_response`` argument for\n  ``django.utils.deprecation.MiddlewareMixin.__init__()`` is required and\n  doesn't accept ``None``.\n\n* The ``providing_args`` argument for ``django.dispatch.Signal`` is removed.\n\n* The ``length`` argument for ``django.utils.crypto.get_random_string()`` is\n  required.\n\n* The ``list`` message for ``ModelMultipleChoiceField`` is removed.\n\n* Support for passing raw column aliases to ``QuerySet.order_by()`` is removed.\n\n* The ``NullBooleanField`` model field is removed, except for support in\n  historical migrations.\n\n* ``django.conf.urls.url()`` is removed.\n\n* The ``django.contrib.postgres.fields.JSONField`` model field is removed,\n  except for support in historical migrations.\n\n* ``django.contrib.postgres.fields.jsonb.KeyTransform`` and\n  ``django.contrib.postgres.fields.jsonb.KeyTextTransform`` are removed.\n\n* ``django.contrib.postgres.forms.JSONField`` is removed.\n\n* The ``{% ifequal %}`` and ``{% ifnotequal %}`` template tags are removed.\n\n* The ``DEFAULT_HASHING_ALGORITHM`` transitional setting is removed.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_03::chunk5",
+    "source_id": "seed_03",
+    "source_type": "deprecation_notice",
+    "heading": "5.1",
+    "text": "---\n\nSee the :ref:`Django 4.2 release notes <deprecated-features-4.2>` for more\ndetails on these changes.\n\n* The ``BaseUserManager.make_random_password()`` method will be removed.\n\n* The model's ``Meta.index_together`` option will be removed.\n\n* The ``length_is`` template filter will be removed.\n\n* The ``django.contrib.auth.hashers.SHA1PasswordHasher``,\n  ``django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher``, and\n  ``django.contrib.auth.hashers.UnsaltedMD5PasswordHasher`` will be removed.\n\n* The model ``django.contrib.postgres.fields.CICharField``,\n  ``django.contrib.postgres.fields.CIEmailField``, and\n  ``django.contrib.postgres.fields.CITextField`` will be removed. Stub fields\n  will remain for compatibility with historical migrations.\n\n* The ``django.contrib.postgres.fields.CIText`` mixin will be removed.\n\n* The ``map_width`` and ``map_height`` attributes of ``BaseGeometryWidget``\n  will be removed.\n\n* The ``SimpleTestCase.assertFormsetError()`` method will be removed.\n\n* The ``TransactionTestCase.assertQuerysetEqual()`` method will be removed.\n\n* Support for passing encoded JSON string literals to ``JSONField`` and\n  associated lookups and expressions will be removed.\n\n* Support for passing positional arguments to ``Signer`` and\n  ``TimestampSigner`` will be removed.\n\n* The ``DEFAULT_FILE_STORAGE`` and ``STATICFILES_STORAGE`` settings will be\n  removed.\n\n* The ``django.core.files.storage.get_storage_class()`` function will be\n  removed.\n\n.. _deprecation-removed-in-5.0:",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_03::chunk6",
+    "source_id": "seed_03",
+    "source_type": "deprecation_notice",
+    "heading": "5.0",
+    "text": "---\n\nSee the :ref:`Django 4.0 release notes <deprecated-features-4.0>` for more\ndetails on these changes.\n\n* The ``SERIALIZE`` test setting will be removed.\n\n* The undocumented ``django.utils.baseconv`` module will be removed.\n\n* The undocumented ``django.utils.datetime_safe`` module will be removed.\n\n* The default value of the ``USE_TZ`` setting will change from ``False`` to\n  ``True``.\n\n* The default sitemap protocol for sitemaps built outside the context of a\n  request will change from ``'http'`` to ``'https'``.\n\n* The ``extra_tests`` argument for ``DiscoverRunner.build_suite()`` and\n  ``DiscoverRunner.run_tests()`` will be removed.\n\n* The ``django.contrib.postgres.aggregates.ArrayAgg``, ``JSONBAgg``, and\n  ``StringAgg`` aggregates will return ``None`` when there are no rows instead\n  of ``[]``, ``[]``, and ``''`` respectively.\n\n* The ``USE_L10N`` setting will be removed.\n\n* The ``USE_DEPRECATED_PYTZ`` transitional setting will be removed.\n\n* Support for ``pytz`` timezones will be removed.\n\n* The ``is_dst`` argument will be removed from:\n\n  * ``QuerySet.datetimes()``\n  * ``django.utils.timezone.make_aware()``\n  * ``django.db.models.functions.Trunc()``\n  * ``django.db.models.functions.TruncSecond()``\n  * ``django.db.models.functions.TruncMinute()``\n  * ``django.db.models.functions.TruncHour()``\n  * ``django.db.models.functions.TruncDay()``\n  * ``django.db.models.functions.TruncWeek()``\n  * ``django.db.models.functions.TruncMonth()``\n  * ``django.db.models.functions.TruncQuarter()``\n  * ``django.db.models.functions.TruncYear()``\n\n* The ``django.contrib.gis.admin.GeoModelAdmin`` and ``OSMGeoAdmin`` classes\n  will be removed.\n\n* The undocumented ``BaseForm._html_output()`` method will be removed.\n\n* The ability to return a ``str``, rather than a ``SafeString``, when rendering\n  an ``ErrorDict`` and ``ErrorList`` will be removed.\n\nSee the :ref:`Django 4.1 release notes <deprecated-features-4.1>` for more\ndetails on these changes.\n\n* The ``SitemapIndexItem.__str__()`` method will be removed.\n\n* The ``CSRF_COOKIE_MASKED`` transitional setting will be removed.\n\n* The ``name`` argument of ``django.utils.functional.cached_property()`` will\n  be removed.\n\n* The ``opclasses`` argument of\n  ``django.contrib.postgres.constraints.ExclusionConstraint`` will be removed.\n\n* The undocumented ability to pass ``errors=None`` to\n  ``SimpleTestCase.assertFormError()`` and ``assertFormsetError()`` will be\n  removed.\n\n* ``django.contrib.sessions.serializers.PickleSerializer`` will be removed.\n\n* The usage of ``QuerySet.iterator()`` on a queryset that prefetches related\n  objects without providing the ``chunk_size`` argument will no longer be\n  allowed.\n\n* Passing unsaved model instances to related filters will no longer be allowed.\n\n* ``created=True`` will be required in the signature of\n  ``RemoteUserBackend.configure_user()`` subclasses.\n\n* Support for logging out via ``GET`` requests in the\n  ``django.contrib.auth.views.LogoutView`` and\n  ``django.contrib.auth.views.logout_then_login()`` will be removed.\n\n* The ``django.utils.timezone.utc`` alias to ``datetime.timezone.utc`` will be\n  removed.\n\n* Passing a response object and a form/formset name to\n  ``SimpleTestCase.assertFormError()`` and ``assertFormsetError()`` will no\n  longer be allowed.\n\n* The ``django.contrib.gis.admin.OpenLayersWidget`` will be removed.\n\n* The ``django.contrib.auth.hashers.CryptPasswordHasher`` will be removed.\n\n* The ``\"django/forms/default.html\"`` and\n  ``\"django/forms/formsets/default.html\"`` templates will be removed.\n\n* The ability to pass ``nulls_first=False`` or ``nulls_last=False`` to\n  ``Expression.asc()`` and ``Expression.desc()`` methods, and the ``OrderBy``\n  expression will be removed.\n\n.. _deprecation-removed-in-4.1:",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_03::chunk7",
+    "source_id": "seed_03",
+    "source_type": "deprecation_notice",
+    "heading": "4.1",
+    "text": "---\n\nSee the :ref:`Django 3.2 release notes <deprecated-features-3.2>` for more\ndetails on these changes.\n\n* Support for assigning objects which don't support creating deep copies with\n  ``copy.deepcopy()`` to class attributes in ``TestCase.setUpTestData()`` will\n  be removed.\n\n* ``BaseCommand.requires_system_checks`` won't support boolean values.\n\n* The ``whitelist`` argument and ``domain_whitelist`` attribute of\n  ``django.core.validators.EmailValidator`` will be removed.\n\n* The ``default_app_config`` module variable will be removed.\n\n* ``TransactionTestCase.assertQuerysetEqual()`` will no longer automatically\n  call ``repr()`` on a queryset when compared to string values.\n\n* ``django.core.cache.backends.memcached.MemcachedCache`` will be removed.\n\n* Support for the pre-Django 3.2 format of messages used by\n  ``django.contrib.messages.storage.cookie.CookieStorage`` will be removed.\n\n.. _deprecation-removed-in-4.0:",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_03::chunk8",
+    "source_id": "seed_03",
+    "source_type": "deprecation_notice",
+    "heading": "4.0",
+    "text": "---\n\nSee the :ref:`Django 3.0 release notes <deprecated-features-3.0>` for more\ndetails on these changes.\n\n* ``django.utils.http.urlquote()``, ``urlquote_plus()``, ``urlunquote()``, and\n  ``urlunquote_plus()`` will be removed.\n\n* ``django.utils.encoding.force_text()`` and ``smart_text()`` will be removed.\n\n* ``django.utils.translation.ugettext()``, ``ugettext_lazy()``,\n  ``ugettext_noop()``, ``ungettext()``, and ``ungettext_lazy()`` will be\n  removed.\n\n* ``django.views.i18n.set_language()`` will no longer set the user language in\n  ``request.session`` (key ``django.utils.translation.LANGUAGE_SESSION_KEY``).\n\n* ``alias=None`` will be required in the signature of\n  ``django.db.models.Expression.get_group_by_cols()`` subclasses.\n\n* ``django.utils.text.unescape_entities()`` will be removed.\n\n* ``django.utils.http.is_safe_url()`` will be removed.\n\nSee the :ref:`Django 3.1 release notes <deprecated-features-3.1>` for more\ndetails on these changes.\n\n* The ``PASSWORD_RESET_TIMEOUT_DAYS`` setting will be removed.\n\n* The undocumented usage of the :lookup:`isnull` lookup with non-boolean values\n  as the right-hand side will no longer be allowed.\n\n* The ``django.db.models.query_utils.InvalidQuery`` exception class will be\n  removed.\n\n* The ``django-admin.py`` entry point will be removed.\n\n* The ``HttpRequest.is_ajax()`` method will be removed.\n\n* Support for the pre-Django 3.1 encoding format of cookies values used by\n  ``django.contrib.messages.storage.cookie.CookieStorage`` will be removed.\n\n* Support for the pre-Django 3.1 password reset tokens in the admin site (that\n  use the SHA-1 hashing algorithm) will be removed.\n\n* Support for the pre-Django 3.1 encoding format of sessions will be removed.\n\n* Support for the pre-Django 3.1 ``django.core.signing.Signer`` signatures\n  (encoded with the SHA-1 algorithm) will be removed.\n\n* Support for the pre-Django 3.1 ``django.core.signing.dumps()`` signatures\n  (encoded with the SHA-1 algorithm) in ``django.core.signing.loads()`` will be\n  removed.\n\n* Support for the pre-Django 3.1 user sessions (that use the SHA-1 algorithm)\n  will be removed.\n\n* The ``get_response`` argument for\n  ``django.utils.deprecation.MiddlewareMixin.__init__()`` will be required and\n  won't accept ``None``.\n\n* The ``providing_args`` argument for ``django.dispatch.Signal`` will be\n  removed.\n\n* The ``length`` argument for ``django.utils.crypto.get_random_string()`` will\n  be required.\n\n* The ``list`` message for ``ModelMultipleChoiceField`` will be removed.\n\n* Support for passing raw column aliases to ``QuerySet.order_by()`` will be\n  removed.\n\n* The model ``NullBooleanField`` will be removed. A stub field will remain for\n  compatibility with historical migrations.\n\n* ``django.conf.urls.url()`` will be removed.\n\n* The model ``django.contrib.postgres.fields.JSONField`` will be removed. A\n  stub field will remain for compatibility with historical migrations.\n\n* ``django.contrib.postgres.forms.JSONField``,\n  ``django.contrib.postgres.fields.jsonb.KeyTransform``, and\n  ``django.contrib.postgres.fields.jsonb.KeyTextTransform`` will be removed.\n\n* The ``{% ifequal %}`` and ``{% ifnotequal %}`` template tags will be removed.\n\n* The ``DEFAULT_HASHING_ALGORITHM`` transitional setting will be removed.\n\n.. _deprecation-removed-in-3.1:",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "registry_meta::chunk0",
+    "source_id": "registry_meta",
+    "source_type": "package_registry_metadata",
+    "heading": "(no heading)",
+    "text": "{\n  \"package\": \"django\",\n  \"queried_version\": \"4.2\",\n  \"latest_version\": \"6.1.1\",\n  \"requires_python\": \">=3.8\",\n  \"classifiers\": [\n    \"Programming Language :: Python :: 3\",\n    \"Programming Language :: Python :: 3 :: Only\",\n    \"Programming Language :: Python :: 3.10\",\n    \"Programming Language :: Python :: 3.11\",\n    \"Programming Language :: Python :: 3.8\",\n    \"Programming Language :: Python :: 3.9\"\n  ],\n  \"project_urls\": {\n    \"Documentation\": \"https://docs.djangoproject.com/\",\n    \"Funding\": \"https://www.djangoproject.com/fundraising/\",\n    \"Homepage\": \"https://www.djangoproject.com/\",\n    \"Release notes\": \"https://docs.djangoproject.com/en/stable/releases/\",\n    \"Source\": \"https://github.com/django/django\",\n    \"Tracker\": \"https://code.djangoproject.com/\"\n  },\n  \"summary\": \"A high-level Python web framework that encourages rapid development and clean, pragmatic design.\"\n}",
+    "category": "runtime_requirement"
+  }
+]

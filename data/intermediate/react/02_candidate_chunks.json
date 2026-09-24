@@ -1,0 +1,562 @@
+[
+  {
+    "chunk_id": "seed_00::chunk32",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React DOM",
+    "text": "* Fixed double warning when the `href` attribute is an empty string [#31783](https://github.com/facebook/react/pull/31783)\n * Fixed an edge case where `getHoistableRoot()` didn\u2019t work properly when the container was a Document [#32321](https://github.com/facebook/react/pull/32321)\n* Removed support for using HTML comments (e.g. `<!-- -->`) as a DOM container. [#32250](https://github.com/facebook/react/pull/32250)\n* Added support for `<script>` and `<template>` tags to be nested within `<select>` tags. [#31837](https://github.com/facebook/react/pull/31837)\n* Fixed responsive images to be preloaded as HTML instead of headers [#32445](https://github.com/facebook/react/pull/32445)",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk47",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Deprecations",
+    "text": "* Deprecated: `element.ref` access: React 19 supports ref as a prop, so we\u2019re deprecating `element.ref` in favor of `element.props.ref`. Accessing will result in a warning.  \n* `react-test-renderer`: In React 19, react-test-renderer logs a deprecation warning and has switched to concurrent rendering for web usage. We recommend migrating your tests to  [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) or [@testing-library/react-native](https://testing-library.com/docs/react-native-testing-library/intro)",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk49",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React",
+    "text": "* New JSX Transform is now required: We introduced [a new JSX transform](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html) in 2020 to improve bundle size and use JSX without importing React. In React 19, we\u2019re adding additional improvements like using ref as a prop and JSX speed improvements that require the new transform.  \n* Errors in render are not re-thrown: Errors that are not caught by an Error Boundary are now reported to window.reportError. Errors that are caught by an Error Boundary are reported to console.error. We\u2019ve introduced `onUncaughtError` and `onCaughtError` methods to `createRoot` and `hydrateRoot` to customize this error handling.  \n* Removed: `propTypes`: Using `propTypes` will now be silently ignored. If required, we recommend migrating to TypeScript or another type-checking solution.  \n* Removed: `defaultProps` for functions: ES6 default parameters can be used in place. Class components continue to support `defaultProps` since there is no ES6 alternative.  \n* Removed: `contextTypes` and `getChildContext`: Legacy Context for class components has been removed in favor of the `contextType` API.  \n* Removed: string refs: Any usage of string refs need to be migrated to ref callbacks.   \n* Removed: Module pattern factories: A rarely used pattern that can be migrated to regular functions.  \n* Removed: `React.createFactory`: Now that JSX is broadly supported, all `createFactory` usage can be migrated to JSX components.  \n* Removed: `react-test-renderer/shallow`: This has been a re-export of [react-shallow-renderer](https://github.com/enzymejs/react-shallow-renderer) since React 18\\. If needed, you can continue to use the third-party package directly. We recommend using [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) or [@testing-library/react-native](https://testing-library.com/docs/react-native-testing-library/intro) instead.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk50",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React DOM",
+    "text": "* Removed: `react-dom/test-utils`: We\u2019ve moved `act` from `react-dom/test-utils` to react. All other utilities have been removed.   \n* Removed: `ReactDOM`.`render`, `ReactDOM`.`hydrate`: These have been removed in favor of the concurrent equivalents: `ReactDOM`.`createRoot` and `ReactDOM.hydrateRoot`.  \n* Removed: `unmountComponentAtNode`: Removed in favor of `root.unmount()`.  \n* Removed: `ReactDOM`.`findDOMNode`: You can replace `ReactDOM`.`findDOMNode` with DOM Refs.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk53",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "TypeScript Changes",
+    "text": "The most common changes can be codemodded with `npx types-react-codemod@latest preset-19 ./path-to-your-react-ts-files`.\n\n* Removed deprecated TypeScript types:   \n  * `ReactChild` (replacement: `React.ReactElement | number | string)`  \n  * `ReactFragment` (replacement: `Iterable<React.ReactNode>`)  \n  * `ReactNodeArray` (replacement: `ReadonlyArray<React.ReactNode>`)  \n  * `ReactText` (replacement: `number | string`)  \n  * `VoidFunctionComponent` (replacement: `FunctionComponent`)  \n  * `VFC` (replacement: `FC`)  \n  * Moved to `prop-types`: `Requireable`, `ValidationMap`, `Validator`, `WeakValidationMap`  \n  * Moved to `create-react-class`: `ClassicComponentClass`, `ClassicComponent`, `ClassicElement`, `ComponentSpec`, `Mixin`, `ReactChildren`, `ReactHTML`, `ReactSVG`, `SFCFactory`  \n* Disallow implicit return in refs: refs can now accept cleanup functions. When you return something else, we can\u2019t tell if you intentionally returned something not meant to clean up or returned the wrong value. Implicit returns of anything but functions will now error.   \n* Require initial argument to `useRef`: The initial argument is now required to match `useState`, `createContext` etc  \n* Refs are mutable by default: Ref objects returned from `useRef()` are now always mutable instead of sometimes being immutable. This feature was too confusing for users and conflicted with legit cases where refs were managed by React and manually written to.  \n* Strict `ReactElement` typing: The props of React elements now default to `unknown` instead of `any` if the element is typed as `ReactElement`  \n* JSX namespace in TypeScript: The global `JSX` namespace is removed to improve interoperability with other libraries using JSX. Instead, the JSX namespace is available from the React package: `import { JSX } from 'react'`  \n* Better `useReducer` typings: Most `useReducer` usage should not require explicit type arguments.  \n  For example,  \n  ```diff\n  -useReducer<React.Reducer<State, Action>>(reducer)\n  +useReducer(reducer)\n  ```\n  or\n  ```diff\n  -useReducer<React.Reducer<State, Action>>(reducer)\n  +useReducer<State, Action>(reducer)\n  ```",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk57",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "ReactTestRenderer",
+    "text": "* Add deprecation error to `react-test-renderer` on web ([\\#27903](https://github.com/facebook/react/pull/27903), [\\#28904](https://github.com/facebook/react/pull/28904) by [@jackpope](https://github.com/jackpope) and [@acdlite](https://github.com/acdlite))  \n* Render with ConcurrentRoot on web ([\\#28498](https://github.com/facebook/react/pull/28498) by [@jackpope](https://github.com/jackpope))  \n* Remove `react-test-renderer/shallow` export ([\\#25475](https://github.com/facebook/react/pull/25475), [\\#28497](https://github.com/facebook/react/pull/28497) by [@sebmarkbage](https://github.com/sebmarkbage) and [@jackpope](https://github.com/jackpope))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk58",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React Reconciler",
+    "text": "* Enable suspending commits without blocking render ([\\#26398](https://github.com/facebook/react/pull/26398), [\\#26427](https://github.com/facebook/react/pull/26427) by [@acdlite](https://github.com/acdlite))  \n* Remove `prepareUpdate` ([\\#26583](https://github.com/facebook/react/pull/26583), [\\#27409](http://github.com/facebook/react/pull/27409) by [@sebmarkbage](https://github.com/sebmarkbage) and [@sophiebits](https://github.com/sophiebits))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk59",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React-Is",
+    "text": "* Enable tree shaking ([\\#27701](https://github.com/facebook/react/pull/27701) by [@markerikson](https://github.com/markerikson))  \n* Remove `isConcurrentMode` and `isAsyncMode` methods ([\\#28224](https://github.com/facebook/react/pull/28224) by @gaearon)",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk76",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Deprecations",
+    "text": "* `react-dom`: `ReactDOM.render` has been deprecated. Using it will warn and run your app in React 17 mode.\n* `react-dom`: `ReactDOM.hydrate` has been deprecated. Using it will warn and run your app in React 17 mode.\n* `react-dom`: `ReactDOM.unmountComponentAtNode` has been deprecated.\n* `react-dom`: `ReactDOM.renderSubtreeIntoContainer` has been deprecated.\n* `react-dom/server`: `ReactDOMServer.renderToNodeStream` has been deprecated.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk77",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React",
+    "text": "* **Automatic batching:** This release introduces a performance improvement that changes to the way React batches updates to do more batching automatically. See [Automatic batching for fewer renders in React 18](https://github.com/reactwg/react-18/discussions/21) for more info. In the rare case that you need to opt out, wrap the state update in `flushSync`.\n* **Stricter Strict Mode**: In the future, React will provide a feature that lets components preserve state between unmounts. To prepare for it, React 18 introduces a new development-only check to Strict Mode. React will automatically unmount and remount every component, whenever a component mounts for the first time, restoring the previous state on the second mount. If this breaks your app, consider removing Strict Mode until you can fix the components to be resilient to remounting with existing state.\n* **Consistent useEffect timing**: React now always synchronously flushes effect functions if the update was triggered during a discrete user input event such as a click or a keydown event. Previously, the behavior wasn't always predictable or consistent.\n* **Stricter hydration errors**: Hydration mismatches due to missing or extra text content are now treated like errors instead of warnings. React will no longer attempt to \"patch up\" individual nodes by inserting or deleting a node on the client in an attempt to match the server markup, and will revert to client rendering up to the closest `<Suspense>` boundary in the tree. This ensures the hydrated tree is consistent and avoids potential privacy and security holes that can be caused by hydration mismatches.\n* **Suspense trees are always consistent:** If a component suspends before it's fully added to the tree, React will not add it to the tree in an incomplete state or fire its effects. Instead, React will throw away the new tree completely, wait for the asynchronous operation to finish, and then retry rendering again from scratch. React will render the retry attempt concurrently, and without blocking the browser.\n* **Layout Effects with Suspense**: When a tree re-suspends and reverts to a fallback, React will now clean up layout effects, and then re-create them when the content inside the boundary is shown again. This fixes an issue which prevented component libraries from correctly measuring layout when used with Suspense.\n* **New JS Environment Requirements**: React now depends on modern browsers features including `Promise`, `Symbol`, and `Object.assign`. If you support older browsers and devices such as Internet Explorer which do not provide modern browser features natively or have non-compliant implementations, consider including a global polyfill in your bundled application.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk78",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Scheduler (Experimental)",
+    "text": "* Remove unstable `scheduler/tracing` API",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk80",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React DOM Server",
+    "text": "* **`renderToString`:** Will no longer error when suspending on the server. Instead, it will emit the fallback HTML for the closest `<Suspense>` boundary and then retry rendering the same content on the client. It is still recommended that you switch to a streaming API like `renderToPipeableStream` or `renderToReadableStream` instead.\n* **`renderToStaticMarkup`:** Will no longer error when suspending on the server. Instead, it will emit the fallback HTML for the closest `<Suspense>` boundary and retry rendering on the client.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk84",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React DOM Test Utils",
+    "text": "* Throw when `act` is used in production. ([#21686](https://github.com/facebook/react/pull/21686) by [@acdlite](https://github.com/acdlite))\n* Support disabling spurious act warnings with `global.IS_REACT_ACT_ENVIRONMENT`. ([#22561](https://github.com/facebook/react/pull/22561) by [@acdlite](https://github.com/acdlite))\n* Expand act warning to cover all APIs that might schedule React work. ([#22607](https://github.com/facebook/react/pull/22607) by [@acdlite](https://github.com/acdlite))\n* Make `act` batch updates. ([#21797](https://github.com/facebook/react/pull/21797) by [@acdlite](https://github.com/acdlite))\n* Remove warning for dangling passive effects. ([#22609](https://github.com/facebook/react/pull/22609) by [@acdlite](https://github.com/acdlite))",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk87",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Scheduler (Experimental)",
+    "text": "* Remove unstable `scheduler/tracing` API ([#20037](https://github.com/facebook/react/pull/20037) by [@bvaughn](https://github.com/bvaughn))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk92",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React DOM",
+    "text": "* Delegate events to roots instead of `document`. ([@trueadm](https://github.com/trueadm) in [#18195](https://github.com/facebook/react/pull/18195) and [others](https://github.com/facebook/react/pulls?q=is%3Apr+author%3Atrueadm+modern+event+is%3Amerged))\n* Clean up all effects before running any next effects. ([@bvaughn](https://github.com/bvaughn) in [#17947](https://github.com/facebook/react/pull/17947))\n* Run `useEffect` cleanup functions asynchronously. ([@bvaughn](https://github.com/bvaughn) in [#17925](https://github.com/facebook/react/pull/17925))\n* Use browser `focusin` and `focusout` for `onFocus` and `onBlur`. ([@trueadm](https://github.com/trueadm) in [#19186](https://github.com/facebook/react/pull/19186))\n* Make all `Capture` events use the browser capture phase. ([@trueadm](https://github.com/trueadm) in [#19221](https://github.com/facebook/react/pull/19221))\n* Don't emulate bubbling of the `onScroll` event. ([@gaearon](https://github.com/gaearon) in [#19464](https://github.com/facebook/react/pull/19464))\n* Throw if `forwardRef` or `memo` component returns `undefined`. ([@gaearon](https://github.com/gaearon) in [#19550](https://github.com/facebook/react/pull/19550))\n* Remove event pooling. ([@trueadm](https://github.com/trueadm) in [#18969](https://github.com/facebook/react/pull/18969))\n* Stop exposing internals that won\u2019t be needed by React Native Web. ([@necolas](https://github.com/necolas) in [#18483](https://github.com/facebook/react/pull/18483))\n* Attach all known event listeners when the root mounts. ([@gaearon](https://github.com/gaearon) in [#19659](https://github.com/facebook/react/pull/19659))\n* Disable `console` in the second render pass of DEV mode double render. ([@sebmarkbage](https://github.com/sebmarkbage) in [#18547](https://github.com/facebook/react/pull/18547))\n* Deprecate the undocumented and misleading `ReactTestUtils.SimulateNative` API. ([@gaearon](https://github.com/gaearon) in [#13407](https://github.com/facebook/react/pull/13407))\n* Rename private field names used in the internals. ([@gaearon](https://github.com/gaearon) in [#18377](https://github.com/facebook/react/pull/18377))\n* Don't call User Timing API in development. ([@gaearon](https://github.com/gaearon) in [#18417](https://github.com/facebook/react/pull/18417))\n* Disable console during the repeated render in Strict Mode. ([@sebmarkbage](https://github.com/sebmarkbage) in [#18547](https://github.com/facebook/react/pull/18547))\n* In Strict Mode, double-render components without Hooks too. ([@eps1lon](https://github.com/eps1lon) in [#18430](https://github.com/facebook/react/pull/18430))\n* Allow calling `ReactDOM.flushSync` during lifecycle methods (but warn). ([@sebmarkbage](https://github.com/sebmarkbage) in [#18759](https://github.com/facebook/react/pull/18759))\n* Add the `code` property to the keyboard event objects. ([@bl00mber](https://github.com/bl00mber) in [#18287](https://github.com/facebook/react/pull/18287))\n* Add the `disableRemotePlayback` property for `video` elements. ([@tombrowndev](https://github.com/tombrowndev) in [#18619](https://github.com/facebook/react/pull/18619))\n* Add the `enterKeyHint` property for `input` elements. ([@eps1lon](https://github.com/eps1lon) in [#18634](https://github.com/facebook/react/pull/18634))\n* Warn when no `value` is provided to `<Context.Provider>`. ([@charlie1404](https://github.com/charlie1404) in [#19054](https://github.com/facebook/react/pull/19054))\n* Warn when `memo` or `forwardRef` components return `undefined`. ([@bvaughn](https://github.com/bvaughn) in [#19550](https://github.com/facebook/react/pull/19550))\n* Improve the error message for invalid updates. ([@JoviDeCroock](https://github.com/JoviDeCroock) in [#18316](https://github.com/facebook/react/pull/18316))\n* Exclude forwardRef and memo from stack frames. ([@sebmarkbage](https://github.com/sebmarkbage) in [#18559](https://github.com/facebook/react/pull/18559))\n* Improve the error message when switching between controlled and uncontrolled inputs. ([@vcarl](https://github.com/vcarl) in [#17070](https://github.com/facebook/react/pull/17070))\n* Keep `onTouchStart`, `onTouchMove`, and `onWheel` passive. ([@gaearon](https://github.com/gaearon) in [#19654](https://github.com/facebook/react/pull/19654))\n* Fix `setState` hanging in development inside a closed iframe. ([@gaearon](https://github.com/gaearon) in [#19220](https://github.com/facebook/react/pull/19220))\n* Fix rendering bailout for lazy components with `defaultProps`. ([@jddxf](https://github.com/jddxf) in [#18539](https://github.com/facebook/react/pull/18539))\n* Fix a false positive warning when `dangerouslySetInnerHTML` is `undefined`. ([@eps1lon](https://github.com/eps1lon) in [#18676](https://github.com/facebook/react/pull/18676))\n* Fix Test Utils with non-standard `require` implementation. ([@just-boris](https://github.com/just-boris) in [#18632](https://github.com/facebook/react/pull/18632))\n* Fix `onBeforeInput` reporting an incorrect `event.type`. ([@eps1lon](https://github.com/eps1lon) in [#19561](https://github.com/facebook/react/pull/19561))\n* Fix `event.relatedTarget` reported as `undefined` in Firefox. ([@claytercek](https://github.com/claytercek) in [#19607](https://github.com/facebook/react/pull/19607))\n* Fix \"unspecified error\" in IE11. ([@hemakshis](https://github.com/hemakshis) in [#19664](https://github.com/facebook/react/pull/19664))\n* Fix rendering into a shadow root. ([@Jack-Works](https://github.com/Jack-Works) in [#15894](https://github.com/facebook/react/pull/15894))\n* Fix `movementX/Y` polyfill with capture events. ([@gaearon](https://github.com/gaearon) in [#19672](https://github.com/facebook/react/pull/19672))\n* Use delegation for `onSubmit` and `onReset` events. ([@gaearon](https://github.com/gaearon) in [#19333](https://github.com/facebook/react/pull/19333))\n* Improve memory usage. ([@trueadm](https://github.com/trueadm) in [#18970](https://github.com/facebook/react/pull/18970))",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk95",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Concurrent Mode (Experimental)",
+    "text": "* Revamp the priority batching heuristics. ([@acdlite](https://github.com/acdlite) in [#18796](https://github.com/facebook/react/pull/18796))\n* Add the `unstable_` prefix before the experimental APIs. ([@acdlite](https://github.com/acdlite) in [#18825](https://github.com/facebook/react/pull/18825))\n* Remove `unstable_discreteUpdates` and `unstable_flushDiscreteUpdates`. ([@trueadm](https://github.com/trueadm) in [#18825](https://github.com/facebook/react/pull/18825))\n* Remove the `timeoutMs` argument. ([@acdlite](https://github.com/acdlite) in [#19703](https://github.com/facebook/react/pull/19703))\n* Disable `<div hidden />` prerendering in favor of a different future API. ([@acdlite](https://github.com/acdlite) in [#18917](https://github.com/facebook/react/pull/18917))\n* Add `unstable_expectedLoadTime` to Suspense for CPU-bound trees. ([@acdlite](https://github.com/acdlite) in [#19936](https://github.com/facebook/react/pull/19936))\n* Add an experimental `unstable_useOpaqueIdentifier` Hook. ([@lunaruan](https://github.com/lunaruan) in [#17322](https://github.com/facebook/react/pull/17322))\n* Add an experimental `unstable_startTransition` API. ([@rickhanlonii](https://github.com/rickhanlonii) in [#19696](https://github.com/facebook/react/pull/19696))\n* Using `act` in the test renderer no longer flushes Suspense fallbacks. ([@acdlite](https://github.com/acdlite) in [#18596](https://github.com/facebook/react/pull/18596))\n* Use global render timeout for CPU Suspense. ([@sebmarkbage](https://github.com/sebmarkbage) in [#19643](https://github.com/facebook/react/pull/19643))\n* Clear the existing root content before mounting. ([@bvaughn](https://github.com/bvaughn) in [#18730](https://github.com/facebook/react/pull/18730))\n* Fix a bug with error boundaries. ([@acdlite](https://github.com/acdlite) in [#18265](https://github.com/facebook/react/pull/18265))\n* Fix a bug causing dropped updates in a suspended tree. ([@acdlite](https://github.com/acdlite) in [#18384](https://github.com/facebook/react/pull/18384) and [#18457](https://github.com/facebook/react/pull/18457))\n* Fix a bug causing dropped render phase updates. ([@acdlite](https://github.com/acdlite) in [#18537](https://github.com/facebook/react/pull/18537))\n* Fix a bug in SuspenseList. ([@sebmarkbage](https://github.com/sebmarkbage) in [#18412](https://github.com/facebook/react/pull/18412))\n* Fix a bug causing Suspense fallback to show too early. ([@acdlite](https://github.com/acdlite) in [#18411](https://github.com/facebook/react/pull/18411))\n* Fix a bug with class components inside SuspenseList. ([@sebmarkbage](https://github.com/sebmarkbage) in [#18448](https://github.com/facebook/react/pull/18448))\n* Fix a bug with inputs that may cause updates to be dropped. ([@jddxf](https://github.com/jddxf) in [#18515](https://github.com/facebook/react/pull/18515) and [@acdlite](https://github.com/acdlite) in [#18535](https://github.com/facebook/react/pull/18535))\n* Fix a bug causing Suspense fallback to get stuck.  ([@acdlite](https://github.com/acdlite) in [#18663](https://github.com/facebook/react/pull/18663))\n* Don't cut off the tail of a SuspenseList if hydrating. ([@sebmarkbage](https://github.com/sebmarkbage) in [#18854](https://github.com/facebook/react/pull/18854))\n* Fix a bug in `useMutableSource` that may happen when `getSnapshot` changes. ([@bvaughn](https://github.com/bvaughn) in [#18297](https://github.com/facebook/react/pull/18297))\n* Fix a tearing bug in `useMutableSource`. ([@bvaughn](https://github.com/bvaughn) in [#18912](https://github.com/facebook/react/pull/18912))\n* Warn if calling setState outside of render but before commit. ([@sebmarkbage](https://github.com/sebmarkbage) in [#18838](https://github.com/facebook/react/pull/18838))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk98",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React",
+    "text": "* Warn when a string ref is used in a manner that's not amenable to a future codemod ([@lunaruan](https://github.com/lunaruan) in [#17864](https://github.com/facebook/react/pull/17864))\n* Deprecate `React.createFactory()` ([@trueadm](https://github.com/trueadm) in [#17878](https://github.com/facebook/react/pull/17878))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk99",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React DOM",
+    "text": "* Warn when changes in `style` may cause an unexpected collision ([@sophiebits](https://github.com/sophiebits) in [#14181](https://github.com/facebook/react/pull/14181), [#18002](https://github.com/facebook/react/pull/18002))\n* Warn when a function component is updated during another component's render phase ([@acdlite](https://github.com/acdlite) in [#17099](https://github.com/facebook/react/pull/17099))\n* Deprecate `unstable_createPortal` ([@trueadm](https://github.com/trueadm) in [#17880](https://github.com/facebook/react/pull/17880))\n* Fix `onMouseEnter` being fired on disabled buttons ([@AlfredoGJ](https://github.com/AlfredoGJ) in [#17675](https://github.com/facebook/react/pull/17675))\n* Call `shouldComponentUpdate` twice when developing in `StrictMode` ([@bvaughn](https://github.com/bvaughn) in [#17942](https://github.com/facebook/react/pull/17942))\n* Add `version` property to ReactDOM ([@ealush](https://github.com/ealush) in [#15780](https://github.com/facebook/react/pull/15780))\n* Don't call `toString()` of `dangerouslySetInnerHTML` ([@sebmarkbage](https://github.com/sebmarkbage) in [#17773](https://github.com/facebook/react/pull/17773))\n* Show component stacks in more warnings ([@gaearon](https://github.com/gaearon) in [#17922](https://github.com/facebook/react/pull/17922), [#17586](https://github.com/facebook/react/pull/17586))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk100",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Concurrent Mode (Experimental)",
+    "text": "* Warn for problematic usages of `ReactDOM.createRoot()` ([@trueadm](https://github.com/trueadm) in [#17937](https://github.com/facebook/react/pull/17937))\n* Remove `ReactDOM.createRoot()` callback params and added warnings on usage ([@bvaughn](https://github.com/bvaughn) in [#17916](https://github.com/facebook/react/pull/17916))\n* Don't group Idle/Offscreen work with other work ([@sebmarkbage](https://github.com/sebmarkbage) in [#17456](https://github.com/facebook/react/pull/17456))\n* Adjust `SuspenseList` CPU bound heuristic ([@sebmarkbage](https://github.com/sebmarkbage) in [#17455](https://github.com/facebook/react/pull/17455))\n* Add missing event plugin priorities ([@trueadm](https://github.com/trueadm) in [#17914](https://github.com/facebook/react/pull/17914))\n* Fix `isPending` only being true when transitioning from inside an input event ([@acdlite](https://github.com/acdlite) in [#17382](https://github.com/facebook/react/pull/17382))\n* Fix `React.memo` components dropping updates when interrupted by a higher priority update ([@acdlite]((https://github.com/acdlite)) in [#18091](https://github.com/facebook/react/pull/18091))\n* Don't warn when suspending at the wrong priority ([@gaearon](https://github.com/gaearon) in [#17971](https://github.com/facebook/react/pull/17971))\n* Fix a bug with rebasing updates ([@acdlite](https://github.com/acdlite) and [@sebmarkbage](https://github.com/sebmarkbage) in [#17560](https://github.com/facebook/react/pull/17560), [#17510](https://github.com/facebook/react/pull/17510), [#17483](https://github.com/facebook/react/pull/17483), [#17480](https://github.com/facebook/react/pull/17480))",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk103",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React DOM",
+    "text": "* Fix `mouseenter` handlers from firing twice inside nested React containers. [@yuanoook](https://github.com/yuanoook) in [#16928](https://github.com/facebook/react/pull/16928)\n* Remove `unstable_createRoot` and `unstable_createSyncRoot` experimental APIs. (These are available in the Experimental channel as `createRoot` and `createSyncRoot`.) ([@acdlite](http://github.com/acdlite) in [#17088](https://github.com/facebook/react/pull/17088))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk109",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React",
+    "text": "* Add `<React.Profiler>` API for gathering performance measurements programmatically. ([@bvaughn](https://github.com/bvaughn) in [#15172](https://github.com/facebook/react/pull/15172))\n* Remove `unstable_ConcurrentMode` in favor of `unstable_createRoot`. ([@acdlite](https://github.com/acdlite) in [#15532](https://github.com/facebook/react/pull/15532))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk110",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React DOM",
+    "text": "* Deprecate old names for the `UNSAFE_*` lifecycle methods. ([@bvaughn](https://github.com/bvaughn) in [#15186](https://github.com/facebook/react/pull/15186) and [@threepointone](https://github.com/threepointone) in [#16103](https://github.com/facebook/react/pull/16103))\n* Deprecate `javascript:` URLs as a common attack surface. ([@sebmarkbage](https://github.com/sebmarkbage) in [#15047](https://github.com/facebook/react/pull/15047))\n* Deprecate uncommon \"module pattern\" (factory) components. ([@sebmarkbage](https://github.com/sebmarkbage) in [#15145](https://github.com/facebook/react/pull/15145))\n* Add support for the `disablePictureInPicture` attribute on `<video>`. ([@eek](https://github.com/eek) in [#15334](https://github.com/facebook/react/pull/15334))\n* Add support for `onLoad` event for `<embed>`. ([@cherniavskii](https://github.com/cherniavskii) in [#15614](https://github.com/facebook/react/pull/15614))\n* Add support for editing `useState` state from DevTools. ([@bvaughn](https://github.com/bvaughn) in [#14906](https://github.com/facebook/react/pull/14906))\n* Add support for toggling Suspense from DevTools. ([@gaearon](https://github.com/gaearon) in [#15232](https://github.com/facebook/react/pull/15232))\n* Warn when `setState` is called from `useEffect`, creating a loop. ([@gaearon](https://github.com/gaearon) in [#15180](https://github.com/facebook/react/pull/15180))\n* Fix a memory leak. ([@paulshen](https://github.com/paulshen) in [#16115](https://github.com/facebook/react/pull/16115))\n* Fix a crash inside `findDOMNode` for components wrapped in `<Suspense>`. ([@acdlite](https://github.com/acdlite) in [#15312](https://github.com/facebook/react/pull/15312))\n* Fix pending effects from being flushed too late. ([@acdlite](https://github.com/acdlite) in [#15650](https://github.com/facebook/react/pull/15650))\n* Fix incorrect argument order in a warning message. ([@brickspert](https://github.com/brickspert) in [#15345](https://github.com/facebook/react/pull/15345))\n* Fix hiding Suspense fallback nodes when there is an `!important` style. ([@acdlite](https://github.com/acdlite) in [#15861](https://github.com/facebook/react/pull/15861) and [#15882](https://github.com/facebook/react/pull/15882))\n* Slightly improve hydration performance. ([@bmeurer](https://github.com/bmeurer) in [#15998](https://github.com/facebook/react/pull/15998))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk127",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React DOM",
+    "text": "* Bail out of rendering on identical values for `useState` and `useReducer` Hooks. ([@acdlite](https://github.com/acdlite) in [#14569](https://github.com/facebook/react/pull/14569))\n* Use `Object.is` algorithm for comparing `useState` and `useReducer` values. ([@Jessidhia](https://github.com/Jessidhia) in [#14752](https://github.com/facebook/react/pull/14752))\n* Don\u2019t compare the first argument passed to `useEffect`/`useMemo`/`useCallback` Hooks. ([@acdlite](https://github.com/acdlite) in [#14594](https://github.com/facebook/react/pull/14594))\n* Support synchronous thenables passed to `React.lazy()`. ([@gaearon](https://github.com/gaearon) in [#14626](https://github.com/facebook/react/pull/14626))\n* Render components with Hooks twice in Strict Mode (DEV-only) to match class behavior. ([@gaearon](https://github.com/gaearon) in [#14654](https://github.com/facebook/react/pull/14654))\n* Warn about mismatching Hook order in development. ([@threepointone](https://github.com/threepointone) in [#14585](https://github.com/facebook/react/pull/14585) and [@acdlite](https://github.com/acdlite) in [#14591](https://github.com/facebook/react/pull/14591))\n* Effect clean-up functions must return either `undefined` or a function. All other values, including `null`, are not allowed. [@acdlite](https://github.com/acdlite) in [#14119](https://github.com/facebook/react/pull/14119)",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk142",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Schedule (Experimental)",
+    "text": "* Renaming \"tracking\" API to \"tracing\" ([@bvaughn](https://github.com/bvaughn) in [#13641](https://github.com/facebook/react/pull/13641))\n* Add UMD production+profiling entry points ([@bvaughn](https://github.com/bvaughn) in [#13642](https://github.com/facebook/react/pull/13642))\n* Refactored `schedule` to remove some React-isms and improve performance for when deferred updates time out ([@acdlite](https://github.com/acdlite) in [#13582](https://github.com/facebook/react/pull/13582))",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk149",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React Test Renderer and Test Utils",
+    "text": "* Fix `this` in a functional component for shallow renderer to be `undefined` ([@koba04](https://github.com/koba04) in [#13144](https://github.com/facebook/react/issues/13144))\n* Deprecate a Jest-specific `ReactTestUtils.mockComponent()` helper ([@bvaughn](https://github.com/bvaughn) in [#13193](https://github.com/facebook/react/issues/13193))\n* Warn about `ReactDOM.createPortal` usage within the test renderer ([@bvaughn](https://github.com/bvaughn) in [#12895](https://github.com/facebook/react/issues/12895))\n* Improve a confusing error message ([@gaearon](https://github.com/gaearon) in [#13351](https://github.com/facebook/react/issues/13351))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk177",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React Reconciler (Experimental)",
+    "text": "* Expose `react-reconciler/persistent` for building renderers that use persistent data structures. ([@gaearon](https://github.com/gaearon) in [#12156](https://github.com/facebook/react/pull/12156))\n* Pass host context to `finalizeInitialChildren()`. ([@jquense](https://github.com/jquense) in [#11970](https://github.com/facebook/react/pull/11970))\n* Remove `useSyncScheduling` from the host config. ([@acdlite](https://github.com/acdlite) in [#11771](https://github.com/facebook/react/pull/11771))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk190",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Discontinuing Bower Releases",
+    "text": "Starting with 16.1.0, we will no longer be publishing new releases on Bower. You can continue using Bower for old releases, or point your Bower configs to the [React UMD builds hosted on unpkg](https://reactjs.org/docs/installation.html#using-a-cdn) that mirror npm releases and will continue to be updated.",
+    "category": "operational_risk"
+  },
+  {
+    "chunk_id": "seed_00::chunk202",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "- There are several changes to the behavior of scheduling and lifecycle methods:\n  * `ReactDOM.render()` and `ReactDOM.unstable_renderIntoContainer()` now return `null` if called from inside a lifecycle method.\n    * To work around this, you can either use [the new portal API](https://github.com/facebook/react/issues/10309#issuecomment-318433235) or [refs](https://github.com/facebook/react/issues/10309#issuecomment-318434635).\n  * Minor changes to `setState` behavior:\n    * Calling `setState` with null no longer triggers an update. This allows you to decide in an updater function if you want to re-render.\n    * Calling `setState` directly in render always causes an update. This was not previously the case. Regardless, you should not be calling `setState` from render.\n    * `setState` callback (second argument) now fires immediately after `componentDidMount` / `componentDidUpdate` instead of after all components have rendered.\n  * When replacing `<A />` with `<B />`,  `B.componentWillMount` now always happens before  `A.componentWillUnmount`. Previously, `A.componentWillUnmount` could fire first in some cases.\n  * Previously, changing the `ref` to a component would always detach the ref before that component's render is called. Now, we change the `ref` later, when applying the changes to the DOM.\n  * It is not safe to re-render into a container that was modified by something other than React. This worked previously in some cases but was never supported. We now emit a warning in this case. Instead you should clean up your component trees using `ReactDOM.unmountComponentAtNode`. [See this example.](https://github.com/facebook/react/issues/10294#issuecomment-318820987)\n  * `componentDidUpdate` lifecycle no longer receives `prevContext` param. ([@bvaughn](https://github.com/bvaughn) in [#8631](https://github.com/facebook/react/pull/8631))\n  * Non-unique keys may now cause children to be duplicated and/or omitted. Using non-unique keys is not (and has never been) supported, but previously it was a hard error.\n  * Shallow renderer no longer calls `componentDidUpdate()` because DOM refs are not available. This also makes it consistent with `componentDidMount()` (which does not get called in previous versions either).\n  * Shallow renderer does not implement `unstable_batchedUpdates()` anymore.\n  * `ReactDOM.unstable_batchedUpdates` now only takes one extra argument after the callback.\n- The names and paths to the single-file browser builds have changed to emphasize the difference between development and production builds. For example:\n  - `react/dist/react.js` \u2192 `react/umd/react.development.js`\n  - `react/dist/react.min.js` \u2192 `react/umd/react.production.min.js`\n  - `react-dom/dist/react-dom.js` \u2192 `react-dom/umd/react-dom.development.js`\n  - `react-dom/dist/react-dom.min.js` \u2192 `react-dom/umd/react-dom.production.min.js`\n* The server renderer has been completely rewritten, with some improvements:\n  * Server rendering does not use markup validation anymore, and instead tries its best to attach to existing DOM, warning about inconsistencies. It also doesn't use comments for empty components and data-reactid attributes on each node anymore.\n  * Hydrating a server rendered container now has an explicit API. Use `ReactDOM.hydrate` instead of `ReactDOM.render` if you're reviving server rendered HTML. Keep using `ReactDOM.render` if you're just doing client-side rendering.\n* When \"unknown\" props are passed to DOM components, for valid values, React will now render them in the DOM. [See this post for more details.](https://reactjs.org/blog/2017/09/08/dom-attributes-in-react-16.html) ([@nhunzaker](https://github.com/nhunzaker) in [#10385](https://github.com/facebook/react/pull/10385), [10564](https://github.com/facebook/react/pull/10564), [#10495](https://github.com/facebook/react/pull/10495) and others)\n* Errors in the render and lifecycle methods now unmount the component tree by default. To prevent this, add [error boundaries](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html) to the appropriate places in the UI.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk203",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Removed Deprecations",
+    "text": "- There is no `react-with-addons.js` build anymore. All compatible addons are published separately on npm, and have single-file browser versions if you need them.\n- The deprecations introduced in 15.x have been removed from the core package. `React.createClass` is now available as create-react-class, `React.PropTypes` as prop-types, `React.DOM` as react-dom-factories, react-addons-test-utils as react-dom/test-utils, and shallow renderer as react-test-renderer/shallow. See [15.5.0](https://reactjs.org/blog/2017/04/07/react-v15.5.0.html) and [15.6.0](https://reactjs.org/blog/2017/06/13/react-v15.6.0.html) blog posts for instructions on migrating code and automated codemods.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk223",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React Addons",
+    "text": "* Last release for addons; they will no longer be actively maintained.\n* Removed `peerDependencies` so that addons continue to work indefinitely. ([@acdlite](https://github.com/acdlite) and [@bvaughn](https://github.com/bvaughn) in [8a06cd7](https://github.com/facebook/react/commit/8a06cd7a786822fce229197cac8125a551e8abfa) and [67a8db3](https://github.com/facebook/react/commit/67a8db3650d724a51e70be130e9008806402678a))\n* Updated to remove references to `React.createClass` and `React.PropTypes` ([@acdlite](https://github.com/acdlite) in [12a96b9](https://github.com/facebook/react/commit/12a96b94823d6b6de6b1ac13bd576864abd50175))\n* `react-addons-test-utils` is deprecated. Use `react-dom/test-utils` and `react-test-renderer/shallow` instead. ([@bvaughn](https://github.com/bvaughn))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk229",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React",
+    "text": "* React package and browser build no longer \"secretly\" includes React DOM. ([@sebmarkbage](https://github.com/sebmarkbage) in [#7164](https://github.com/facebook/react/pull/7164) and [#7168](https://github.com/facebook/react/pull/7168))\n* Required PropTypes now fail with specific messages for null and undefined. ([@chenglou](https://github.com/chenglou) in [#7291](https://github.com/facebook/react/pull/7291))\n* Improved development performance by freezing children instead of copying. ([@keyanzhang](https://github.com/keyanzhang) in [#7455](https://github.com/facebook/react/pull/7455))",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk266",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React",
+    "text": "- Restore `React.__spread` API to unbreak code compiled with some tools making use of this undocumented API. It is now officially deprecated. ([@zpao](https://github.com/zpao) in [#6444](https://github.com/facebook/react/pull/6444))",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk269",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking changes",
+    "text": "- **No more extra `<span>`s.**\n- **`React.cloneElement()` now resolves `defaultProps`.** We fixed a bug in `React.cloneElement()` that some components may rely on. If some of the `props` received by `cloneElement()` are `undefined`, it used to return an element with `undefined` values for those props. We\u2019re changing it to be consistent with `createElement()`. Now any `undefined` props passed to `cloneElement()` are resolved to the corresponding component\u2019s `defaultProps`. ([@truongduy134](https://github.com/truongduy134) in [#5997](https://github.com/facebook/react/pull/5997))\n- **`ReactPerf.getLastMeasurements()` is opaque.** This change won\u2019t affect applications but may break some third-party tools. We are [revamping `ReactPerf` implementation](https://github.com/facebook/react/pull/6046) and plan to release it during the 15.x cycle. The internal performance measurement format is subject to change so, for the time being, we consider the return value of `ReactPerf.getLastMeasurements()` an opaque data structure that should not be relied upon. ([@gaearon](https://github.com/gaearon) in [#6286](https://github.com/facebook/react/pull/6286))",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk270",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Removed deprecations",
+    "text": "These deprecations were introduced nine months ago in v0.14 with a warning and are removed:\n\n- Deprecated APIs are removed from the `React` top-level export: `findDOMNode`, `render`, `renderToString`, `renderToStaticMarkup`, and `unmountComponentAtNode`. As a reminder, they are now available on `ReactDOM` and `ReactDOMServer`. ([@jimfb](https://github.com/jimfb) in [#5832](https://github.com/facebook/react/pull/5832))\n- Deprecated addons are removed: `batchedUpdates` and `cloneWithProps`. ([@jimfb](https://github.com/jimfb) in [#5859](https://github.com/facebook/react/pull/5859), [@zpao](https://github.com/zpao) in [#6016](https://github.com/facebook/react/pull/6016))\n- Deprecated component instance methods are removed: `setProps`, `replaceProps`, and `getDOMNode`. ([@jimfb](https://github.com/jimfb) in [#5570](https://github.com/facebook/react/pull/5570))\n- Deprecated CommonJS `react/addons` entry point is removed. As a reminder, you should use separate `react-addons-*` packages instead. This only applies if you use the CommonJS builds. ([@gaearon](https://github.com/gaearon) in [#6285](https://github.com/facebook/react/pull/6285))\n- Passing `children` to void elements like `<input>` was deprecated, and now throws an error. ([@jonhester](https://github.com/jonhester) in [#3372](https://github.com/facebook/react/pull/3372))\n- React-specific properties on DOM `refs` (e.g. `this.refs.div.props`) were deprecated, and are removed now. ([@jimfb](https://github.com/jimfb) in [#5495](https://github.com/facebook/react/pull/5495))",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk271",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "New deprecations, introduced with a warning",
+    "text": "Each of these changes will continue to work as before with a new warning until the release of React 16 so you can upgrade your code gradually.\n\n- `LinkedStateMixin` and `valueLink` are now deprecated due to very low popularity. If you need this, you can use a wrapper component that implements the same behavior: [react-linked-input](https://www.npmjs.com/package/react-linked-input). ([@jimfb](https://github.com/jimfb) in [#6127](https://github.com/facebook/react/pull/6127))\n- Future versions of React will treat `<input value={null}>` as a request to clear the input. However, React 0.14 has been ignoring `value={null}`. React 15 warns you on a `null` input value and offers you to clarify your intention. To fix the warning, you may explicitly pass an empty string to clear a controlled input, or pass `undefined` to make the input uncontrolled. ([@antoaravinth](https://github.com/antoaravinth) in [#5048](https://github.com/facebook/react/pull/5048))\n- `ReactPerf.printDOM()` was renamed to `ReactPerf.printOperations()`, and `ReactPerf.getMeasurementsSummaryMap()` was renamed to `ReactPerf.getWasted()`. ([@gaearon](https://github.com/gaearon) in [#6287](https://github.com/facebook/react/pull/6287))",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk294",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking changes",
+    "text": "- `React.initializeTouchEvents` is no longer necessary and has been removed completely. Touch events now work automatically.\n- Add-Ons: Due to the DOM node refs change mentioned above, `TestUtils.findAllInRenderedTree` and related helpers are no longer able to take a DOM component, only a custom component.\n- The `props` object is now frozen, so mutating props after creating a component element is no longer supported. In most cases, [`React.cloneElement`](https://reactjs.org/docs/react-api.html#cloneelement) should be used instead. This change makes your components easier to reason about and enables the compiler optimizations mentioned above.\n- Plain objects are no longer supported as React children; arrays should be used instead. You can use the [`createFragment`](https://reactjs.org/docs/create-fragment.html) helper to migrate, which now returns an array.\n- Add-Ons: `classSet` has been removed. Use [classnames](https://github.com/JedWatson/classnames) instead.\n- Web components (custom elements) now use native property names.  Eg: `class` instead of `className`.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk295",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Deprecations",
+    "text": "- `this.getDOMNode()` is now deprecated and `ReactDOM.findDOMNode(this)` can be used instead. Note that in the common case, `findDOMNode` is now unnecessary since a ref to the DOM component is now the actual DOM node.\n- `setProps` and `replaceProps` are now deprecated. Instead, call ReactDOM.render again at the top level with the new props.\n- ES6 component classes must now extend `React.Component` in order to enable stateless function components. The [ES3 module pattern](https://reactjs.org/blog/2015/01/27/react-v0.13.0-beta-1.html#other-languages) will continue to work.\n- Reusing and mutating a `style` object between renders has been deprecated. This mirrors our change to freeze the `props` object.\n- Add-Ons: `cloneWithProps` is now deprecated. Use [`React.cloneElement`](https://reactjs.org/docs/react-api.html#cloneelement) instead (unlike `cloneWithProps`, `cloneElement` does not merge `className` or `style` automatically; you can merge them manually if needed).\n- Add-Ons: To improve reliability, `CSSTransitionGroup` will no longer listen to transition events. Instead, you should specify transition durations manually using props such as `transitionEnterTimeout={500}`.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk299",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "- The `react-tools` package and `JSXTransformer.js` browser file [have been deprecated](https://reactjs.org/blog/2015/06/12/deprecating-jstransform-and-react-tools.html). You can continue using version `0.13.3` of both, but we no longer support them and recommend migrating to [Babel](https://babeljs.io), which has built-in support for React and JSX.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk311",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "* Deprecated patterns that warned in 0.12 no longer work: most prominently, calling component classes without using JSX or React.createElement and using non-component functions with JSX or createElement\n* Mutating `props` after an element is created is deprecated and will cause warnings in development mode; future versions of React will incorporate performance optimizations assuming that props aren't mutated\n* Static methods (defined in `statics`) are no longer autobound to the component class\n* `ref` resolution order has changed slightly such that a ref to a component is available immediately after its `componentDidMount` method is called; this change should be observable only if your component calls a parent component's callback within your `componentDidMount`, which is an anti-pattern and should be avoided regardless\n* Calls to `setState` in life-cycle methods are now always batched and therefore asynchronous. Previously the first call on the first mount was synchronous.\n* `setState` and `forceUpdate` on an unmounted component now warns instead of throwing. That avoids a possible race condition with Promises.\n* Access to most internal properties has been completely removed, including `this._pendingState` and `this._rootNodeID`.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk313",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Deprecations",
+    "text": "* `ComponentClass.type` is deprecated. Just use `ComponentClass` (usually as `element.type === ComponentClass`).\n* Some methods that are available on `createClass`-based components are removed or deprecated from ES6 classes (`getDOMNode`, `replaceState`, `isMounted`, `setProps`, `replaceProps`).",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk315",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Deprecations",
+    "text": "* `React.addons.classSet` is now deprecated. This functionality can be replaced with several freely available modules. [classnames](https://www.npmjs.com/package/classnames) is one such module.\n* Calls to `React.addons.cloneWithProps` can be migrated to use `React.cloneElement` instead \u2013 make sure to merge `style` and `className` manually if desired.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk316",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "* When transforming ES6 syntax, `class` methods are no longer enumerable by default, which requires `Object.defineProperty`; if you support browsers such as IE8, you can pass `--target es3` to mirror the old behavior",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk318",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "* The return value of `transform` now contains `sourceMap` as a JS object already, not an instance of `SourceMapGenerator`.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk319",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "* A change was made to how some JSX was parsed, specifically around the use of `>` or `}` when inside an element. Previously it would be treated as a string but now it will be treated as a parse error. The [`jsx_orphaned_brackets_transformer`](https://www.npmjs.com/package/jsx_orphaned_brackets_transformer) package on npm can be used to find and fix potential issues in your JSX code.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk323",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "* `key` and `ref` moved off props object, now accessible on the element directly\n* React is now BSD licensed with accompanying Patents grant\n* Default prop resolution has moved to Element creation time instead of mount time, making them effectively static\n* `React.__internals` is removed - it was exposed for DevTools which no longer needs access\n* Composite Component functions can no longer be called directly - they must be wrapped with `React.createFactory` first. This is handled for you when using JSX.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk325",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Deprecations",
+    "text": "* `React.renderComponent` --> `React.render`\n* `React.renderComponentToString` --> `React.renderToString`\n* `React.renderComponentToStaticMarkup` --> `React.renderToStaticMarkup`\n* `React.isValidComponent` --> `React.isValidElement`\n* `React.PropTypes.component` --> `React.PropTypes.element`\n* `React.PropTypes.renderable` --> `React.PropTypes.node`\n* **DEPRECATED** `React.isValidClass`\n* **DEPRECATED** `instance.transferPropsTo`\n* **DEPRECATED** Returning `false` from event handlers to preventDefault\n* **DEPRECATED** Convenience Constructor usage as function, instead wrap with `React.createFactory`\n* **DEPRECATED** use of `key={null}` to assign implicit keys",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_00::chunk328",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "* `React.addons.update` uses `assign` instead of `copyProperties` which does `hasOwnProperty` checks. Properties on prototypes will no longer be updated correctly.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk330",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "* Enforced convention: lower case tag names are always treated as HTML tags, upper case tag names are always treated as composite components\n* JSX no longer transforms to simple function calls",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk338",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "* `getDefaultProps()` is now called once per class and shared across all instances\n* `MyComponent()` now returns a descriptor, not an instance\n* `React.isValidComponent` and `React.PropTypes.component` validate *descriptors*, not component instances\n* Custom `propType` validators should return an `Error` instead of logging directly",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk349",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "Breaking Changes",
+    "text": "- The lifecycle methods `componentDidMount` and `componentDidUpdate` no longer receive the root node as a parameter; use `this.getDOMNode()` instead\n- Whenever a prop is equal to `undefined`, the default value returned by `getDefaultProps` will now be used instead\n- `React.unmountAndReleaseReactRootNode` was previously deprecated and has now been removed\n- `React.renderComponentToString` is now synchronous and returns the generated HTML string\n- Full-page rendering (that is, rendering the `<html>` tag using React) is now supported only when starting with server-rendered markup\n- On mouse wheel events, `deltaY` is no longer negated\n- When prop types validation fails, a warning is logged instead of an error thrown (with the production build of React, type checks are now skipped for performance)\n- On `input`, `select`, and `textarea` elements, `.getValue()` is no longer supported; use `.getDOMNode().value` instead\n- `this.context` on components is now reserved for internal use by React",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk352",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React with Addons",
+    "text": "- `React.addons.TestUtils` was added to help write unit tests\n- `React.addons.TransitionGroup` was renamed to `React.addons.CSSTransitionGroup`\n- `React.addons.TransitionGroup` was added as a more general animation wrapper\n- `React.addons.cloneWithProps` was added for cloning components and modifying their props\n- Bug fix for adding back nodes during an exit transition for CSSTransitionGroup\n- Bug fix for changing `transitionLeave` in CSSTransitionGroup\n- Performance optimizations for CSSTransitionGroup\n- On checkbox `<input>` elements, `checkedLink` is now supported for two-way binding",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk353",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "JSX Compiler and react-tools Package",
+    "text": "- Whitespace normalization has changed; now space between two tags on the same line will be preserved, while newlines between two tags will be removed\n- The `react-tools` npm package no longer includes the React core libraries; use the `react` package instead.\n- `displayName` is now added in more cases, improving error messages and names in the React Dev Tools\n- Fixed an issue where an invalid token error was thrown after a JSX closing tag\n- `JSXTransformer` now uses source maps automatically in modern browsers\n- `JSXTransformer` error messages now include the filename and problematic line contents when a file fails to parse",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk363",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "JSX",
+    "text": "* No longer transform `class` to `className` as part of the transform! This is a breaking change - if you were using `class`, you *must* change this to `className` or your components will be visually broken.\n* Added warnings to the in-browser transformer to make it clear it is not intended for production use.\n* Improved compatibility for Windows\n* Improved support for maintaining line numbers when transforming.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk366",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "React",
+    "text": "* Switch from using `id` attribute to `data-reactid` to track DOM nodes. This allows you to integrate with other JS and CSS libraries more easily.\n* Support for more DOM elements and attributes (e.g., `<canvas>`)\n* Improved server-side rendering APIs. `React.renderComponentToString(<component>, callback)` allows you to use React on the server and generate markup which can be sent down to the browser.\n* `prop` improvements: validation and default values. [Read our blog post for details...](https://reactjs.org/blog/2013/07/11/react-v0-4-prop-validation-and-default-values.html)\n* Support for the `key` prop, which allows for finer control over reconciliation. [Read the docs for details...](https://reactjs.org/docs/multiple-components.html)\n* Removed `React.autoBind`. [Read our blog post for details...](https://reactjs.org/blog/2013/07/02/react-v0-4-autobind-by-default.html)\n* Improvements to forms. We've written wrappers around `<input>`, `<textarea>`, `<option>`, and `<select>` in order to standardize many inconsistencies in browser implementations. This includes support for `defaultValue`, and improved implementation of the `onChange` event, and circuit completion. [Read the docs for details...](https://reactjs.org/docs/forms.html)\n* We've implemented an improved synthetic event system that conforms to the W3C spec.\n* Updates to your component are batched now, which may result in a significantly faster re-render of components. `this.setState` now takes an optional callback as it's second parameter. If you were using `onClick={this.setState.bind(this, state)}` previously, you'll want to make sure you add a third parameter so that the event is not treated as the callback.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_00::chunk371",
+    "source_id": "seed_00",
+    "source_type": "official_changelog",
+    "heading": "react-tools",
+    "text": "* Upgrade Commoner so `require` statements are no longer relativized when passing through the transformer. This was a feature needed when building React, but doesn't translate well for other consumers of `bin/jsx`.\n* Upgraded our dependencies on Commoner and Recast so they use a different directory for their cache.\n* Freeze our Esprima dependency.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk3",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "Updates to Client Rendering APIs",
+    "text": "When you first install React 18, you will see a warning in the console:\n\nConsole\n\nReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it\u2019s running React 17. Learn more: https://reactjs.org/link/switch-to-createroot\n\nReact 18 introduces a new root API which provides better ergonomics for managing roots. The new root API also enables the new concurrent renderer, which allows you to opt-into concurrent features.\n\n// Before\n\nimport { render } from 'react-dom';\n\nconst container = document.getElementById('app');\n\nrender(<App tab=\"home\" />, container);\n\n// After\n\nimport { createRoot } from 'react-dom/client';\n\nconst container = document.getElementById('app');\n\nconst root = createRoot(container); // createRoot(container!) if you use TypeScript\n\nroot.render(<App tab=\"home\" />);\n\nWe\u2019ve also changed unmountComponentAtNode to root.unmount:\n\n// Before\n\nunmountComponentAtNode(container);\n\n// After\n\nroot.unmount();\n\nWe\u2019ve also removed the callback from render, since it usually does not have the expected result when using Suspense:\n\n// Before\n\nconst container = document.getElementById('app');\n\nrender(<App tab=\"home\" />, container, () => {\n\nconsole.log('rendered');\n\n});\n\n// After\n\nfunction AppWithCallbackAfterRender() {\n\nuseEffect(() => {\n\nconsole.log('rendered');\n\n});\n\nreturn <App tab=\"home\" />\n\n}\n\nconst container = document.getElementById('app');\n\nconst root = createRoot(container);\n\nroot.render(<AppWithCallbackAfterRender />);",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_01::chunk4",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "Note",
+    "text": "There is no one-to-one replacement for the old render callback API \u2014 it depends on your use case. See the working group post for Replacing render with createRoot for more information.\n\nFinally, if your app uses server-side rendering with hydration, upgrade hydrate to hydrateRoot:\n\n// Before\n\nimport { hydrate } from 'react-dom';\n\nconst container = document.getElementById('app');\n\nhydrate(<App tab=\"home\" />, container);\n\n// After\n\nimport { hydrateRoot } from 'react-dom/client';\n\nconst container = document.getElementById('app');\n\nconst root = hydrateRoot(container, <App tab=\"home\" />);\n\n// Unlike with createRoot, you don't need a separate root.render() call here.\n\nFor more information, see the working group discussion here.",
+    "category": "migration_step"
+  },
+  {
+    "chunk_id": "seed_01::chunk5",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "Note",
+    "text": "If your app doesn\u2019t work after upgrading, check whether it\u2019s wrapped in <StrictMode>. Strict Mode has gotten stricter in React 18, and not all your components may be resilient to the new checks it adds in development mode. If removing Strict Mode fixes your app, you can remove it during the upgrade, and then add it back (either at the top or for a part of the tree) after you fix the issues that it\u2019s pointing out.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk6",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "Updates to Server Rendering APIs",
+    "text": "In this release, we\u2019re revamping our react-dom/server APIs to fully support Suspense on the server and Streaming SSR. As part of these changes, we\u2019re deprecating the old Node streaming API, which does not support incremental Suspense streaming on the server.\n\nUsing this API will now warn:\n\nrenderToNodeStream: Deprecated \u26d4\ufe0f\ufe0f\n\nInstead, for streaming in Node environments, use:\n\nrenderToPipeableStream: New \u2728\n\nWe\u2019re also introducing a new API to support streaming SSR with Suspense for modern edge runtime environments, such as Deno and Cloudflare workers:\n\nrenderToReadableStream: New \u2728\n\nThe following APIs will continue working, but with limited support for Suspense:\n\nrenderToString: Limited \u26a0\ufe0f\n\nrenderToStaticMarkup: Limited \u26a0\ufe0f\n\nFinally, this API will continue to work for rendering e-mails:\n\nrenderToStaticNodeStream\n\nFor more information on the changes to server rendering APIs, see the working group post on Upgrading to React 18 on the server, a deep dive on the new Suspense SSR Architecture, and Shaundai Person\u2019s talk on Streaming Server Rendering with Suspense at React Conf 2021.",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_01::chunk7",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "Updates to TypeScript definitions",
+    "text": "If your project uses TypeScript, you will need to update your @types/react and @types/react-dom dependencies to the latest versions. The new types are safer and catch issues that used to be ignored by the type checker. The most notable change is that the children prop now needs to be listed explicitly when defining props, for example:\n\ninterface MyButtonProps {\n\ncolor: string;\n\nchildren?: React.ReactNode;\n\n}\n\nSee the React 18 typings pull request for a full list of type-only changes. It links to example fixes in library types so you can see how to adjust your code. You can use the automated migration script to help port your application code to the new and safer typings faster.\n\nIf you find a bug in the typings, please file an issue in the DefinitelyTyped repo.",
+    "category": "dependency_requirement"
+  },
+  {
+    "chunk_id": "seed_01::chunk8",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "Automatic Batching",
+    "text": "React 18 adds out-of-the-box performance improvements by doing more batching by default. Batching is when React groups multiple state updates into a single re-render for better performance. Before React 18, we only batched updates inside React event handlers. Updates inside of promises, setTimeout, native event handlers, or any other event were not batched in React by default:\n\n// Before React 18 only React events were batched\n\nfunction handleClick() {\n\nsetCount(c => c + 1);\n\nsetFlag(f => !f);\n\n// React will only re-render once at the end (that's batching!)\n\n}\n\nsetTimeout(() => {\n\nsetCount(c => c + 1);\n\nsetFlag(f => !f);\n\n// React will render twice, once for each state update (no batching)\n\n}, 1000);\n\nStarting in React 18 with createRoot, all updates will be automatically batched, no matter where they originate from. This means that updates inside of timeouts, promises, native event handlers or any other event will batch the same way as updates inside of React events:\n\n// After React 18 updates inside of timeouts, promises,\n\n// native event handlers or any other event are batched.\n\nfunction handleClick() {\n\nsetCount(c => c + 1);\n\nsetFlag(f => !f);\n\n// React will only re-render once at the end (that's batching!)\n\n}\n\nsetTimeout(() => {\n\nsetCount(c => c + 1);\n\nsetFlag(f => !f);\n\n// React will only re-render once at the end (that's batching!)\n\n}, 1000);\n\nThis is a breaking change, but we expect this to result in less work rendering, and therefore better performance in your applications. To opt-out of automatic batching, you can use flushSync:\n\nimport { flushSync } from 'react-dom';\n\nfunction handleClick() {\n\nflushSync(() => {\n\nsetCounter(c => c + 1);\n\n});\n\n// React has updated the DOM by now\n\nflushSync(() => {\n\nsetFlag(f => !f);\n\n});\n\n// React has updated the DOM by now\n\n}\n\nFor more information, see the Automatic batching deep dive.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk9",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "New APIs for Libraries",
+    "text": "In the React 18 Working Group we worked with library maintainers to create new APIs needed to support concurrent rendering for use cases specific to their use case in areas like styles, and external stores. To support React 18, some libraries may need to switch to one of the following APIs:\n\nuseSyncExternalStore is a new Hook that allows external stores to support concurrent reads by forcing updates to the store to be synchronous. This new API is recommended for any library that integrates with state external to React. For more information, see the useSyncExternalStore overview post and useSyncExternalStore API details.\n\nuseInsertionEffect is a new Hook that allows CSS-in-JS libraries to address performance issues of injecting styles in render. Unless you\u2019ve already built a CSS-in-JS library we don\u2019t expect you to ever use this. This Hook will run after the DOM is mutated, but before layout effects read the new layout. This solves an issue that already exists in React 17 and below, but is even more important in React 18 because React yields to the browser during concurrent rendering, giving it a chance to recalculate layout. For more information, see the Library Upgrade Guide for <style>.\n\nReact 18 also introduces new APIs for concurrent rendering such as startTransition, useDeferredValue and useId, which we share more about in the release post.",
+    "category": "migration_step"
+  },
+  {
+    "chunk_id": "seed_01::chunk10",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "Updates to Strict Mode",
+    "text": "In the future, we\u2019d like to add a feature that allows React to add and remove sections of the UI while preserving state. For example, when a user tabs away from a screen and back, React should be able to immediately show the previous screen. To do this, React would unmount and remount trees using the same component state as before.\n\nThis feature will give React better performance out-of-the-box, but requires components to be resilient to effects being mounted and destroyed multiple times. Most effects will work without any changes, but some effects assume they are only mounted or destroyed once.\n\nTo help surface these issues, React 18 introduces a new development-only check to Strict Mode. This new check will automatically unmount and remount every component, whenever a component mounts for the first time, restoring the previous state on the second mount.\n\nBefore this change, React would mount the component and create the effects:\n\n* React mounts the component.\n\n* Layout effects are created.\n\n* Effect effects are created.\n\nWith Strict Mode in React 18, React will simulate unmounting and remounting the component in development mode:\n\n* React mounts the component.\n\n* Layout effects are created.\n\n* Effect effects are created.\n\n* React simulates unmounting the component.\n\n* Layout effects are destroyed.\n\n* Effects are destroyed.\n\n* React simulates mounting the component with the previous state.\n\n* Layout effect setup code runs\n\n* Effect setup code runs\n\nFor more information, see the Working Group posts for Adding Reusable State to StrictMode and How to support Reusable State in Effects.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk14",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "Other Breaking Changes",
+    "text": "Consistent useEffect timing: React now always synchronously flushes effect functions if the update was triggered during a discrete user input event such as a click or a keydown event. Previously, the behavior wasn\u2019t always predictable or consistent.\n\nStricter hydration errors: Hydration mismatches due to missing or extra text content are now treated like errors instead of warnings. React will no longer attempt to \u201cpatch up\u201d individual nodes by inserting or deleting a node on the client in an attempt to match the server markup, and will revert to client rendering up to the closest <Suspense> boundary in the tree. This ensures the hydrated tree is consistent and avoids potential privacy and security holes that can be caused by hydration mismatches.\n\nSuspense trees are always consistent: If a component suspends before it\u2019s fully added to the tree, React will not add it to the tree in an incomplete state or fire its effects. Instead, React will throw away the new tree completely, wait for the asynchronous operation to finish, and then retry rendering again from scratch. React will render the retry attempt concurrently, and without blocking the browser.\n\nLayout Effects with Suspense: When a tree re-suspends and reverts to a fallback, React will now clean up layout effects, and then re-create them when the content inside the boundary is shown again. This fixes an issue which prevented component libraries from correctly measuring layout when used with Suspense.\n\nNew JS Environment Requirements: React now depends on modern browsers features including Promise, Symbol, and Object.assign. If you support older browsers and devices such as Internet Explorer which do not provide modern browser features natively or have non-compliant implementations, consider including a global polyfill in your bundled application.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_01::chunk16",
+    "source_id": "seed_01",
+    "source_type": "official_migration_guide",
+    "heading": "React DOM Server",
+    "text": "renderToString: Will no longer error when suspending on the server. Instead, it will emit the fallback HTML for the closest <Suspense> boundary and then retry rendering the same content on the client. It is still recommended that you switch to a streaming API like renderToPipeableStream or renderToReadableStream instead.\n\nrenderToStaticMarkup: Will no longer error when suspending on the server. Instead, it will emit the fallback HTML for the closest <Suspense> boundary.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_02::chunk3",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "Gradually Adopting Concurrent Features",
+    "text": "Technically, concurrent rendering is a breaking change. Because concurrent rendering is interruptible, components behave slightly differently when it is enabled.\n\nIn our testing, we\u2019ve upgraded thousands of components to React 18. What we\u2019ve found is that nearly all existing components \u201cjust work\u201d with concurrent rendering, without any changes. However, some of them may require some additional migration effort. Although the changes are usually small, you\u2019ll still have the ability to make them at your own pace. The new rendering behavior in React 18 is only enabled in the parts of your app that use new features.\n\nThe overall upgrade strategy is to get your application running on React 18 without breaking existing code. Then you can gradually start adding concurrent features at your own pace. You can use <StrictMode> to help surface concurrency-related bugs during development. Strict Mode doesn\u2019t affect production behavior, but during development it will log extra warnings and double-invoke functions that are expected to be idempotent. It won\u2019t catch everything, but it\u2019s effective at preventing the most common types of mistakes.\n\nAfter you upgrade to React 18, you\u2019ll be able to start using concurrent features immediately. For example, you can use startTransition to navigate between screens without blocking user input. Or useDeferredValue to throttle expensive re-renders.\n\nHowever, long term, we expect the main way you\u2019ll add concurrency to your app is by using a concurrent-enabled library or framework. In most cases, you won\u2019t interact with concurrent APIs directly. For example, instead of developers calling startTransition whenever they navigate to a new screen, router libraries will automatically wrap navigations in startTransition.\n\nIt may take some time for libraries to upgrade to be concurrent compatible. We\u2019ve provided new APIs to make it easier for libraries to take advantage of concurrent features. In the meantime, please be patient with maintainers as we work to gradually migrate the React ecosystem.\n\nFor more info, see our previous post: How to upgrade to React 18.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_02::chunk12",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "New Strict Mode Behaviors",
+    "text": "In the future, we\u2019d like to add a feature that allows React to add and remove sections of the UI while preserving state. For example, when a user tabs away from a screen and back, React should be able to immediately show the previous screen. To do this, React would unmount and remount trees using the same component state as before.\n\nThis feature will give React apps better performance out-of-the-box, but requires components to be resilient to effects being mounted and destroyed multiple times. Most effects will work without any changes, but some effects assume they are only mounted or destroyed once.\n\nTo help surface these issues, React 18 introduces a new development-only check to Strict Mode. This new check will automatically unmount and remount every component, whenever a component mounts for the first time, restoring the previous state on the second mount.\n\nBefore this change, React would mount the component and create the effects:\n\n* React mounts the component.\n\n* Layout effects are created.\n\n* Effects are created.\n\nWith Strict Mode in React 18, React will simulate unmounting and remounting the component in development mode:\n\n* React mounts the component.\n\n* Layout effects are created.\n\n* Effects are created.\n\n* React simulates unmounting the component.\n\n* Layout effects are destroyed.\n\n* Effects are destroyed.\n\n* React simulates mounting the component with the previous state.\n\n* Layout effects are created.\n\n* Effects are created.\n\nSee docs for ensuring reusable state here.",
+    "category": "changed_behavior"
+  },
+  {
+    "chunk_id": "seed_02::chunk16",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "useSyncExternalStore",
+    "text": "useSyncExternalStore is a new Hook that allows external stores to support concurrent reads by forcing updates to the store to be synchronous. It removes the need for useEffect when implementing subscriptions to external data sources, and is recommended for any library that integrates with state external to React. See docs here.\n\nNote\n\nuseSyncExternalStore is intended to be used by libraries, not application code.",
+    "category": "migration_step"
+  },
+  {
+    "chunk_id": "seed_02::chunk21",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "React DOM Server",
+    "text": "Add the new streaming renderer. (#14144, #20970, #21056, #21255, #21200, #21257, #21276, #22443, #22450, #23247, #24025, #24030 by @sebmarkbage)\n\nFix context providers in SSR when handling multiple requests. (#23171 by @frandiox)\n\nRevert to client render on text mismatch. (#23354 by @acdlite)\n\nDeprecate renderToNodeStream. (#23359 by @sebmarkbage)\n\nFix a spurious error log in the new server renderer. (#24043 by @eps1lon)\n\nFix a bug in the new server renderer. (#22617 by @shuding)\n\nIgnore function and symbol values inside custom elements on the server. (#21157 by @sebmarkbage)",
+    "category": "removed_api"
+  },
+  {
+    "chunk_id": "seed_02::chunk22",
+    "source_id": "seed_02",
+    "source_type": "official_release_notes",
+    "heading": "React DOM Test Utils",
+    "text": "Throw when act is used in production. (#21686 by @acdlite)\n\nSupport disabling spurious act warnings with global.IS_REACT_ACT_ENVIRONMENT. (#22561 by @acdlite)\n\nExpand act warning to cover all APIs that might schedule React work. (#22607 by @acdlite)\n\nMake act batch updates. (#21797 by @acdlite)\n\nRemove warning for dangling passive effects. (#22609 by @acdlite)",
+    "category": "changed_behavior"
+  }
+]

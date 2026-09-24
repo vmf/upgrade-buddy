@@ -1,0 +1,20 @@
+{
+  "high_confidence_risks": [
+    "nextjs_14_node_version_requirement",
+    "nextjs_14_next_export_removed",
+    "nextjs_14_imageresponse_import_path",
+    "nextjs_14_next_font_package_removed",
+    "nextjs_14_react_version_requirement",
+    "nextjs_13_link_nested_anchor_removed",
+    "nextjs_13_image_component_renamed"
+  ],
+  "medium_confidence_risks": [
+    "nextjs_14_next_swc_wasm_removed:c2_depends_on_wasm_swc"
+  ],
+  "low_confidence_or_disputed_risks": [],
+  "sources_with_disagreements": [],
+  "open_questions": [
+    "For nextjs_14_next_swc_wasm_removed:c2_depends_on_wasm_swc - The official documentation does not provide details about which specific environments, architectures, or configurations relied on the WASM target. This makes it difficult to create a concrete, testable condition. Users should test builds in their target environments to determine impact.",
+    "The upgrade path from Next.js 12 to 14 includes changes from Next.js 13. Human reviewer should verify whether users need explicit guidance about whether they should upgrade 12->13->14 or can go directly to 14."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "project": "Kubernetes",
+  "current_version": "1.23",
+  "target_version": "1.29",
+  "sources": [
+    {
+      "source_id": "seed_00",
+      "title": "Kubernetes Deprecated API Migration Guide",
+      "url": "https://kubernetes.io/docs/reference/using-api/deprecation-guide/",
+      "source_type": "deprecation_notice",
+      "retrieved_at": "2026-09-23T13:37:46.377283+00:00",
+      "why_relevant": "Official deprecation notice published by the Kubernetes project; hand-curated as directly relevant to the 1.23 -> 1.29 upgrade."
+    },
+    {
+      "source_id": "seed_01",
+      "title": "Kubernetes 1.29 CHANGELOG",
+      "url": "https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG/CHANGELOG-1.29.md",
+      "source_type": "official_changelog",
+      "retrieved_at": "2026-09-23T13:37:46.377283+00:00",
+      "why_relevant": "Official official changelog published by the Kubernetes project; hand-curated as directly relevant to the 1.23 -> 1.29 upgrade."
+    },
+    {
+      "source_id": "seed_02",
+      "title": "Kubernetes 1.24 CHANGELOG",
+      "url": "https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG/CHANGELOG-1.24.md",
+      "source_type": "official_changelog",
+      "retrieved_at": "2026-09-23T13:37:46.377283+00:00",
+      "why_relevant": "Official official changelog published by the Kubernetes project; hand-curated as directly relevant to the 1.23 -> 1.29 upgrade."
+    }
+  ]
+}

@@ -1,0 +1,772 @@
+{
+  "project": "PostgreSQL",
+  "current_version": "13",
+  "target_version": "16",
+  "summary": "This upgrade from PostgreSQL 13 to 16 introduces multiple breaking changes spanning configuration parameters, API removals, and privilege model restructuring. The most severe risks include a major overhaul of CREATEROLE privileges that now requires ADMIN OPTION for role management operations (potentially breaking administrative scripts), changes to role inheritance behavior that shifts control from role attributes to GRANT-time settings, and the removal of the promote_trigger_file configuration parameter affecting failover automation. Medium-risk changes include renamed/removed configuration parameters (force_parallel_mode, vacuum_defer_cleanup_age), removed pg_walinspect functions, altered REINDEX behavior for system catalogs, and modified PL/pgSQL cursor assignment semantics. Additional low-risk changes affect monitoring scripts, view creation methods, and deployment tooling.",
+  "source_inventory": [
+    {
+      "source_id": "seed_00",
+      "title": "PostgreSQL 16 release notes",
+      "url": "https://www.postgresql.org/docs/16/release-16.html",
+      "source_type": "official_release_notes",
+      "retrieved_at": "2026-09-23T13:45:37.863824+00:00",
+      "why_relevant": "Official official release notes published by the PostgreSQL project; hand-curated as directly relevant to the 13 -> 16 upgrade."
+    },
+    {
+      "source_id": "seed_01",
+      "title": "PostgreSQL 15 release notes",
+      "url": "https://www.postgresql.org/docs/16/release-15.html",
+      "source_type": "official_release_notes",
+      "retrieved_at": "2026-09-23T13:45:37.863824+00:00",
+      "why_relevant": "Official official release notes published by the PostgreSQL project; hand-curated as directly relevant to the 13 -> 16 upgrade."
+    },
+    {
+      "source_id": "seed_02",
+      "title": "PostgreSQL 14 release notes",
+      "url": "https://www.postgresql.org/docs/16/release-14.html",
+      "source_type": "official_release_notes",
+      "retrieved_at": "2026-09-23T13:45:37.863824+00:00",
+      "why_relevant": "Official official release notes published by the PostgreSQL project; hand-curated as directly relevant to the 13 -> 16 upgrade."
+    }
+  ],
+  "risk_paths": [
+    {
+      "path_id": "pg13to16_pgwalinspect_functions_removed",
+      "path_name": "pg_walinspect functions pg_get_wal_records_info_till_end_of_wal() and pg_get_wal_stats_till_end_of_wal() removed",
+      "risk_type": "removed_api",
+      "risk_level": "medium",
+      "affected_surface": "application_code",
+      "description": "PostgreSQL 16 removed the pg_walinspect extension functions pg_get_wal_records_info_till_end_of_wal() and pg_get_wal_stats_till_end_of_wal(). Applications or scripts that call these functions will fail at runtime with a 'function does not exist' error.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove pg_walinspect functions pg_get_wal_records_info_till_end_of_wal() and pg_get_wal_stats_till_end_of_wal()",
+              "relevance": "Documents the removal of these functions in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "calls_pg_get_wal_records_info_till_end_of_wal",
+          "statement": "Application code or scripts call pg_get_wal_records_info_till_end_of_wal() or pg_get_wal_stats_till_end_of_wal()",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "pg_get_wal_records_info_till_end_of_wal or pg_get_wal_stats_till_end_of_wal",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove pg_walinspect functions pg_get_wal_records_info_till_end_of_wal() and pg_get_wal_stats_till_end_of_wal()",
+              "relevance": "Specifies which functions are no longer available"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Search codebase for calls to pg_get_wal_records_info_till_end_of_wal() and pg_get_wal_stats_till_end_of_wal()",
+        "Review pg_walinspect documentation for PostgreSQL 16 to identify replacement functions",
+        "Update any monitoring or diagnostic scripts that rely on these removed functions"
+      ]
+    },
+    {
+      "path_id": "pg13to16_force_parallel_mode_renamed",
+      "path_name": "Server variable force_parallel_mode renamed to debug_parallel_query",
+      "risk_type": "configuration_change",
+      "risk_level": "medium",
+      "affected_surface": "configuration",
+      "description": "PostgreSQL 16 renamed the server variable force_parallel_mode to debug_parallel_query. Configuration files, ALTER SYSTEM commands, or application code that sets or references force_parallel_mode will fail or be ignored after upgrade.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Rename server variable force_parallel_mode to debug_parallel_query",
+              "relevance": "Documents the renaming of this configuration parameter in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "uses_force_parallel_mode",
+          "statement": "Configuration files, ALTER SYSTEM commands, or application code references force_parallel_mode",
+          "category": "configuration",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "force_parallel_mode",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Rename server variable force_parallel_mode to debug_parallel_query",
+              "relevance": "Specifies the old parameter name that will no longer be recognized"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Search postgresql.conf, postgresql.auto.conf, and any custom configuration files for force_parallel_mode",
+        "Grep application code for SET force_parallel_mode or ALTER SYSTEM SET force_parallel_mode",
+        "Replace all instances of force_parallel_mode with debug_parallel_query before or during upgrade"
+      ]
+    },
+    {
+      "path_id": "pg13to16_vacuum_defer_cleanup_age_removed",
+      "path_name": "Server variable vacuum_defer_cleanup_age removed",
+      "risk_type": "configuration_change",
+      "risk_level": "low",
+      "affected_surface": "configuration",
+      "description": "PostgreSQL 16 removed the server variable vacuum_defer_cleanup_age. Configuration files that set this parameter will cause warnings or errors on server startup after upgrade. This parameter has been unnecessary since hot_standby_feedback and replication slots were added.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove the server variable vacuum_defer_cleanup_age",
+              "relevance": "Documents the removal of this configuration parameter in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "sets_vacuum_defer_cleanup_age",
+          "statement": "Configuration files set vacuum_defer_cleanup_age",
+          "category": "configuration",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "vacuum_defer_cleanup_age",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove the server variable vacuum_defer_cleanup_age",
+              "relevance": "Specifies the parameter that is no longer supported"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Search postgresql.conf and postgresql.auto.conf for vacuum_defer_cleanup_age",
+        "Remove vacuum_defer_cleanup_age settings from configuration files",
+        "Review hot_standby_feedback and replication slot configuration as modern alternatives"
+      ]
+    },
+    {
+      "path_id": "pg13to16_promote_trigger_file_removed",
+      "path_name": "Server variable promote_trigger_file removed",
+      "risk_type": "configuration_change",
+      "risk_level": "medium",
+      "affected_surface": "configuration",
+      "description": "PostgreSQL 16 removed the server variable promote_trigger_file, which was used to promote a standby to primary. Configuration files or failover scripts that rely on this parameter will fail. The functionality is now available via pg_ctl promote or pg_promote().",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove server variable promote_trigger_file",
+              "relevance": "Documents the removal of this configuration parameter in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "sets_promote_trigger_file",
+          "statement": "Configuration files set promote_trigger_file or scripts create the trigger file",
+          "category": "configuration",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "promote_trigger_file",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove server variable promote_trigger_file. This was used to promote a standby to primary, but is now more easily accomplished with pg_ctl promote or pg_promote().",
+              "relevance": "Specifies the parameter that is removed and the replacement methods"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Search postgresql.conf and recovery.conf for promote_trigger_file settings",
+        "Review failover and HA scripts that create or monitor the promote trigger file",
+        "Migrate failover logic to use pg_ctl promote or pg_promote() function instead",
+        "Test failover procedures with the new promotion mechanism before production deployment"
+      ]
+    },
+    {
+      "path_id": "pg13to16_lc_collate_lc_ctype_removed",
+      "path_name": "Read-only server variables lc_collate and lc_ctype removed",
+      "risk_type": "removed_api",
+      "risk_level": "low",
+      "affected_surface": "application_code",
+      "description": "PostgreSQL 16 removed the read-only server variables lc_collate and lc_ctype. Monitoring scripts or application code that queries these variables via SHOW, current_setting(), or pg_settings will fail or return errors.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove read-only server variables lc_collate and lc_ctype",
+              "relevance": "Documents the removal of these server variables in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "queries_lc_collate_or_lc_ctype",
+          "statement": "Application code or scripts query lc_collate or lc_ctype via SHOW, current_setting(), or pg_settings",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "lc_collate or lc_ctype",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove read-only server variables lc_collate and lc_ctype. Collations and locales can vary between databases so having them as read-only server variables was unhelpful.",
+              "relevance": "Specifies which variables are removed and explains why"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Search codebase for SHOW lc_collate, SHOW lc_ctype, current_setting('lc_collate'), current_setting('lc_ctype')",
+        "Search for queries against pg_settings WHERE name IN ('lc_collate', 'lc_ctype')",
+        "Query database-specific locale information from pg_database or using database-level collation queries instead"
+      ]
+    },
+    {
+      "path_id": "pg13to16_on_select_rules_removed",
+      "path_name": "Ability to create views manually with ON SELECT rules removed",
+      "risk_type": "removed_api",
+      "risk_level": "low",
+      "affected_surface": "application_code",
+      "description": "PostgreSQL 16 removed the ability to manually create views using ON SELECT rules. Applications that use CREATE RULE with ON SELECT to manually construct views will fail. Standard CREATE VIEW syntax should be used instead.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove the ability to create views manually with ON SELECT rules",
+              "relevance": "Documents the removal of this capability in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "creates_on_select_rules",
+          "statement": "Application code or migration scripts use CREATE RULE with ON SELECT to manually create views",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "CREATE RULE ... ON SELECT",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove the ability to create views manually with ON SELECT rules",
+              "relevance": "Specifies the removed functionality"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Search codebase and migration scripts for CREATE RULE statements with ON SELECT",
+        "Convert manual ON SELECT rule creation to standard CREATE VIEW syntax",
+        "Test all view creation logic to ensure compatibility with PostgreSQL 16"
+      ]
+    },
+    {
+      "path_id": "pg13to16_postmaster_symlinks_removed",
+      "path_name": "Symbolic links for the postmaster binary removed",
+      "risk_type": "operational_risk",
+      "risk_level": "low",
+      "affected_surface": "deployment",
+      "description": "PostgreSQL 16 removed symbolic links for the postmaster binary. Scripts, systemd units, or automation that invoke the postmaster command directly via a symbolic link may fail if the link is not manually recreated.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove symbolic links for the postmaster binary",
+              "relevance": "Documents the removal of postmaster symbolic links in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "invokes_postmaster_symlink",
+          "statement": "Scripts, systemd units, or automation invoke the postmaster binary via symbolic link rather than postgres binary",
+          "category": "deployment",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "postmaster",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Remove symbolic links for the postmaster binary",
+              "relevance": "Indicates that postmaster symlinks will not be created by default"
+            }
+          ],
+          "confidence": "medium",
+          "ambiguities": [
+            "The documentation does not specify whether existing symlinks will be removed or simply not created for new installations"
+          ]
+        }
+      ],
+      "suggested_actions": [
+        "Search systemd unit files, init scripts, and automation for invocations of 'postmaster' binary",
+        "Replace references to 'postmaster' with 'postgres' binary in all startup scripts",
+        "Alternatively, manually create a postmaster symlink to the postgres binary if needed for compatibility"
+      ]
+    },
+    {
+      "path_id": "pg13to16_plpgsql_cursor_assignment_changed",
+      "path_name": "PL/pgSQL bound cursor variable assignment rules changed",
+      "risk_type": "changed_behavior",
+      "risk_level": "medium",
+      "affected_surface": "application_code",
+      "description": "PostgreSQL 16 changed how PL/pgSQL bound cursor variables are assigned their string values. Previously, the string value was set to match the variable name during cursor assignment; now it is assigned during OPEN and will not match the variable name. PL/pgSQL functions that rely on the old behavior may produce incorrect results or errors.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Change assignment rules for PL/pgSQL bound cursor variables",
+              "relevance": "Documents the behavior change in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "uses_plpgsql_bound_cursors",
+          "statement": "Application uses PL/pgSQL functions with bound cursor variables that depend on the cursor variable's string value",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "PL/pgSQL functions with CURSOR FOR declarations",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Previously, the string value of such variables was set to match the variable name during cursor assignment; now it will be assigned during OPEN, and will not match the variable name. To restore the previous behavior, assign the desired portal name to the cursor variable before OPEN.",
+              "relevance": "Describes the behavior change and workaround"
+            }
+          ],
+          "confidence": "medium",
+          "ambiguities": [
+            "Not clear how common it is for applications to depend on cursor variable string values matching variable names"
+          ]
+        }
+      ],
+      "suggested_actions": [
+        "Search for PL/pgSQL functions that declare bound cursors (CURSOR FOR syntax)",
+        "Review code that accesses cursor variable string values or portal names",
+        "If the old behavior is needed, explicitly assign the desired portal name to the cursor variable before OPEN",
+        "Test all PL/pgSQL functions with cursors to verify correct behavior after upgrade"
+      ]
+    },
+    {
+      "path_id": "pg13to16_nulls_not_distinct_pk_disallowed",
+      "path_name": "NULLS NOT DISTINCT indexes disallowed for primary keys",
+      "risk_type": "changed_behavior",
+      "risk_level": "low",
+      "affected_surface": "database",
+      "description": "PostgreSQL 16 disallows creating primary keys with NULLS NOT DISTINCT indexes. Attempts to create such constraints will fail with an error.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Disallow NULLS NOT DISTINCT indexes for primary keys",
+              "relevance": "Documents the restriction added in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "creates_nulls_not_distinct_pk",
+          "statement": "DDL scripts or schema definitions attempt to create primary keys with NULLS NOT DISTINCT option",
+          "category": "database",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "PRIMARY KEY with NULLS NOT DISTINCT",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Disallow NULLS NOT DISTINCT indexes for primary keys",
+              "relevance": "Specifies the combination that is no longer allowed"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Search DDL scripts and migration files for NULLS NOT DISTINCT in primary key definitions",
+        "Remove NULLS NOT DISTINCT option from primary key constraints",
+        "Consider using unique constraints instead of primary keys if NULLS NOT DISTINCT behavior is required"
+      ]
+    },
+    {
+      "path_id": "pg13to16_reindex_database_system_catalogs",
+      "path_name": "REINDEX DATABASE and reindexdb no longer process system catalog indexes by default",
+      "risk_type": "changed_behavior",
+      "risk_level": "medium",
+      "affected_surface": "application_code",
+      "description": "PostgreSQL 16 changed REINDEX DATABASE and reindexdb to not process indexes on system catalogs by default. Maintenance scripts that rely on REINDEX DATABASE to reindex system catalogs will no longer do so. Use REINDEX SYSTEM or reindexdb --system instead.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Change REINDEX DATABASE and reindexdb to not process indexes on system catalogs",
+              "relevance": "Documents the behavior change in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "uses_reindex_database_for_system",
+          "statement": "Maintenance scripts use REINDEX DATABASE or reindexdb expecting system catalog indexes to be reindexed",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "REINDEX DATABASE or reindexdb",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Change REINDEX DATABASE and reindexdb to not process indexes on system catalogs. Processing such indexes is still possible using REINDEX SYSTEM and reindexdb --system.",
+              "relevance": "Describes the changed behavior and alternative commands"
+            }
+          ],
+          "confidence": "medium",
+          "ambiguities": [
+            "Not clear how many applications intentionally reindex system catalogs via REINDEX DATABASE"
+          ]
+        }
+      ],
+      "suggested_actions": [
+        "Review maintenance scripts and cron jobs that use REINDEX DATABASE or reindexdb",
+        "If system catalog reindexing is required, add explicit REINDEX SYSTEM or reindexdb --system commands",
+        "Test reindexing procedures to ensure both user and system indexes are covered as needed"
+      ]
+    },
+    {
+      "path_id": "pg13to16_generated_column_inheritance",
+      "path_name": "GENERATED expression restrictions tightened on inherited and partitioned tables",
+      "risk_type": "changed_behavior",
+      "risk_level": "medium",
+      "affected_surface": "database",
+      "description": "PostgreSQL 16 tightened restrictions on GENERATED columns in inherited and partitioned tables. Columns of parent/partitioned and child/partition tables must all have the same generation status (all GENERATED or all not), though the actual generation expressions can now differ. Existing schemas that violate this may fail to restore or cause errors.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Tighten GENERATED expression restrictions on inherited and partitioned tables",
+              "relevance": "Documents the tightened restrictions in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "uses_generated_columns_inheritance",
+          "statement": "Database schema uses GENERATED columns in table inheritance or partitioning hierarchies with inconsistent generation status between parent and child tables",
+          "category": "database",
+          "required": true,
+          "operator": "present",
+          "expected_value": "GENERATED columns in inherited/partitioned tables",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Columns of parent/partitioned and child/partition tables must all have the same generation status, though now the actual generation expressions can be different.",
+              "relevance": "Specifies the new requirement for generation status consistency"
+            }
+          ],
+          "confidence": "medium",
+          "ambiguities": [
+            "Not clear what happens to existing schemas that violate this - whether pg_upgrade will fail or data will be rejected"
+          ]
+        }
+      ],
+      "suggested_actions": [
+        "Query pg_attribute for tables with inheritance or partitioning that have GENERATED columns",
+        "Verify that parent and child tables have matching generation status (attgenerated) for corresponding columns",
+        "Adjust schema to ensure consistent generation status across inheritance hierarchies before upgrade",
+        "Test pg_dump/pg_restore with the current schema to identify potential issues"
+      ]
+    },
+    {
+      "path_id": "pg13to16_createrole_privileges_restricted",
+      "path_name": "CREATEROLE privileges restricted, now requires ADMIN OPTION for many operations",
+      "risk_type": "changed_behavior",
+      "risk_level": "high",
+      "affected_surface": "application_code",
+      "description": "PostgreSQL 16 significantly restricted the privileges of roles with CREATEROLE. Previously, CREATEROLE allowed modifying many aspects of any non-superuser role. Now, modifying roles (including adding members, changing CREATEDB, REPLICATION, BYPASSRLS properties) requires the role requesting the change to have ADMIN OPTION permission. Applications or administrative scripts that rely on CREATEROLE to manage other roles may fail with permission denied errors.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Restrict the privileges of CREATEROLE and its ability to modify other roles",
+              "relevance": "Documents the privilege restriction in PostgreSQL 16"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "uses_createrole_for_management",
+          "statement": "Application or administrative scripts use roles with CREATEROLE privilege to modify other roles, add role members, or change role properties",
+          "category": "api_usage",
+          "required": true,
+          "operator": "present",
+          "expected_value": "ALTER ROLE, GRANT role membership by CREATEROLE users",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Previously roles with CREATEROLE privileges could change many aspects of any non-superuser role. Such changes, including adding members, now require the role requesting the change to have ADMIN OPTION permission. For example, they can now change the CREATEDB, REPLICATION, and BYPASSRLS properties only if they also have those permissions.",
+              "relevance": "Describes the scope of the restriction and new requirements"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Audit roles with CREATEROLE privilege and what role management operations they perform",
+        "Review administrative scripts that use CREATEROLE roles to modify other roles or grant memberships",
+        "Grant ADMIN OPTION on managed roles to the CREATEROLE users that need to modify them",
+        "Test role management procedures in a non-production PostgreSQL 16 environment to identify permission issues"
+      ]
+    },
+    {
+      "path_id": "pg13to16_role_inheritance_grant_behavior",
+      "path_name": "Role inheritance behavior changed to be set at GRANT time with new INHERIT clause",
+      "risk_type": "changed_behavior",
+      "risk_level": "high",
+      "affected_surface": "database",
+      "description": "PostgreSQL 16 changed how role inheritance works. Previously, inheritance status was controlled only by the member role's inheritance attribute, affecting all memberships. Now, inheritance is controlled at GRANT time with the new WITH INHERIT clause, allowing different inheritance behavior for different role memberships. Existing role memberships will have their inheritance behavior migrated during upgrade, but scripts that rely on the old behavior may produce different results.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Role inheritance now controls the default inheritance status of member roles added during GRANT",
+              "relevance": "Documents the fundamental change in role inheritance behavior"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "uses_role_inheritance",
+          "statement": "Application or database design relies on role inheritance behavior, particularly changing a role's inheritance attribute to affect existing memberships",
+          "category": "database",
+          "required": true,
+          "operator": "present",
+          "expected_value": "GRANT role memberships with inheritance expectations",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "The role's default inheritance behavior can be overridden with the new GRANT ... WITH INHERIT clause. This allows inheritance of some roles and not others because the members' inheritance status is set at GRANT time. Previously the inheritance status of member roles was controlled only by the role's inheritance status, and changes to a role's inheritance status affected all previous and future member roles.",
+              "relevance": "Explains the new GRANT-time inheritance control and how it differs from previous behavior"
+            }
+          ],
+          "confidence": "medium",
+          "ambiguities": [
+            "Migration behavior for existing role memberships is not fully specified in the provided chunks"
+          ]
+        }
+      ],
+      "suggested_actions": [
+        "Review all GRANT role membership statements and role inheritance dependencies",
+        "Test role permission behavior after upgrade, particularly for roles that previously changed their inheritance attribute",
+        "Use the new WITH INHERIT clause explicitly in GRANT statements to ensure expected inheritance behavior",
+        "Query pg_auth_members to verify inheritance settings for role memberships after upgrade"
+      ]
+    },
+    {
+      "path_id": "pg13to16_psql_du_member_of_removed",
+      "path_name": "psql \\du and \\dg no longer show 'Member of' column",
+      "risk_type": "changed_behavior",
+      "risk_level": "low",
+      "affected_surface": "application_code",
+      "description": "PostgreSQL 16 removed the 'Member of' output column from psql commands \\du and \\dg. Scripts that parse the output of these commands expecting the 'Member of' column will fail or produce incorrect results. Use the new \\drg command to display role membership details.",
+      "conditions": [
+        {
+          "condition_id": "version_pg16_target",
+          "statement": "Target PostgreSQL version is 16 or later",
+          "category": "version",
+          "required": true,
+          "operator": "greater_than",
+          "expected_value": "16",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "Add psql command \\drg to show role membership details. The Member of output column has been removed from \\du and \\dg because this new command displays this information in more detail.",
+              "relevance": "Documents the removal of the Member of column from \\du and \\dg"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        },
+        {
+          "condition_id": "parses_psql_du_output",
+          "statement": "Scripts or automation parse the output of psql \\du or \\dg commands expecting a 'Member of' column",
+          "category": "api_usage",
+          "required": true,
+          "operator": "contains",
+          "expected_value": "\\du or \\dg output parsing",
+          "evidence": [
+            {
+              "source_id": "seed_00",
+              "source_type": "official_release_notes",
+              "quote_or_summary": "The Member of output column has been removed from \\du and \\dg",
+              "relevance": "Specifies what output has changed"
+            }
+          ],
+          "confidence": "high",
+          "ambiguities": []
+        }
+      ],
+      "suggested_actions": [
+        "Search scripts and automation for psql -c '\\du' or psql -c '\\dg' followed by output parsing",
+        "Update scripts to use psql -c '\\drg' for role membership information",
+        "Alternatively, query pg_auth_members directly for programmatic role membership checks"
+      ]
+    }
+  ],
+  "open_questions": [
+    "For postmaster symlink removal: The documentation does not specify whether existing symlinks will be removed during upgrade or simply not created for new installations. Upgrade behavior needs verification.",
+    "For PL/pgSQL cursor assignment changes: Unclear how common it is for applications to depend on cursor variable string values matching variable names. This may be a rare edge case with limited real-world impact.",
+    "For REINDEX DATABASE behavior: Unclear how many applications intentionally reindex system catalogs via REINDEX DATABASE. May be a low-impact change for most users.",
+    "For generated column inheritance restrictions: The behavior when existing schemas violate the new requirements is not fully specified - whether pg_upgrade will fail, pg_restore will fail, or the system will accept the data with warnings.",
+    "For role inheritance migration: The exact migration behavior for existing role memberships during pg_upgrade is not fully detailed in the provided documentation.",
+    "This assessment is based solely on official PostgreSQL release notes and public documentation, not on analysis of the target application's actual code, configuration files, or database schema. Manual code review and testing in a non-production environment are essential to confirm which risks apply."
+  ],
+  "overall_confidence": "medium"
+}

@@ -1,0 +1,47 @@
+{
+  "project": "React",
+  "upgrade": "17_to_18",
+  "evidence_summary": {
+    "high_confidence_risks": [
+      "react_18_remove_reactdom_render",
+      "react_18_remove_reactdom_hydrate",
+      "react_18_remove_unmountcomponentatnode",
+      "react_18_render_callback_removed",
+      "react_18_rendertonodestream_deprecated",
+      "react_18_strict_mode_double_effects:react_18_strict_mode_double_effects_version",
+      "react_18_strict_mode_double_effects:react_18_strict_mode_double_effects_usage",
+      "react_18_automatic_batching:react_18_automatic_batching_version",
+      "react_18_hydration_errors_stricter",
+      "react_18_modern_browser_features_required:react_18_modern_browser_features_required_version",
+      "react_18_typescript_children_prop:react_18_typescript_children_prop_version",
+      "react_18_typescript_children_prop:react_18_typescript_children_prop_typescript",
+      "react_18_typescript_useref_required_arg:react_18_typescript_useref_required_arg_version",
+      "react_18_typescript_deprecated_types_removed:react_18_typescript_deprecated_types_removed_version",
+      "react_18_typescript_deprecated_types_removed:react_18_typescript_deprecated_types_removed_typescript"
+    ],
+    "medium_confidence_risks": [
+      "react_18_strict_mode_double_effects:react_18_strict_mode_double_effects_effects",
+      "react_18_modern_browser_features_required:react_18_modern_browser_features_required_target",
+      "react_18_typescript_children_prop:react_18_typescript_children_prop_interfaces",
+      "react_18_typescript_useref_required_arg:react_18_typescript_useref_required_arg_typescript",
+      "react_18_typescript_useref_required_arg:react_18_typescript_useref_required_arg_usage",
+      "react_18_typescript_deprecated_types_removed:react_18_typescript_deprecated_types_removed_usage"
+    ],
+    "low_confidence_or_disputed_risks": [
+      "react_18_automatic_batching:react_18_automatic_batching_usage"
+    ],
+    "sources_with_disagreements": [],
+    "open_questions": [
+      "For react_18_strict_mode_double_effects_effects: Need actual code analysis to determine which effects assume single mount/unmount. The condition is conceptually correct but detection requires manual review.",
+      "For react_18_automatic_batching_usage: Very difficult to automatically detect if application logic depends on separate renders between setState calls. This condition requires understanding application semantics and may produce false positives/negatives without manual review.",
+      "For react_18_modern_browser_features_required_target: Browser support targets typically defined in browserslist or build configs - cannot detect automatically without access to project configuration.",
+      "For TypeScript-related conditions: All TypeScript conditions require TypeScript compilation or static analysis to definitively detect. The conditions are accurate but detection is not possible without running the TypeScript compiler.",
+      "The codemod reference 'preset-19' in TypeScript risk paths appears to target React 19, not React 18. This might be a reference error from the first pass, though the general codemod recommendation is valid.",
+      "Dropped condition 'react_18_hydration_errors_stricter_mismatch' in path 'react_18_hydration_errors_stricter': no valid evidence after grounding check.",
+      "Dropped condition 'react_18_typescript_useref_required_arg_typescript' in path 'react_18_typescript_useref_required_arg': no valid evidence after grounding check.",
+      "Dropped condition 'react_18_typescript_useref_required_arg_usage' in path 'react_18_typescript_useref_required_arg': no valid evidence after grounding check.",
+      "Dropped condition 'react_18_typescript_deprecated_types_removed_typescript' in path 'react_18_typescript_deprecated_types_removed': no valid evidence after grounding check.",
+      "Dropped condition 'react_18_typescript_deprecated_types_removed_usage' in path 'react_18_typescript_deprecated_types_removed': no valid evidence after grounding check."
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "project": "PostgreSQL",
+  "upgrade": "13_to_16",
+  "evidence_summary": {
+    "high_confidence_risks": [
+      "pg13to16_pgwalinspect_functions_removed",
+      "pg13to16_force_parallel_mode_renamed",
+      "pg13to16_vacuum_defer_cleanup_age_removed",
+      "pg13to16_promote_trigger_file_removed",
+      "pg13to16_lc_collate_lc_ctype_removed",
+      "pg13to16_on_select_rules_removed",
+      "pg13to16_nulls_not_distinct_pk_disallowed",
+      "pg13to16_createrole_privileges_restricted",
+      "pg13to16_psql_du_member_of_removed"
+    ],
+    "medium_confidence_risks": [
+      "pg13to16_postmaster_symlinks_removed:invokes_postmaster_symlink",
+      "pg13to16_plpgsql_cursor_assignment_changed:uses_plpgsql_bound_cursors",
+      "pg13to16_reindex_database_system_catalogs:uses_reindex_database_for_system",
+      "pg13to16_generated_column_inheritance:uses_generated_columns_inheritance",
+      "pg13to16_role_inheritance_grant_behavior:uses_role_inheritance"
+    ],
+    "low_confidence_or_disputed_risks": [],
+    "sources_with_disagreements": [],
+    "open_questions": [
+      "For pg13to16_postmaster_symlinks_removed: The documentation does not specify whether existing symlinks will be removed during upgrade or simply not created for new installations. Need to verify upgrade behavior.",
+      "For pg13to16_plpgsql_cursor_assignment_changed: Unclear how common it is for applications to depend on cursor variable string values matching variable names. This may be a rare edge case.",
+      "For pg13to16_reindex_database_system_catalogs: Unclear how many applications intentionally reindex system catalogs via REINDEX DATABASE. May be a low-impact change for most users.",
+      "For pg13to16_generated_column_inheritance: The behavior when existing schemas violate the new requirements is not fully specified - whether pg_upgrade will fail, pg_restore will fail, or the system will accept the data with warnings.",
+      "For pg13to16_role_inheritance_grant_behavior: Migration behavior for existing role memberships during pg_upgrade is not fully detailed in the provided documentation."
+    ]
+  }
+}

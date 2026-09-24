@@ -1,0 +1,39 @@
+{
+  "project": "Django",
+  "upgrade": "3.2_to_4.2",
+  "evidence_summary": {
+    "high_confidence_risks": [
+      "django_42_mariadb_103_dropped",
+      "django_42_mysql_57_dropped",
+      "django_42_postgresql_11_dropped",
+      "django_42_rawsql_mysql_groupby",
+      "django_42_parse_header_removed",
+      "django_42_expression_get_group_by_cols_alias",
+      "django_42_exists_negated_removed",
+      "django_42_sqlparse_version",
+      "django_42_sqlite_version",
+      "django_42_asgiref_version",
+      "django_42_usercreationform_case_sensitive",
+      "django_42_mysqlclient_version",
+      "django_42_argon2_version",
+      "django_42_pillow_version",
+      "django_42_jinja2_version",
+      "django_42_redis_version",
+      "django_42_wsgi_request_validation",
+      "django_42_proj_version",
+      "django_42_smtp_ssl_verification",
+      "django_42_index_together_deprecated",
+      "django_42_jsonfield_encoded_strings_deprecated",
+      "django_42_database_backend_features_allows_group_by_pk"
+    ],
+    "medium_confidence_risks": [
+      "django_42_default_file_storage_deprecated:default_file_storage_usage",
+      "django_42_staticfiles_storage_deprecated:staticfiles_storage_usage"
+    ],
+    "low_confidence_or_disputed_risks": [],
+    "sources_with_disagreements": [],
+    "open_questions": [
+      "For django_42_default_file_storage_deprecated and django_42_staticfiles_storage_deprecated: The exact replacement syntax (STORAGES['default'] and STORAGES['staticfiles']) is referenced in the evidence but the verbatim quote stating this replacement doesn't appear in the cited chunk. The deprecation is clearly stated, but the specific replacement structure may need verification from additional documentation."
+    ]
+  }
+}

@@ -1,0 +1,726 @@
+[
+  {
+    "path_id": "react_18_remove_reactdom_render",
+    "path_name": "ReactDOM.render() is deprecated and will warn in React 18",
+    "risk_type": "changed_behavior",
+    "risk_level": "high",
+    "affected_surface": "application_code",
+    "description": "Applications using ReactDOM.render() will see a deprecation warning in React 18 and the app will run in React 17 mode. The API has been replaced by createRoot() from 'react-dom/client'. While this does not break the application immediately, it prevents access to concurrent features and will be fully removed in a future version.",
+    "conditions": [
+      {
+        "condition_id": "react_18_remove_reactdom_render_version",
+        "statement": "The application is upgrading to React 18 or later",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "react-dom: ReactDOM.render has been deprecated. Using it will warn and run your app in React 17 mode.",
+            "relevance": "Documents that ReactDOM.render is deprecated in React 18"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_remove_reactdom_render_usage",
+        "statement": "The application code calls ReactDOM.render() to mount components",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "ReactDOM.render",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "When you first install React 18, you will see a warning in the console: ReactDOM.render is no longer supported in React 18. Use createRoot instead.",
+            "relevance": "Shows that apps using ReactDOM.render will see warnings in React 18"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for 'ReactDOM.render(' or \"from 'react-dom'\" imports combined with .render calls",
+      "Replace ReactDOM.render(<App />, container) with createRoot(container).render(<App />)",
+      "Import createRoot from 'react-dom/client' instead of 'react-dom'",
+      "Review the migration guide at https://reactjs.org/link/switch-to-createroot"
+    ]
+  },
+  {
+    "path_id": "react_18_remove_reactdom_hydrate",
+    "path_name": "ReactDOM.hydrate() is deprecated and will warn in React 18",
+    "risk_type": "changed_behavior",
+    "risk_level": "high",
+    "affected_surface": "application_code",
+    "description": "Applications using ReactDOM.hydrate() for server-side rendering hydration will see a deprecation warning in React 18 and run in React 17 mode. The API has been replaced by hydrateRoot() from 'react-dom/client'.",
+    "conditions": [
+      {
+        "condition_id": "react_18_remove_reactdom_hydrate_version",
+        "statement": "The application is upgrading to React 18 or later",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "react-dom: ReactDOM.hydrate has been deprecated. Using it will warn and run your app in React 17 mode.",
+            "relevance": "Documents that ReactDOM.hydrate is deprecated in React 18"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_remove_reactdom_hydrate_usage",
+        "statement": "The application code calls ReactDOM.hydrate() for SSR hydration",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "ReactDOM.hydrate",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "if your app uses server-side rendering with hydration, upgrade hydrate to hydrateRoot",
+            "relevance": "Shows that apps using hydrate need to migrate to hydrateRoot"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for 'ReactDOM.hydrate(' or hydrate imports from react-dom",
+      "Replace ReactDOM.hydrate(<App />, container) with hydrateRoot(container, <App />)",
+      "Import hydrateRoot from 'react-dom/client' instead of 'react-dom'",
+      "Note: Unlike createRoot, hydrateRoot does not require a separate .render() call"
+    ]
+  },
+  {
+    "path_id": "react_18_remove_unmountcomponentatnode",
+    "path_name": "ReactDOM.unmountComponentAtNode() is deprecated in React 18",
+    "risk_type": "changed_behavior",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "Applications using ReactDOM.unmountComponentAtNode() to unmount components will see deprecation warnings. The API has been replaced by root.unmount() where root is obtained from createRoot() or hydrateRoot().",
+    "conditions": [
+      {
+        "condition_id": "react_18_remove_unmountcomponentatnode_version",
+        "statement": "The application is upgrading to React 18 or later",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "react-dom: ReactDOM.unmountComponentAtNode has been deprecated.",
+            "relevance": "Documents that unmountComponentAtNode is deprecated in React 18"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_remove_unmountcomponentatnode_usage",
+        "statement": "The application code calls ReactDOM.unmountComponentAtNode()",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "unmountComponentAtNode",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "We've also changed unmountComponentAtNode to root.unmount",
+            "relevance": "Shows that unmountComponentAtNode needs to be replaced with root.unmount()"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for 'unmountComponentAtNode(' calls",
+      "Store the root returned from createRoot() or hydrateRoot() in a variable",
+      "Replace unmountComponentAtNode(container) with root.unmount()",
+      "Ensure the root variable is accessible where unmounting is needed"
+    ]
+  },
+  {
+    "path_id": "react_18_render_callback_removed",
+    "path_name": "Render callback parameter removed from ReactDOM.render()",
+    "risk_type": "removed_api",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "The callback parameter that was optionally passed as the third argument to ReactDOM.render() has been removed. Applications relying on this callback (e.g., for timing notifications after render) will need to use useEffect hooks instead.",
+    "conditions": [
+      {
+        "condition_id": "react_18_render_callback_removed_version",
+        "statement": "The application is upgrading to React 18 or later",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "We've also removed the callback from render, since it usually does not have the expected result when using Suspense",
+            "relevance": "Documents that the render callback has been removed"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_render_callback_removed_usage",
+        "statement": "The application passes a callback function as the third argument to ReactDOM.render()",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "ReactDOM.render with callback",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "render(<App tab=\"home\" />, container, () => { console.log('rendered'); });",
+            "relevance": "Example showing the old callback pattern that needs migration"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search for ReactDOM.render calls with three arguments (component, container, callback)",
+      "Move callback logic into a useEffect hook within the component",
+      "The useEffect will run after the component is rendered, similar to the old callback timing",
+      "Example: wrap component in a wrapper that has useEffect(() => { /* callback logic */ })"
+    ]
+  },
+  {
+    "path_id": "react_18_rendertonodestream_deprecated",
+    "path_name": "ReactDOMServer.renderToNodeStream() is deprecated in React 18",
+    "risk_type": "changed_behavior",
+    "risk_level": "high",
+    "affected_surface": "application_code",
+    "description": "The renderToNodeStream() API for server-side rendering is deprecated and will warn in React 18. It does not support incremental Suspense streaming. Applications should migrate to renderToPipeableStream for Node environments or renderToReadableStream for edge runtimes.",
+    "conditions": [
+      {
+        "condition_id": "react_18_rendertonodestream_deprecated_version",
+        "statement": "The application is upgrading to React 18 or later",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "react-dom/server: ReactDOMServer.renderToNodeStream has been deprecated.",
+            "relevance": "Documents that renderToNodeStream is deprecated in React 18"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_rendertonodestream_deprecated_usage",
+        "statement": "The application uses ReactDOMServer.renderToNodeStream() for SSR",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "renderToNodeStream",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "renderToNodeStream: Deprecated \u26d4\ufe0f\ufe0f ... Instead, for streaming in Node environments, use: renderToPipeableStream: New \u2728",
+            "relevance": "Shows renderToNodeStream is deprecated with a replacement"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for 'renderToNodeStream' imports and usage",
+      "For Node.js environments, migrate to renderToPipeableStream from 'react-dom/server'",
+      "For edge runtimes (Deno, Cloudflare Workers), migrate to renderToReadableStream",
+      "Review the SSR Architecture guide for details on the new streaming APIs",
+      "Test SSR thoroughly as the new APIs have different semantics"
+    ]
+  },
+  {
+    "path_id": "react_18_strict_mode_double_effects",
+    "path_name": "Strict Mode now unmounts/remounts components in development",
+    "risk_type": "changed_behavior",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "In React 18, Strict Mode introduces a new development-only check that automatically unmounts and remounts every component when it first mounts, simulating the lifecycle twice. Effects that assume they are only mounted once may break or produce unexpected behavior. This only affects development mode but can surface bugs that will occur in production with future React features.",
+    "conditions": [
+      {
+        "condition_id": "react_18_strict_mode_double_effects_version",
+        "statement": "The application is upgrading to React 18 or later",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "Stricter Strict Mode: React 18 introduces a new development-only check to Strict Mode. React will automatically unmount and remount every component, whenever a component mounts for the first time, restoring the previous state on the second mount.",
+            "relevance": "Documents the new Strict Mode behavior in React 18"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_strict_mode_double_effects_usage",
+        "statement": "The application wraps components in <React.StrictMode> or <StrictMode>",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "StrictMode wrapper",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "If your app doesn't work after upgrading, check whether it's wrapped in <StrictMode>. Strict Mode has gotten stricter in React 18",
+            "relevance": "Shows that StrictMode behavior change can cause issues"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_strict_mode_double_effects_effects",
+        "statement": "The application has effects (useEffect, useLayoutEffect) that assume single mount/unmount",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "Effects not resilient to double mounting",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "Most effects will work without any changes, but some effects assume they are only mounted or destroyed once.",
+            "relevance": "Identifies which effects are at risk"
+          }
+        ],
+        "confidence": "medium",
+        "ambiguities": [
+          "Cannot automatically detect which effects assume single mount without code analysis"
+        ]
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for <StrictMode> usage to identify affected component trees",
+      "Review all useEffect and useLayoutEffect hooks for assumptions about single mounting",
+      "Ensure effect cleanup functions properly tear down subscriptions, timers, etc.",
+      "Test in development mode to see if double-mounting reveals any issues",
+      "If issues appear, you can temporarily remove StrictMode during migration, then add it back after fixing effects",
+      "Look for effects that set up subscriptions, WebSocket connections, timers, or global state that don't clean up properly"
+    ]
+  },
+  {
+    "path_id": "react_18_automatic_batching",
+    "path_name": "Automatic batching now applies to all updates, not just React events",
+    "risk_type": "changed_behavior",
+    "risk_level": "low",
+    "affected_surface": "application_code",
+    "description": "In React 18, state updates are automatically batched in all contexts (setTimeout, promises, native event handlers, etc.), not just React event handlers. This is generally a performance improvement, but code that relied on multiple synchronous renders may behave differently. Most applications benefit from this change, but in rare cases applications may need to opt out using flushSync.",
+    "conditions": [
+      {
+        "condition_id": "react_18_automatic_batching_version",
+        "statement": "The application is upgrading to React 18 or later AND using createRoot (not legacy render)",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "Starting in React 18 with createRoot, all updates will be automatically batched, no matter where they originate from.",
+            "relevance": "Documents that automatic batching only applies when using createRoot"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_automatic_batching_usage",
+        "statement": "The application has state updates in non-React contexts (setTimeout, promises, native handlers) that relied on synchronous re-renders between updates",
+        "category": "behavior",
+        "required": true,
+        "operator": "present",
+        "expected_value": "Multiple setState calls outside React events expecting separate renders",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "Before React 18, updates inside of promises, setTimeout, native event handlers, or any other event were not batched in React by default ... After React 18 ... will batch the same way",
+            "relevance": "Shows the behavior change that could affect applications"
+          }
+        ],
+        "confidence": "low",
+        "ambiguities": [
+          "Very difficult to detect automatically if application logic depends on separate renders - requires understanding application semantics"
+        ]
+      }
+    ],
+    "suggested_actions": [
+      "Review code that performs multiple setState calls in setTimeout, promises, or native event handlers",
+      "Check if any logic depends on DOM being updated between state updates (e.g., reading layout after first update)",
+      "If synchronous renders are needed, wrap updates in flushSync from 'react-dom'",
+      "Test the application thoroughly - most apps will benefit from this change without issues",
+      "Look for patterns like: setTimeout(() => { setState1(); readDOM(); setState2(); })"
+    ]
+  },
+  {
+    "path_id": "react_18_hydration_errors_stricter",
+    "path_name": "Hydration mismatches are now treated as errors, not warnings",
+    "risk_type": "changed_behavior",
+    "risk_level": "high",
+    "affected_surface": "runtime",
+    "description": "In React 18, hydration mismatches due to missing or extra text content are now treated like errors instead of warnings. React will no longer attempt to patch up individual nodes, and will instead revert to client rendering up to the closest Suspense boundary. This ensures consistency but may cause more visible fallback rendering if server/client markup doesn't match.",
+    "conditions": [
+      {
+        "condition_id": "react_18_hydration_errors_stricter_version",
+        "statement": "The application is upgrading to React 18 or later",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "Stricter hydration errors: Hydration mismatches due to missing or extra text content are now treated like errors instead of warnings.",
+            "relevance": "Documents the stricter hydration behavior"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_hydration_errors_stricter_ssr",
+        "statement": "The application uses server-side rendering with client-side hydration",
+        "category": "runtime",
+        "required": true,
+        "operator": "present",
+        "expected_value": "SSR with hydration",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "Stricter hydration errors: Hydration mismatches due to missing or extra text content are now treated like errors instead of warnings. React will no longer attempt to 'patch up' individual nodes",
+            "relevance": "Shows this only affects SSR applications"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      }
+    ],
+    "suggested_actions": [
+      "Test SSR/hydration flow thoroughly after upgrading to React 18",
+      "Look for console errors about hydration mismatches",
+      "Common causes: Date.now(), Math.random(), browser-only APIs used during render",
+      "Ensure server and client render identical markup for the initial render",
+      "Use suppressHydrationWarning on elements where mismatches are intentional",
+      "Consider adding Suspense boundaries to limit fallback rendering scope if mismatches occur"
+    ]
+  },
+  {
+    "path_id": "react_18_modern_browser_features_required",
+    "path_name": "React 18 requires modern browser features (Promise, Symbol, Object.assign)",
+    "risk_type": "runtime_requirement",
+    "risk_level": "high",
+    "affected_surface": "runtime",
+    "description": "React 18 now depends on modern browser features including Promise, Symbol, and Object.assign. Applications that support older browsers like Internet Explorer which do not provide these features natively will fail at runtime unless polyfills are included.",
+    "conditions": [
+      {
+        "condition_id": "react_18_modern_browser_features_required_version",
+        "statement": "The application is upgrading to React 18 or later",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "New JS Environment Requirements: React now depends on modern browsers features including Promise, Symbol, and Object.assign.",
+            "relevance": "Documents the new runtime requirements"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_modern_browser_features_required_target",
+        "statement": "The application targets browsers that do not natively support Promise, Symbol, or Object.assign (e.g., Internet Explorer)",
+        "category": "runtime",
+        "required": true,
+        "operator": "present",
+        "expected_value": "Legacy browser support",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "If you support older browsers and devices such as Internet Explorer which do not provide modern browser features natively or have non-compliant implementations, consider including a global polyfill in your bundled application.",
+            "relevance": "Identifies which browsers are affected and suggests polyfills"
+          }
+        ],
+        "confidence": "medium",
+        "ambiguities": [
+          "Cannot automatically detect browser support targets without checking browserslist config or similar"
+        ]
+      }
+    ],
+    "suggested_actions": [
+      "Review your browser support requirements (check package.json browserslist or similar config)",
+      "If supporting IE11 or other legacy browsers, add polyfills for Promise, Symbol, and Object.assign",
+      "Consider using core-js or similar polyfill libraries",
+      "Update build configuration to include polyfills in the bundle",
+      "Test on target browsers after adding polyfills",
+      "Alternatively, drop support for browsers that don't have these features"
+    ]
+  },
+  {
+    "path_id": "react_18_typescript_children_prop",
+    "path_name": "TypeScript: children prop must now be explicitly defined in component props",
+    "risk_type": "changed_behavior",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "In React 18 TypeScript definitions, the children prop is no longer automatically included in component props. Applications must explicitly define children?: React.ReactNode in their props interfaces, or they will get TypeScript errors when passing children to components.",
+    "conditions": [
+      {
+        "condition_id": "react_18_typescript_children_prop_version",
+        "statement": "The application is upgrading to React 18 or later with TypeScript",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "The new types are safer and catch issues that used to be ignored by the type checker. The most notable change is that the children prop now needs to be listed explicitly when defining props",
+            "relevance": "Documents that children must be explicitly defined in TypeScript"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_typescript_children_prop_typescript",
+        "statement": "The application uses TypeScript",
+        "category": "dependency",
+        "required": true,
+        "operator": "present",
+        "expected_value": "TypeScript usage",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "If your project uses TypeScript, you will need to update your @types/react and @types/react-dom dependencies to the latest versions.",
+            "relevance": "Shows this only affects TypeScript projects"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_typescript_children_prop_interfaces",
+        "statement": "The application has component prop interfaces that accept children but don't explicitly declare the children prop",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "Props interfaces without explicit children",
+        "evidence": [
+          {
+            "source_id": "seed_01",
+            "source_type": "official_migration_guide",
+            "quote_or_summary": "interface MyButtonProps { color: string; children?: React.ReactNode; }",
+            "relevance": "Example showing how to add children prop explicitly"
+          }
+        ],
+        "confidence": "medium",
+        "ambiguities": [
+          "Need TypeScript compilation to detect all missing children prop declarations"
+        ]
+      }
+    ],
+    "suggested_actions": [
+      "Run TypeScript compiler after upgrading @types/react and @types/react-dom",
+      "Look for errors about children prop not being defined",
+      "Add children?: React.ReactNode to all component prop interfaces that accept children",
+      "Use the automated codemod: npx types-react-codemod@latest preset-19 ./path-to-react-ts-files",
+      "Review and fix any TypeScript compilation errors related to children"
+    ]
+  },
+  {
+    "path_id": "react_18_typescript_useref_required_arg",
+    "path_name": "TypeScript: useRef now requires an initial argument",
+    "risk_type": "changed_behavior",
+    "risk_level": "low",
+    "affected_surface": "application_code",
+    "description": "In React 18 TypeScript definitions, useRef() now requires an initial argument to be passed, similar to useState and createContext. Calls to useRef() without an argument will cause TypeScript compilation errors.",
+    "conditions": [
+      {
+        "condition_id": "react_18_typescript_useref_required_arg_version",
+        "statement": "The application is upgrading to React 18 or later with TypeScript",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "Require initial argument to useRef: The initial argument is now required to match useState, createContext etc",
+            "relevance": "Documents that useRef requires an initial argument in React 18"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_typescript_useref_required_arg_typescript",
+        "statement": "The application uses TypeScript",
+        "category": "dependency",
+        "required": true,
+        "operator": "present",
+        "expected_value": "TypeScript usage",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "Require initial argument to useRef: The initial argument is now required to match useState, createContext etc",
+            "relevance": "This is a TypeScript-specific type definition change"
+          }
+        ],
+        "confidence": "medium",
+        "ambiguities": [
+          "The source mentions this is about TypeScript types but doesn't explicitly state TypeScript is required - inferred from context that this is a TypeScript definition change"
+        ]
+      },
+      {
+        "condition_id": "react_18_typescript_useref_required_arg_usage",
+        "statement": "The application calls useRef() without an initial argument",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "useRef() without initial argument",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "Require initial argument to useRef: The initial argument is now required to match useState, createContext etc",
+            "relevance": "Indicates that previously optional argument is now required"
+          }
+        ],
+        "confidence": "medium",
+        "ambiguities": [
+          "Cannot automatically detect useRef calls without arguments without code analysis"
+        ]
+      }
+    ],
+    "suggested_actions": [
+      "Run TypeScript compiler after upgrading @types/react",
+      "Look for errors about useRef requiring an initial argument",
+      "Add initial argument to useRef calls: useRef(null) or useRef(undefined) depending on the type",
+      "Use the automated codemod: npx types-react-codemod@latest preset-19 ./path-to-react-ts-files",
+      "For DOM refs, use useRef<HTMLDivElement>(null)"
+    ]
+  },
+  {
+    "path_id": "react_18_typescript_deprecated_types_removed",
+    "path_name": "TypeScript: Deprecated type aliases removed (ReactChild, ReactFragment, etc.)",
+    "risk_type": "removed_api",
+    "risk_level": "medium",
+    "affected_surface": "application_code",
+    "description": "React 18 TypeScript definitions remove several deprecated type aliases including ReactChild, ReactFragment, ReactNodeArray, ReactText, VoidFunctionComponent, and VFC. Code using these types will fail to compile and needs to use replacement types.",
+    "conditions": [
+      {
+        "condition_id": "react_18_typescript_deprecated_types_removed_version",
+        "statement": "The application is upgrading to React 18 or later with TypeScript",
+        "category": "version",
+        "required": true,
+        "operator": "greater_than",
+        "expected_value": "18.0.0",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "Removed deprecated TypeScript types: ReactChild (replacement: React.ReactElement | number | string), ReactFragment (replacement: Iterable<React.ReactNode>), ReactNodeArray (replacement: ReadonlyArray<React.ReactNode>), ReactText (replacement: number | string), VoidFunctionComponent (replacement: FunctionComponent), VFC (replacement: FC)",
+            "relevance": "Lists all removed TypeScript types and their replacements"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_typescript_deprecated_types_removed_typescript",
+        "statement": "The application uses TypeScript",
+        "category": "dependency",
+        "required": true,
+        "operator": "present",
+        "expected_value": "TypeScript usage",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "Removed deprecated TypeScript types: ReactChild (replacement: React.ReactElement | number | string), ReactFragment (replacement: Iterable<React.ReactNode>), ReactNodeArray (replacement: ReadonlyArray<React.ReactNode>), ReactText (replacement: number | string), VoidFunctionComponent (replacement: FunctionComponent), VFC (replacement: FC)",
+            "relevance": "This is a TypeScript-specific change"
+          }
+        ],
+        "confidence": "high",
+        "ambiguities": []
+      },
+      {
+        "condition_id": "react_18_typescript_deprecated_types_removed_usage",
+        "statement": "The application uses one or more of the removed TypeScript types (ReactChild, ReactFragment, ReactNodeArray, ReactText, VoidFunctionComponent, VFC)",
+        "category": "api_usage",
+        "required": true,
+        "operator": "present",
+        "expected_value": "Usage of deprecated TypeScript types",
+        "evidence": [
+          {
+            "source_id": "seed_00",
+            "source_type": "official_changelog",
+            "quote_or_summary": "Removed deprecated TypeScript types: ReactChild (replacement: React.ReactElement | number | string), ReactFragment (replacement: Iterable<React.ReactNode>), ReactNodeArray (replacement: ReadonlyArray<React.ReactNode>), ReactText (replacement: number | string), VoidFunctionComponent (replacement: FunctionComponent), VFC (replacement: FC)",
+            "relevance": "Lists the specific types that need to be replaced"
+          }
+        ],
+        "confidence": "medium",
+        "ambiguities": [
+          "Cannot detect usage without code analysis or TypeScript compilation"
+        ]
+      }
+    ],
+    "suggested_actions": [
+      "Search codebase for ReactChild, ReactFragment, ReactNodeArray, ReactText, VoidFunctionComponent, VFC",
+      "Replace ReactChild with React.ReactElement | number | string",
+      "Replace ReactFragment with Iterable<React.ReactNode>",
+      "Replace ReactNodeArray with ReadonlyArray<React.ReactNode>",
+      "Replace ReactText with number | string",
+      "Replace VoidFunctionComponent and VFC with FunctionComponent or FC",
+      "Use the automated codemod: npx types-react-codemod@latest preset-19 ./path-to-react-ts-files",
+      "Run TypeScript compiler to catch any remaining issues"
+    ]
+  }
+]

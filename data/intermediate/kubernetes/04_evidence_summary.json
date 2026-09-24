@@ -1,0 +1,24 @@
+{
+  "high_confidence_risks": [
+    "rp_k8s_1_29_flowcontrol_v1beta2_removed",
+    "rp_k8s_1_27_csistoragecapacity_v1beta1_removed",
+    "rp_k8s_1_26_flowcontrol_v1beta1_removed",
+    "rp_k8s_1_26_hpa_v2beta2_removed",
+    "rp_k8s_1_25_cronjob_v1beta1_removed",
+    "rp_k8s_1_25_endpointslice_v1beta1_removed",
+    "rp_k8s_1_25_event_v1beta1_removed",
+    "rp_k8s_1_25_hpa_v2beta1_removed",
+    "rp_k8s_1_25_pdb_v1beta1_removed",
+    "rp_k8s_1_25_psp_removed",
+    "rp_k8s_1_25_runtimeclass_v1beta1_removed",
+    "rp_k8s_1_24_dockershim_removed",
+    "rp_k8s_1_29_kubeadm_super_admin_conf",
+    "rp_k8s_1_24_legacy_sa_token_auto_generation",
+    "rp_k8s_1_29_kube_scheduler_config_v1beta3_removed",
+    "rp_k8s_1_29_kubeadm_upgrade_no_component_config"
+  ],
+  "medium_confidence_risks": [],
+  "low_confidence_or_disputed_risks": [],
+  "sources_with_disagreements": [],
+  "open_questions": []
+}

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.idea/
+.pytest_cache/
+
+# Raw fetched documents can be large and are fully reproducible by re-running
+# the pipeline; keep the smaller derived artifacts (chunks, risk paths,
+# final output) so a repo checkout is still useful without network access.
+data/intermediate/*/01_raw_docs.json
