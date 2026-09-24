@@ -11,3 +11,9 @@ dependencies = [
 dev = [
     "pytest>=9.1.1",
 ]
+
+[tool.setuptools]
+py-modules = ["extract_upgrade_risks"]
+
+[tool.setuptools.packages.find]
+include = ["core", "core.*", "schema", "schema.*", "sources", "sources.*", "pipeline", "pipeline.*", "tools", "tools.*"]

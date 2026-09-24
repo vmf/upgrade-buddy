@@ -9,3 +9,5 @@ __pycache__/
 # the pipeline; keep the smaller derived artifacts (chunks, risk paths,
 # final output) so a repo checkout is still useful without network access.
 data/intermediate/*/01_raw_docs.json
+
+upgrade_buddy.egg-info
