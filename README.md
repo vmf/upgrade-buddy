@@ -43,12 +43,6 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 uv pip install -e .
 ```
 
-4. Run the project
-
-```bash
-uv run main.py
-```
-
 #### Option 2: Setup without uv
 
 1. Create and activate a virtual environment:
@@ -62,12 +56,6 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 ```bash
 pip install anthropic python-dotenv
-```
-
-3. Run the project
-
-```bash
-python main.py
 ```
 
 ## Upgrade Risk Extraction Pipeline
